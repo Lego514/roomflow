@@ -1,0 +1,75 @@
+name: Kernel lab
+
+# Reruns the packet lab on a GitHub-hosted runner: a native Linux kernel with
+# hardware virtualization, instead of the QEMU TCG guest the first results came
+# from, whose software-emulated timing made the smaller differences unreliable.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      repeats:
+        description: "Runs per scenario x policy cell (1-10)"
+        default: "5"
+      seed:
+        description: "Run-order shuffle seed"
+        default: "20261007"
+
+jobs:
+  unit:
+    name: Unit tests (Node model, Python lab)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node --test tests/*.test.mjs
+      - run: python3 -m unittest discover -s lab -p "test_*.py" -v
+
+  kernel:
+    name: Packet lab on a native kernel
+    needs: unit
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    env:
+      REPEATS: ${{ inputs.repeats || '5' }}
+      SEED: ${{ inputs.seed || '20261007' }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install tools
+        run: |
+          sudo apt-get update -q
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -q iperf3 ethtool iproute2 iputils-ping
+          # The kernel modules exist on the runner but may not be loaded yet.
+          for m in sch_cake sch_netem sch_htb cls_flower act_skbedit; do sudo modprobe "$m" || echo "modprobe $m failed"; done
+          uname -r
+      - name: Check kernel features (CAKE, netem, HTB, flower, skbedit)
+        run: sudo python3 lab/netlab.py check
+      - name: Build the topology
+        run: sudo python3 lab/netlab.py setup
+      - name: Self-test
+        run: sudo python3 lab/netlab.py selftest --duration 8 --output ci/selftest
+      - name: Measurement matrix
+        run: sudo python3 lab/netlab.py batch --duration 15 --repeats "$REPEATS" --seed "$SEED" --output ci/batch
+      - name: Tear down
+        if: always()
+        run: sudo python3 lab/netlab.py teardown || true
+      - name: Audit the raw data
+        run: sudo python3 lab/audit_results.py --input ci/batch --output ci/batch-audit.json
+      - name: Summary
+        if: always()
+        run: |
+          if [ -f ci/batch/measurements.csv ]; then
+            python3 lab/ci_summary.py --input ci/batch/measurements.csv \
+              --environment "GitHub Actions ubuntu-24.04, kernel $(uname -r), $(nproc) vCPU, seed $SEED" \
+              | tee -a "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload raw results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kernel-lab-results
+          path: ci/
+          if-no-files-found: ignore

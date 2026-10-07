@@ -502,7 +502,7 @@ def selftest(state, output, duration):
             set_mode(state, "sqm")
 
 
-def batch(state, output, duration, repeats):
+def batch(state, output, duration, repeats, seed=22756):
     if not 1 <= repeats <= 10:
         raise LabError("Batch repeats must be 1..10")
     output = Path(output).resolve()
@@ -510,9 +510,9 @@ def batch(state, output, duration, repeats):
         raise LabError("Batch output must be new/empty")
     output.mkdir(parents=True, exist_ok=True)
     jobs = [(repeat, mode, scenario) for repeat in range(1, repeats + 1) for mode in MODES for scenario in SCENARIOS]
-    random.Random(22756).shuffle(jobs)
+    random.Random(seed).shuffle(jobs)
     summaries, flat = [], []
-    manifest = {"kind": "linux-kernel-batch", "repeats": repeats, "random_seed": 22756, "completed": False, "measurements": summaries}
+    manifest = {"kind": "linux-kernel-batch", "repeats": repeats, "random_seed": seed, "completed": False, "measurements": summaries}
     try:
         for repeat, mode, scenario in jobs:
             folder = f"r{repeat}-{mode}-{scenario}"
@@ -566,6 +566,7 @@ def main(argv=None):
     batch_parser.add_argument("--output", required=True)
     batch_parser.add_argument("--duration", type=int, default=15)
     batch_parser.add_argument("--repeats", type=int, default=3)
+    batch_parser.add_argument("--seed", type=int, default=22756, help="run-order shuffle seed")
     args = parser.parse_args(argv)
     try:
         guard_linux()
@@ -594,7 +595,7 @@ def main(argv=None):
             elif args.command == "selftest":
                 result = selftest(state, args.output, args.duration)
             elif args.command == "batch":
-                result = batch(state, args.output, args.duration, args.repeats)
+                result = batch(state, args.output, args.duration, args.repeats, args.seed)
             else:
                 if not 0 <= args.bulk_tos <= 255:
                     raise LabError("--bulk-tos must fit the IPv4 TOS byte (0..255)")
