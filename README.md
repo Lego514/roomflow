@@ -10,6 +10,11 @@ RoomFlow answers that with real packets: a Linux lab that shares one bottleneck 
 
 The problem is **bufferbloat**, and fair queuing fixes it almost completely. Prioritizing the meeting device on top of that made no measurable difference.
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/latency-dark.svg">
+  <img alt="Meeting latency over time. Under FIFO it climbs from 40 ms to about 280 ms within seconds of the roommate's transfers starting, with gaps where pings are lost; under CAKE and CAKE with meeting priority it stays flat near 44 ms." src="docs/latency-light.svg" width="760">
+</picture>
+
 Both directions congested (5 Mbps up / 20 Mbps down, 40 ms base RTT), five runs per policy on a native Linux kernel in CI ([workflow](.github/workflows/kernel-lab.yml), [raw results](results/native-ci/)):
 
 | Policy | Meeting p95 RTT, mean (range) | Meeting loss up / down | Roommate throughput up / down |
