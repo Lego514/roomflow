@@ -47,6 +47,16 @@ roommate 10.77.2.2 ──┘               shared 20 Mbps down
 
 The repository also has a browser dashboard and a Node.js queueing model for exploring the same question on Windows without a Linux kernel. The model is a simplified simulation, not CAKE; its numbers and the kernel lab's are not interchangeable.
 
+## At home: is it actually bufferbloat?
+
+The lab answers "if the problem is bufferbloat, which queue fixes it?". [`homenet/`](homenet/) answers the question that comes first, on the real home network: when a call stutters, is it the Wi-Fi, the router's queue under load, the ISP, or the far end?
+
+- **`python -m homenet check`** reads the Wi-Fi link (band, channel, signal, RSSI, link rate), then measures latency bottom-up: the router, public IPs, DNS, and the services calls actually use (Zoom, Teams). The verdict names the lowest layer that is degraded, because a dead ISP also breaks DNS and every service, and those aren't the cause.
+- **`python -m homenet bloat`** is the lab's experiment on the real link: latency at idle, then while parallel transfers to Cloudflare's speed-test endpoints saturate the download and then the upload. It samples TCP handshakes to 1.1.1.1 five times a second and pings the router once a second, so it can tell whether the queue builds locally (Wi-Fi, router) or upstream (modem, ISP), and grades the added latency.
+- **`python -m homenet watch`** repeats `check` on a schedule and **`report`** summarizes it by hour of day.
+
+History goes to a local SQLite file. Network names, MAC addresses and the router's address are never recorded; a test checks that.
+
 ## Run it
 
 Kernel lab (an isolated Linux VM with root; Python standard library only):

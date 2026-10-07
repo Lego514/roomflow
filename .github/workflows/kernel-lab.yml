@@ -18,7 +18,7 @@ on:
 
 jobs:
   unit:
-    name: Unit tests (Node model, Python lab)
+    name: Unit tests (Node model, Python lab, homenet)
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -27,6 +27,7 @@ jobs:
           node-version: 22
       - run: node --test tests/*.test.mjs
       - run: python3 -m unittest discover -s lab -p "test_*.py" -v
+      - run: python3 -m unittest discover -s homenet/tests -t . -v
 
   kernel:
     name: Packet lab on a native kernel
