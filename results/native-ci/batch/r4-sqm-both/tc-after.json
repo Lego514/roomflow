@@ -1,0 +1,16 @@
+{
+  "mode": "sqm",
+  "up_mbps": 5,
+  "down_mbps": 20,
+  "rtt_ms": 40,
+  "snapshots": {
+    "router/wan": {
+      "qdisc": "qdisc cake 1: root refcnt 5 bandwidth 5Mbit besteffort dual-srchost nonat wash no-ack-filter split-gso rtt 40ms raw overhead 0 \n Sent 11168058 bytes 27263 pkt (dropped 301, overlimits 78703 requeues 0) \n backlog 0b 0p requeues 0\n memory used: 93920b of 4Mb\n capacity estimate: 5Mbit\n min/max network layer size:           46 /    1514\n min/max overhead-adjusted size:       46 /    1514\n average network hdr offset:           14\n\n                  Tin 0\n  thresh          5Mbit\n  target         3.63ms\n  interval       41.6ms\n  pk_delay       6.57ms\n  av_delay       1.22ms\n  sp_delay          0us\n  backlog            0b\n  pkts            27564\n  bytes        11623772\n  way_inds            0\n  way_miss           19\n  way_cols            0\n  drops             301\n  marks               0\n  ack_drop            0\n  sp_flows           10\n  bk_flows            1\n  un_flows            0\n  max_len          1514\n  quantum           300\n\n",
+      "filters": ""
+    },
+    "delay/torouter": {
+      "qdisc": "qdisc cake 1: root refcnt 5 bandwidth 20Mbit besteffort dual-dsthost nonat wash no-ack-filter split-gso rtt 40ms raw overhead 0 \n Sent 42561805 bytes 36228 pkt (dropped 152, overlimits 99368 requeues 0) \n backlog 0b 0p requeues 0\n memory used: 93912b of 4Mb\n capacity estimate: 20Mbit\n min/max network layer size:           46 /    1514\n min/max overhead-adjusted size:       46 /    1514\n average network hdr offset:           14\n\n                  Tin 0\n  thresh         20Mbit\n  target            2ms\n  interval         40ms\n  pk_delay       15.4ms\n  av_delay       4.23ms\n  sp_delay        183us\n  backlog            0b\n  pkts            36380\n  bytes        42791933\n  way_inds           23\n  way_miss           20\n  way_cols            0\n  drops             152\n  marks               0\n  ack_drop            0\n  sp_flows            5\n  bk_flows            1\n  un_flows            0\n  max_len          1514\n  quantum           610\n\n",
+      "filters": ""
+    }
+  }
+}

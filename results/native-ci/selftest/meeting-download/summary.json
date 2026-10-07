@@ -1,0 +1,54 @@
+{
+  "kind": "linux-kernel-measurement",
+  "mode": "meeting",
+  "scenario": "download",
+  "duration_seconds": 8,
+  "warmup_seconds": 2,
+  "bulk_tos": 192,
+  "up_mbps": 5,
+  "down_mbps": 20,
+  "base_rtt_ms": 40,
+  "udp_target_bps_each_direction": 600000,
+  "udp_payload_bytes": 256,
+  "kernel": "6.17.0-1022-azure",
+  "note": "UDP surrogate, not WebRTC quality or a real Wi-Fi measurement",
+  "started_at_unix": 1791390749.0636177,
+  "measurement_start_unix": 1791390751.0636177,
+  "rtt": {
+    "samples": 80,
+    "mean_ms": 40.46,
+    "p95_ms": 41.0,
+    "ping_loss_including_warmup_pct": 0.0
+  },
+  "flows": {
+    "meeting-up": {
+      "bits_per_second": 600103.4522171522,
+      "jitter_ms": 0.17190822916322326,
+      "lost_packets": 0,
+      "packets": 2356,
+      "lost_percent": 0,
+      "seconds": 8.040427
+    },
+    "meeting-down": {
+      "bits_per_second": 600119.886164399,
+      "jitter_ms": 0.2680808419019284,
+      "lost_packets": 0,
+      "packets": 2344,
+      "lost_percent": 0,
+      "seconds": 7.999255
+    },
+    "roommate-down": {
+      "bits_per_second": 17562431.80159774,
+      "bytes": 17563648,
+      "seconds": 8.000554
+    }
+  },
+  "cpu_busy_percent": {
+    "cpu": 49.6,
+    "cpu0": 50.93,
+    "cpu1": 48.05,
+    "cpu2": 72.74,
+    "cpu3": 26.27
+  },
+  "cpu_warning": false
+}

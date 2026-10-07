@@ -1,0 +1,2006 @@
+{
+  "passed": true,
+  "profile": "full-factorial",
+  "measurements": 60,
+  "receiver_flows": 180,
+  "failures": [],
+  "observations": [
+    {
+      "kind": "iperf_loss_denominator",
+      "name": "r1-fifo-both",
+      "flow": "meeting-down",
+      "lost": 7,
+      "received_summary_packets": 4413,
+      "reported_loss_pct": 0.15652951699463327,
+      "end_sum_packets": 4472
+    },
+    {
+      "kind": "iperf_loss_denominator",
+      "name": "r1-fifo-download",
+      "flow": "meeting-down",
+      "lost": 10,
+      "received_summary_packets": 4371,
+      "reported_loss_pct": 0.2242152466367713,
+      "end_sum_packets": 4460
+    },
+    {
+      "kind": "cpu_warning",
+      "name": "r1-meeting-idle"
+    },
+    {
+      "kind": "cpu_warning",
+      "name": "r1-meeting-upload"
+    },
+    {
+      "kind": "interval_end_byte_delta",
+      "name": "r1-sqm-idle",
+      "flow": "meeting-down",
+      "interval_bytes": 1124864,
+      "receiver_end_bytes": 1125120,
+      "delta": 256
+    },
+    {
+      "kind": "interval_end_byte_delta",
+      "name": "r1-sqm-upload",
+      "flow": "meeting-down",
+      "interval_bytes": 1124864,
+      "receiver_end_bytes": 1125120,
+      "delta": 256
+    },
+    {
+      "kind": "iperf_loss_denominator",
+      "name": "r2-fifo-both",
+      "flow": "meeting-down",
+      "lost": 4,
+      "received_summary_packets": 4366,
+      "reported_loss_pct": 0.0898472596585804,
+      "end_sum_packets": 4452
+    },
+    {
+      "kind": "iperf_loss_denominator",
+      "name": "r2-fifo-download",
+      "flow": "meeting-down",
+      "lost": 5,
+      "received_summary_packets": 4376,
+      "reported_loss_pct": 0.11210762331838565,
+      "end_sum_packets": 4460
+    },
+    {
+      "kind": "interval_end_byte_delta",
+      "name": "r2-fifo-upload",
+      "flow": "meeting-down",
+      "interval_bytes": 1124864,
+      "receiver_end_bytes": 1125120,
+      "delta": 256
+    },
+    {
+      "kind": "interval_end_byte_delta",
+      "name": "r2-meeting-both",
+      "flow": "meeting-up",
+      "interval_bytes": 1127936,
+      "receiver_end_bytes": 1128192,
+      "delta": 256
+    },
+    {
+      "kind": "interval_end_byte_delta",
+      "name": "r2-meeting-idle",
+      "flow": "meeting-up",
+      "interval_bytes": 1127936,
+      "receiver_end_bytes": 1128192,
+      "delta": 256
+    },
+    {
+      "kind": "cpu_warning",
+      "name": "r2-meeting-idle"
+    },
+    {
+      "kind": "cpu_warning",
+      "name": "r2-sqm-idle"
+    },
+    {
+      "kind": "iperf_loss_denominator",
+      "name": "r3-fifo-both",
+      "flow": "meeting-down",
+      "lost": 8,
+      "received_summary_packets": 4373,
+      "reported_loss_pct": 0.17945266935845672,
+      "end_sum_packets": 4458
+    },
+    {
+      "kind": "iperf_loss_denominator",
+      "name": "r3-fifo-download",
+      "flow": "meeting-down",
+      "lost": 10,
+      "received_summary_packets": 4377,
+      "reported_loss_pct": 0.2242152466367713,
+      "end_sum_packets": 4460
+    },
+    {
+      "kind": "interval_end_byte_delta",
+      "name": "r3-fifo-idle",
+      "flow": "meeting-up",
+      "interval_bytes": 1127168,
+      "receiver_end_bytes": 1128192,
+      "delta": 1024
+    },
+    {
+      "kind": "cpu_warning",
+      "name": "r3-fifo-idle"
+    },
+    {
+      "kind": "interval_end_byte_delta",
+      "name": "r3-fifo-upload",
+      "flow": "meeting-up",
+      "interval_bytes": 1133312,
+      "receiver_end_bytes": 1133568,
+      "delta": 256
+    },
+    {
+      "kind": "cpu_warning",
+      "name": "r3-fifo-upload"
+    },
+    {
+      "kind": "interval_end_byte_delta",
+      "name": "r3-meeting-download",
+      "flow": "meeting-up",
+      "interval_bytes": 1127680,
+      "receiver_end_bytes": 1128192,
+      "delta": 512
+    },
+    {
+      "kind": "cpu_warning",
+      "name": "r3-meeting-download"
+    },
+    {
+      "kind": "cpu_warning",
+      "name": "r3-meeting-idle"
+    },
+    {
+      "kind": "cpu_warning",
+      "name": "r3-sqm-download"
+    },
+    {
+      "kind": "interval_end_byte_delta",
+      "name": "r3-sqm-idle",
+      "flow": "meeting-down",
+      "interval_bytes": 1124608,
+      "receiver_end_bytes": 1125120,
+      "delta": 512
+    },
+    {
+      "kind": "cpu_warning",
+      "name": "r3-sqm-upload"
+    },
+    {
+      "kind": "iperf_loss_denominator",
+      "name": "r4-fifo-both",
+      "flow": "meeting-down",
+      "lost": 8,
+      "received_summary_packets": 4389,
+      "reported_loss_pct": 0.179372197309417,
+      "end_sum_packets": 4460
+    },
+    {
+      "kind": "iperf_loss_denominator",
+      "name": "r4-fifo-download",
+      "flow": "meeting-down",
+      "lost": 2,
+      "received_summary_packets": 4377,
+      "reported_loss_pct": 0.04484304932735426,
+      "end_sum_packets": 4460
+    },
+    {
+      "kind": "interval_end_byte_delta",
+      "name": "r4-fifo-upload",
+      "flow": "meeting-down",
+      "interval_bytes": 1124864,
+      "receiver_end_bytes": 1125120,
+      "delta": 256
+    },
+    {
+      "kind": "cpu_warning",
+      "name": "r4-meeting-idle"
+    },
+    {
+      "kind": "cpu_warning",
+      "name": "r4-meeting-upload"
+    },
+    {
+      "kind": "cpu_warning",
+      "name": "r4-sqm-both"
+    },
+    {
+      "kind": "interval_end_byte_delta",
+      "name": "r4-sqm-upload",
+      "flow": "meeting-down",
+      "interval_bytes": 1124864,
+      "receiver_end_bytes": 1125120,
+      "delta": 256
+    },
+    {
+      "kind": "cpu_warning",
+      "name": "r4-sqm-upload"
+    },
+    {
+      "kind": "iperf_loss_denominator",
+      "name": "r5-fifo-both",
+      "flow": "meeting-down",
+      "lost": 8,
+      "received_summary_packets": 4413,
+      "reported_loss_pct": 0.17821341055914458,
+      "end_sum_packets": 4489
+    },
+    {
+      "kind": "iperf_loss_denominator",
+      "name": "r5-fifo-download",
+      "flow": "meeting-down",
+      "lost": 8,
+      "received_summary_packets": 4376,
+      "reported_loss_pct": 0.179372197309417,
+      "end_sum_packets": 4460
+    },
+    {
+      "kind": "cpu_warning",
+      "name": "r5-meeting-download"
+    },
+    {
+      "kind": "interval_end_byte_delta",
+      "name": "r5-meeting-idle",
+      "flow": "meeting-up",
+      "interval_bytes": 1127936,
+      "receiver_end_bytes": 1128192,
+      "delta": 256
+    },
+    {
+      "kind": "cpu_warning",
+      "name": "r5-sqm-idle"
+    }
+  ],
+  "data": [
+    {
+      "name": "r1-fifo-both",
+      "mode": "fifo",
+      "scenario": "both",
+      "p95_ms": 287.0,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 503957.0205240147,
+          "jitter_ms": 5.9295392081276885,
+          "lost_packets": 704,
+          "packets": 4428,
+          "lost_percent": 15.898825654923217,
+          "seconds": 15.133735
+        },
+        "meeting-down": {
+          "bits_per_second": 601587.8446759256,
+          "jitter_ms": 4.14636082074073,
+          "lost_packets": 7,
+          "packets": 4413,
+          "lost_percent": 0.15652951699463327,
+          "seconds": 14.999452
+        },
+        "roommate-up": {
+          "bits_per_second": 3834322.724219236,
+          "bytes": 7208960,
+          "seconds": 15.040904
+        },
+        "roommate-down": {
+          "bits_per_second": 18314853.96484746,
+          "bytes": 34340864,
+          "seconds": 15.000224
+        }
+      }
+    },
+    {
+      "name": "r1-fifo-download",
+      "mode": "fifo",
+      "scenario": "download",
+      "p95_ms": 304.0,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600086.487107517,
+          "jitter_ms": 0.024962101265696483,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.040392
+        },
+        "meeting-down": {
+          "bits_per_second": 595428.2972922774,
+          "jitter_ms": 0.4389590641065422,
+          "lost_packets": 10,
+          "packets": 4371,
+          "lost_percent": 0.2242152466367713,
+          "seconds": 14.999838
+        },
+        "roommate-down": {
+          "bits_per_second": 18454738.28882648,
+          "bytes": 34603008,
+          "seconds": 15.000162
+        }
+      }
+    },
+    {
+      "name": "r1-fifo-idle",
+      "mode": "fifo",
+      "scenario": "idle",
+      "p95_ms": 40.1,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600087.2451766987,
+          "jitter_ms": 0.0024934902823894613,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.040373
+        },
+        "meeting-down": {
+          "bits_per_second": 600063.5999576,
+          "jitter_ms": 0.0021874480755100134,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 15.00001
+        }
+      }
+    },
+    {
+      "name": "r1-fifo-upload",
+      "mode": "fifo",
+      "scenario": "upload",
+      "p95_ms": 232.0,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 596987.2601153846,
+          "jitter_ms": 2.6185209363656656,
+          "lost_packets": 36,
+          "packets": 4462,
+          "lost_percent": 0.8068130883012102,
+          "seconds": 15.183654
+        },
+        "meeting-down": {
+          "bits_per_second": 599932.506099718,
+          "jitter_ms": 0.008094062877745457,
+          "lost_packets": 0,
+          "packets": 4394,
+          "lost_percent": 0,
+          "seconds": 14.999874
+        },
+        "roommate-up": {
+          "bits_per_second": 4146668.72831659,
+          "bytes": 7864320,
+          "seconds": 15.172314
+        }
+      }
+    },
+    {
+      "name": "r1-meeting-both",
+      "mode": "meeting",
+      "scenario": "both",
+      "p95_ms": 43.9,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600043.280329888,
+          "jitter_ms": 0.7834961451797632,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.041475
+        },
+        "meeting-down": {
+          "bits_per_second": 600059.4795519207,
+          "jitter_ms": 0.2100541402594355,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 15.000113
+        },
+        "roommate-up": {
+          "bits_per_second": 3624740.2065583887,
+          "bytes": 6815744,
+          "seconds": 15.04272
+        },
+        "roommate-down": {
+          "bits_per_second": 17196725.50493732,
+          "bytes": 32243712,
+          "seconds": 14.999931
+        }
+      }
+    },
+    {
+      "name": "r1-meeting-download",
+      "mode": "meeting",
+      "scenario": "download",
+      "p95_ms": 40.8,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600089.7188894565,
+          "jitter_ms": 0.027833603985906185,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.040311
+        },
+        "meeting-down": {
+          "bits_per_second": 600063.879987224,
+          "jitter_ms": 0.24063921362738164,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 15.000003
+        },
+        "roommate-down": {
+          "bits_per_second": 17755535.373732932,
+          "bytes": 33292288,
+          "seconds": 15.000297
+        }
+      }
+    },
+    {
+      "name": "r1-meeting-idle",
+      "mode": "meeting",
+      "scenario": "idle",
+      "p95_ms": 40.5,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 599991.9278420894,
+          "jitter_ms": 0.0029022695021219285,
+          "lost_packets": 0,
+          "packets": 4406,
+          "lost_percent": 0,
+          "seconds": 15.039349
+        },
+        "meeting-down": {
+          "bits_per_second": 600065.84020191,
+          "jitter_ms": 0.03607931720914261,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 14.999954
+        }
+      }
+    },
+    {
+      "name": "r1-meeting-upload",
+      "mode": "meeting",
+      "scenario": "upload",
+      "p95_ms": 44.0,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600038.6129340564,
+          "jitter_ms": 0.5849867525090438,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.041592
+        },
+        "meeting-down": {
+          "bits_per_second": 600054.35912663,
+          "jitter_ms": 0.012741521795954931,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 15.000241
+        },
+        "roommate-up": {
+          "bits_per_second": 4113246.277376854,
+          "bytes": 7733248,
+          "seconds": 15.040671
+        }
+      }
+    },
+    {
+      "name": "r1-sqm-both",
+      "mode": "sqm",
+      "scenario": "both",
+      "p95_ms": 44.1,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600081.459960355,
+          "jitter_ms": 0.704801870748614,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.040518
+        },
+        "meeting-down": {
+          "bits_per_second": 600063.1199074242,
+          "jitter_ms": 0.37368235275269157,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 15.000022
+        },
+        "roommate-up": {
+          "bits_per_second": 3554824.9977083285,
+          "bytes": 6684672,
+          "seconds": 15.043603
+        },
+        "roommate-down": {
+          "bits_per_second": 17685411.21739805,
+          "bytes": 33161216,
+          "seconds": 15.000484
+        }
+      }
+    },
+    {
+      "name": "r1-sqm-download",
+      "mode": "sqm",
+      "scenario": "download",
+      "p95_ms": 41.1,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600086.886091058,
+          "jitter_ms": 0.23525598126686734,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.040382
+        },
+        "meeting-down": {
+          "bits_per_second": 600102.8066481632,
+          "jitter_ms": 0.29574883650663075,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 14.99903
+        },
+        "roommate-down": {
+          "bits_per_second": 17895009.898286574,
+          "bytes": 33554432,
+          "seconds": 15.000576
+        }
+      }
+    },
+    {
+      "name": "r1-sqm-idle",
+      "mode": "sqm",
+      "scenario": "idle",
+      "p95_ms": 40.4,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600086.0083279677,
+          "jitter_ms": 0.004092106301281818,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.040404
+        },
+        "meeting-down": {
+          "bits_per_second": 600065.080117144,
+          "jitter_ms": 0.004543839707935708,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 14.999973
+        }
+      }
+    },
+    {
+      "name": "r1-sqm-upload",
+      "mode": "sqm",
+      "scenario": "upload",
+      "p95_ms": 43.9,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600090.7562589406,
+          "jitter_ms": 0.8996056903843325,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.040285
+        },
+        "meeting-down": {
+          "bits_per_second": 600064.8000864,
+          "jitter_ms": 0.005690059784835606,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 14.99998
+        },
+        "roommate-up": {
+          "bits_per_second": 3973597.0358793507,
+          "bytes": 7471104,
+          "seconds": 15.041493
+        }
+      }
+    },
+    {
+      "name": "r2-fifo-both",
+      "mode": "fifo",
+      "scenario": "both",
+      "p95_ms": 286.0,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 541093.1269134018,
+          "jitter_ms": 3.391487437191085,
+          "lost_packets": 437,
+          "packets": 4421,
+          "lost_percent": 9.88464148382719,
+          "seconds": 15.079164
+        },
+        "meeting-down": {
+          "bits_per_second": 595531.4819770146,
+          "jitter_ms": 5.942391829451155,
+          "lost_packets": 4,
+          "packets": 4366,
+          "lost_percent": 0.0898472596585804,
+          "seconds": 15.000678
+        },
+        "roommate-up": {
+          "bits_per_second": 3555390.5570097086,
+          "bytes": 6684672,
+          "seconds": 15.04121
+        },
+        "roommate-down": {
+          "bits_per_second": 18246048.33778809,
+          "bytes": 34209792,
+          "seconds": 14.999321
+        }
+      }
+    },
+    {
+      "name": "r2-fifo-download",
+      "mode": "fifo",
+      "scenario": "download",
+      "p95_ms": 304.0,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600084.2528094908,
+          "jitter_ms": 0.14342084769527774,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.040448
+        },
+        "meeting-down": {
+          "bits_per_second": 596792.3324140587,
+          "jitter_ms": 0.5492583920096444,
+          "lost_packets": 5,
+          "packets": 4376,
+          "lost_percent": 0.11210762331838565,
+          "seconds": 14.999871
+        },
+        "roommate-down": {
+          "bits_per_second": 18595559.739441957,
+          "bytes": 34865152,
+          "seconds": 14.999345
+        }
+      }
+    },
+    {
+      "name": "r2-fifo-idle",
+      "mode": "fifo",
+      "scenario": "idle",
+      "p95_ms": 40.1,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600090.5168656644,
+          "jitter_ms": 0.002272807464188732,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.040291
+        },
+        "meeting-down": {
+          "bits_per_second": 600054.759156709,
+          "jitter_ms": 0.003578513913085373,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 15.000231
+        }
+      }
+    },
+    {
+      "name": "r2-fifo-upload",
+      "mode": "fifo",
+      "scenario": "upload",
+      "p95_ms": 233.0,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 596346.3919698606,
+          "jitter_ms": 2.18759515021859,
+          "lost_packets": 34,
+          "packets": 4455,
+          "lost_percent": 0.7631874298540965,
+          "seconds": 15.1828
+        },
+        "meeting-down": {
+          "bits_per_second": 600090.9240794604,
+          "jitter_ms": 0.00747042124728765,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 14.999327
+        },
+        "roommate-up": {
+          "bits_per_second": 4145652.556237852,
+          "bytes": 7864320,
+          "seconds": 15.176033
+        }
+      }
+    },
+    {
+      "name": "r2-meeting-both",
+      "mode": "meeting",
+      "scenario": "both",
+      "p95_ms": 44.1,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 599970.1262534725,
+          "jitter_ms": 0.6798856749299672,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.043309
+        },
+        "meeting-down": {
+          "bits_per_second": 600120.637272491,
+          "jitter_ms": 0.21943279824389808,
+          "lost_packets": 0,
+          "packets": 4396,
+          "lost_percent": 0,
+          "seconds": 15.001997
+        },
+        "roommate-up": {
+          "bits_per_second": 3555089.4386857916,
+          "bytes": 6684672,
+          "seconds": 15.042484
+        },
+        "roommate-down": {
+          "bits_per_second": 17266590.604272034,
+          "bytes": 32374784,
+          "seconds": 14.999966
+        }
+      }
+    },
+    {
+      "name": "r2-meeting-download",
+      "mode": "meeting",
+      "scenario": "download",
+      "p95_ms": 40.8,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 599950.081108226,
+          "jitter_ms": 0.06074450479707078,
+          "lost_packets": 0,
+          "packets": 4406,
+          "lost_percent": 0,
+          "seconds": 15.040398
+        },
+        "meeting-down": {
+          "bits_per_second": 600066.8003117348,
+          "jitter_ms": 0.23324962245917955,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 14.99993
+        },
+        "roommate-down": {
+          "bits_per_second": 17825120.587124553,
+          "bytes": 33423360,
+          "seconds": 15.000565
+        }
+      }
+    },
+    {
+      "name": "r2-meeting-idle",
+      "mode": "meeting",
+      "scenario": "idle",
+      "p95_ms": 40.5,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600090.9557534833,
+          "jitter_ms": 0.00438424748690092,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.04028
+        },
+        "meeting-down": {
+          "bits_per_second": 600055.2391935078,
+          "jitter_ms": 0.002138369895639494,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 15.000219
+        }
+      }
+    },
+    {
+      "name": "r2-meeting-upload",
+      "mode": "meeting",
+      "scenario": "upload",
+      "p95_ms": 44.1,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 599966.5767002908,
+          "jitter_ms": 0.7361787810207554,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.043398
+        },
+        "meeting-down": {
+          "bits_per_second": 600097.96554485,
+          "jitter_ms": 0.0058543754581129965,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 14.999151
+        },
+        "roommate-up": {
+          "bits_per_second": 4042740.810582142,
+          "bytes": 7602176,
+          "seconds": 15.043608
+        }
+      }
+    },
+    {
+      "name": "r2-sqm-both",
+      "mode": "sqm",
+      "scenario": "both",
+      "p95_ms": 43.8,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600048.6658768434,
+          "jitter_ms": 0.7105203489218898,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.04134
+        },
+        "meeting-down": {
+          "bits_per_second": 600080.522217045,
+          "jitter_ms": 0.3486240730754438,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 14.999587
+        },
+        "roommate-up": {
+          "bits_per_second": 3624694.183193665,
+          "bytes": 6815744,
+          "seconds": 15.042911
+        },
+        "roommate-down": {
+          "bits_per_second": 17337101.47350815,
+          "bytes": 32505856,
+          "seconds": 14.999442
+        }
+      }
+    },
+    {
+      "name": "r2-sqm-download",
+      "mode": "sqm",
+      "scenario": "download",
+      "p95_ms": 41.0,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600083.5346458015,
+          "jitter_ms": 0.04075752036748565,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.040466
+        },
+        "meeting-down": {
+          "bits_per_second": 600098.0855712604,
+          "jitter_ms": 0.325080719809352,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 14.999148
+        },
+        "roommate-down": {
+          "bits_per_second": 17966092.00877544,
+          "bytes": 33685504,
+          "seconds": 14.999591
+        }
+      }
+    },
+    {
+      "name": "r2-sqm-idle",
+      "mode": "sqm",
+      "scenario": "idle",
+      "p95_ms": 40.4,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600090.157776108,
+          "jitter_ms": 0.580402033516065,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.0403
+        },
+        "meeting-down": {
+          "bits_per_second": 599930.5863057155,
+          "jitter_ms": 0.0038818655953384656,
+          "lost_packets": 0,
+          "packets": 4394,
+          "lost_percent": 0,
+          "seconds": 14.999922
+        }
+      }
+    },
+    {
+      "name": "r2-sqm-upload",
+      "mode": "sqm",
+      "scenario": "upload",
+      "p95_ms": 43.5,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 599909.2313136547,
+          "jitter_ms": 1.205129094764529,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.044836
+        },
+        "meeting-down": {
+          "bits_per_second": 599938.2655554467,
+          "jitter_ms": 0.008482390528232643,
+          "lost_packets": 0,
+          "packets": 4394,
+          "lost_percent": 0,
+          "seconds": 14.99973
+        },
+        "roommate-up": {
+          "bits_per_second": 4113230.962838432,
+          "bytes": 7733248,
+          "seconds": 15.040727
+        }
+      }
+    },
+    {
+      "name": "r3-fifo-both",
+      "mode": "fifo",
+      "scenario": "both",
+      "p95_ms": 288.0,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 511097.45604864,
+          "jitter_ms": 5.713634359689616,
+          "lost_packets": 649,
+          "packets": 4424,
+          "lost_percent": 14.66998191681736,
+          "seconds": 15.126665
+        },
+        "meeting-down": {
+          "bits_per_second": 595975.74768472,
+          "jitter_ms": 3.3449211313492153,
+          "lost_packets": 8,
+          "packets": 4373,
+          "lost_percent": 0.17945266935845672,
+          "seconds": 14.999805
+        },
+        "roommate-up": {
+          "bits_per_second": 3695015.1478623645,
+          "bytes": 6946816,
+          "seconds": 15.040406
+        },
+        "roommate-down": {
+          "bits_per_second": 18246092.13039155,
+          "bytes": 34209792,
+          "seconds": 14.999285
+        }
+      }
+    },
+    {
+      "name": "r3-fifo-download",
+      "mode": "fifo",
+      "scenario": "download",
+      "p95_ms": 304.0,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600090.277472579,
+          "jitter_ms": 0.02094020077020043,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.040297
+        },
+        "meeting-down": {
+          "bits_per_second": 596240.0729332117,
+          "jitter_ms": 0.658320252577752,
+          "lost_packets": 10,
+          "packets": 4377,
+          "lost_percent": 0.2242152466367713,
+          "seconds": 15.000025
+        },
+        "roommate-down": {
+          "bits_per_second": 18455227.962253273,
+          "bytes": 34603008,
+          "seconds": 14.999764
+        }
+      }
+    },
+    {
+      "name": "r3-fifo-idle",
+      "mode": "fifo",
+      "scenario": "idle",
+      "p95_ms": 40.1,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600092.3123198915,
+          "jitter_ms": 0.0036050584240266944,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.040246
+        },
+        "meeting-down": {
+          "bits_per_second": 600046.358637056,
+          "jitter_ms": 0.0069734320260547,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 15.000441
+        }
+      }
+    },
+    {
+      "name": "r3-fifo-upload",
+      "mode": "fifo",
+      "scenario": "upload",
+      "p95_ms": 232.0,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 596334.1851475007,
+          "jitter_ms": 2.0763903261529366,
+          "lost_packets": 27,
+          "packets": 4455,
+          "lost_percent": 0.606060606060606,
+          "seconds": 15.207151
+        },
+        "meeting-down": {
+          "bits_per_second": 600074.0412389567,
+          "jitter_ms": 0.004820508433803966,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 14.999749
+        },
+        "roommate-up": {
+          "bits_per_second": 4149065.0837656693,
+          "bytes": 7864320,
+          "seconds": 15.163551
+        }
+      }
+    },
+    {
+      "name": "r3-meeting-both",
+      "mode": "meeting",
+      "scenario": "both",
+      "p95_ms": 44.0,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600043.2404373082,
+          "jitter_ms": 0.514702080346802,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.041476
+        },
+        "meeting-down": {
+          "bits_per_second": 600074.3612839715,
+          "jitter_ms": 0.27743788185989765,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 14.999741
+        },
+        "roommate-up": {
+          "bits_per_second": 3694464.1864607753,
+          "bytes": 6946816,
+          "seconds": 15.042649
+        },
+        "roommate-down": {
+          "bits_per_second": 17335723.81007363,
+          "bytes": 32505856,
+          "seconds": 15.000634
+        }
+      }
+    },
+    {
+      "name": "r3-meeting-download",
+      "mode": "meeting",
+      "scenario": "download",
+      "p95_ms": 41.0,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600091.833531047,
+          "jitter_ms": 0.06473477754789678,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.040258
+        },
+        "meeting-down": {
+          "bits_per_second": 600087.5634383244,
+          "jitter_ms": 0.2124949734664531,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 14.999411
+        },
+        "roommate-down": {
+          "bits_per_second": 17825525.805481307,
+          "bytes": 33423360,
+          "seconds": 15.000224
+        }
+      }
+    },
+    {
+      "name": "r3-meeting-idle",
+      "mode": "meeting",
+      "scenario": "idle",
+      "p95_ms": 40.4,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600087.444668907,
+          "jitter_ms": 0.0049186063636201755,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.040368
+        },
+        "meeting-down": {
+          "bits_per_second": 600087.483423518,
+          "jitter_ms": 0.002822593364972498,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 14.999413
+        }
+      }
+    },
+    {
+      "name": "r3-meeting-upload",
+      "mode": "meeting",
+      "scenario": "upload",
+      "p95_ms": 44.3,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 599984.085577844,
+          "jitter_ms": 0.5920614882983202,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.042959
+        },
+        "meeting-down": {
+          "bits_per_second": 600063.359932416,
+          "jitter_ms": 0.012430092263453605,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 15.000016
+        },
+        "roommate-up": {
+          "bits_per_second": 4182578.559266951,
+          "bytes": 7864320,
+          "seconds": 15.042051
+        }
+      }
+    },
+    {
+      "name": "r3-sqm-both",
+      "mode": "sqm",
+      "scenario": "both",
+      "p95_ms": 43.7,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600066.4189198847,
+          "jitter_ms": 0.5919039289684538,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.040895
+        },
+        "meeting-down": {
+          "bits_per_second": 600071.6809175158,
+          "jitter_ms": 0.35779296028317015,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 14.999808
+        },
+        "roommate-up": {
+          "bits_per_second": 3625026.4933119845,
+          "bytes": 6815744,
+          "seconds": 15.041532
+        },
+        "roommate-down": {
+          "bits_per_second": 17546480.55139104,
+          "bytes": 32899072,
+          "seconds": 14.999736
+        }
+      }
+    },
+    {
+      "name": "r3-sqm-download",
+      "mode": "sqm",
+      "scenario": "download",
+      "p95_ms": 40.8,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600086.327514249,
+          "jitter_ms": 0.05009691825192685,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.040396
+        },
+        "meeting-down": {
+          "bits_per_second": 600077.761783337,
+          "jitter_ms": 0.32225644185114866,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 14.999656
+        },
+        "roommate-down": {
+          "bits_per_second": 17756632.711907234,
+          "bytes": 33292288,
+          "seconds": 14.99937
+        }
+      }
+    },
+    {
+      "name": "r3-sqm-idle",
+      "mode": "sqm",
+      "scenario": "idle",
+      "p95_ms": 40.4,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600089.519395736,
+          "jitter_ms": 0.003265168509780149,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.040316
+        },
+        "meeting-down": {
+          "bits_per_second": 600064.5200559173,
+          "jitter_ms": 0.00307690118111475,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 14.999987
+        }
+      }
+    },
+    {
+      "name": "r3-sqm-upload",
+      "mode": "sqm",
+      "scenario": "upload",
+      "p95_ms": 44.0,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600072.2437426487,
+          "jitter_ms": 1.1008045813812992,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.040749
+        },
+        "meeting-down": {
+          "bits_per_second": 600057.1993517407,
+          "jitter_ms": 0.03792564274374574,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 15.00017
+        },
+        "roommate-up": {
+          "bits_per_second": 4182567.436934134,
+          "bytes": 7864320,
+          "seconds": 15.042091
+        }
+      }
+    },
+    {
+      "name": "r4-fifo-both",
+      "mode": "fifo",
+      "scenario": "both",
+      "p95_ms": 288.0,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 568033.649501411,
+          "jitter_ms": 3.692528946157868,
+          "lost_packets": 221,
+          "packets": 4407,
+          "lost_percent": 5.014749262536873,
+          "seconds": 15.092289
+        },
+        "meeting-down": {
+          "bits_per_second": 598125.5778072935,
+          "jitter_ms": 5.43277423634999,
+          "lost_packets": 8,
+          "packets": 4389,
+          "lost_percent": 0.179372197309417,
+          "seconds": 15.000676
+        },
+        "roommate-up": {
+          "bits_per_second": 3477128.4535563258,
+          "bytes": 6553600,
+          "seconds": 15.078189
+        },
+        "roommate-down": {
+          "bits_per_second": 18386255.83222137,
+          "bytes": 34471936,
+          "seconds": 14.999002
+        }
+      }
+    },
+    {
+      "name": "r4-fifo-download",
+      "mode": "fifo",
+      "scenario": "download",
+      "p95_ms": 303.0,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600089.6789907018,
+          "jitter_ms": 0.2921300252400379,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.040312
+        },
+        "meeting-down": {
+          "bits_per_second": 597365.0733308963,
+          "jitter_ms": 0.553589725467546,
+          "lost_packets": 2,
+          "packets": 4377,
+          "lost_percent": 0.04484304932735426,
+          "seconds": 14.999203
+        },
+        "roommate-down": {
+          "bits_per_second": 18524893.301375024,
+          "bytes": 34734080,
+          "seconds": 14.999959
+        }
+      }
+    },
+    {
+      "name": "r4-fifo-idle",
+      "mode": "fifo",
+      "scenario": "idle",
+      "p95_ms": 40.1,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600087.444668907,
+          "jitter_ms": 0.00408786280472533,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.040368
+        },
+        "meeting-down": {
+          "bits_per_second": 600042.0784627335,
+          "jitter_ms": 0.04055976283997496,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 15.000548
+        }
+      }
+    },
+    {
+      "name": "r4-fifo-upload",
+      "mode": "fifo",
+      "scenario": "upload",
+      "p95_ms": 232.0,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 596335.6632299328,
+          "jitter_ms": 2.374055497782239,
+          "lost_packets": 29,
+          "packets": 4456,
+          "lost_percent": 0.6508078994614004,
+          "seconds": 15.203679
+        },
+        "meeting-down": {
+          "bits_per_second": 600062.7998744003,
+          "jitter_ms": 0.005739418429599752,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 15.00003
+        },
+        "roommate-up": {
+          "bits_per_second": 4004675.9646448824,
+          "bytes": 7602176,
+          "seconds": 15.186599
+        }
+      }
+    },
+    {
+      "name": "r4-meeting-both",
+      "mode": "meeting",
+      "scenario": "both",
+      "p95_ms": 44.6,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600145.4828196118,
+          "jitter_ms": 1.1824632779636122,
+          "lost_packets": 0,
+          "packets": 4408,
+          "lost_percent": 0,
+          "seconds": 15.042326
+        },
+        "meeting-down": {
+          "bits_per_second": 600068.1204677605,
+          "jitter_ms": 0.209960020480539,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 14.999897
+        },
+        "roommate-up": {
+          "bits_per_second": 3624845.028531237,
+          "bytes": 6815744,
+          "seconds": 15.042285
+        },
+        "roommate-down": {
+          "bits_per_second": 17267155.817120265,
+          "bytes": 32374784,
+          "seconds": 14.999475
+        }
+      }
+    },
+    {
+      "name": "r4-meeting-download",
+      "mode": "meeting",
+      "scenario": "download",
+      "p95_ms": 40.9,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600089.2002060594,
+          "jitter_ms": 0.02050536852244983,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.040324
+        },
+        "meeting-down": {
+          "bits_per_second": 600079.8821142133,
+          "jitter_ms": 0.27070564501245237,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 14.999603
+        },
+        "roommate-down": {
+          "bits_per_second": 17895749.56086538,
+          "bytes": 33554432,
+          "seconds": 14.999956
+        }
+      }
+    },
+    {
+      "name": "r4-meeting-idle",
+      "mode": "meeting",
+      "scenario": "idle",
+      "p95_ms": 40.5,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600089.5991932083,
+          "jitter_ms": 0.0023939408730528247,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.040314
+        },
+        "meeting-down": {
+          "bits_per_second": 600064.1600171094,
+          "jitter_ms": 0.002138508701373439,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 14.999996
+        }
+      }
+    },
+    {
+      "name": "r4-meeting-upload",
+      "mode": "meeting",
+      "scenario": "upload",
+      "p95_ms": 44.0,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 599981.812157881,
+          "jitter_ms": 0.8069396437694965,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.043016
+        },
+        "meeting-down": {
+          "bits_per_second": 599928.0665947333,
+          "jitter_ms": 0.0200212036396614,
+          "lost_packets": 0,
+          "packets": 4394,
+          "lost_percent": 0,
+          "seconds": 14.999985
+        },
+        "roommate-up": {
+          "bits_per_second": 4043411.9527473734,
+          "bytes": 7602176,
+          "seconds": 15.041111
+        }
+      }
+    },
+    {
+      "name": "r4-sqm-both",
+      "mode": "sqm",
+      "scenario": "both",
+      "p95_ms": 43.9,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 599967.0154068363,
+          "jitter_ms": 1.1257970594994835,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.043387
+        },
+        "meeting-down": {
+          "bits_per_second": 600085.243017603,
+          "jitter_ms": 0.3927584619194837,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 14.999469
+        },
+        "roommate-up": {
+          "bits_per_second": 3624814.4247079524,
+          "bytes": 6815744,
+          "seconds": 15.042412
+        },
+        "roommate-down": {
+          "bits_per_second": 17476243.365008846,
+          "bytes": 32768000,
+          "seconds": 15.00002
+        }
+      }
+    },
+    {
+      "name": "r4-sqm-download",
+      "mode": "sqm",
+      "scenario": "download",
+      "p95_ms": 41.0,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600086.0083279677,
+          "jitter_ms": 0.053720808082624354,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.040404
+        },
+        "meeting-down": {
+          "bits_per_second": 600063.7999787333,
+          "jitter_ms": 0.35486996578392344,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 15.000005
+        },
+        "roommate-down": {
+          "bits_per_second": 18035491.56924064,
+          "bytes": 33816576,
+          "seconds": 15.000013
+        }
+      }
+    },
+    {
+      "name": "r4-sqm-idle",
+      "mode": "sqm",
+      "scenario": "idle",
+      "p95_ms": 40.4,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600089.3199021483,
+          "jitter_ms": 0.003006805269692497,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.040321
+        },
+        "meeting-down": {
+          "bits_per_second": 600078.1618446195,
+          "jitter_ms": 0.00721596276727802,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 14.999646
+        }
+      }
+    },
+    {
+      "name": "r4-sqm-upload",
+      "mode": "sqm",
+      "scenario": "upload",
+      "p95_ms": 43.6,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600030.2357390424,
+          "jitter_ms": 1.12730103196911,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.041802
+        },
+        "meeting-down": {
+          "bits_per_second": 600066.6802978386,
+          "jitter_ms": 0.021632234319781216,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 14.999933
+        },
+        "roommate-up": {
+          "bits_per_second": 4042840.5136474287,
+          "bytes": 7602176,
+          "seconds": 15.043237
+        }
+      }
+    },
+    {
+      "name": "r5-fifo-both",
+      "mode": "fifo",
+      "scenario": "both",
+      "p95_ms": 289.0,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 528289.615402371,
+          "jitter_ms": 9.75472046026575,
+          "lost_packets": 497,
+          "packets": 4414,
+          "lost_percent": 11.259628454916175,
+          "seconds": 15.184883
+        },
+        "meeting-down": {
+          "bits_per_second": 601429.934763268,
+          "jitter_ms": 3.13752820505157,
+          "lost_packets": 8,
+          "packets": 4413,
+          "lost_percent": 0.17821341055914458,
+          "seconds": 14.999985
+        },
+        "roommate-up": {
+          "bits_per_second": 3620989.645511801,
+          "bytes": 6815744,
+          "seconds": 15.058301
+        },
+        "roommate-down": {
+          "bits_per_second": 18383641.5044595,
+          "bytes": 34471936,
+          "seconds": 15.001135
+        }
+      }
+    },
+    {
+      "name": "r5-fifo-download",
+      "mode": "fifo",
+      "scenario": "download",
+      "p95_ms": 304.0,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600086.167921066,
+          "jitter_ms": 0.12340732541232156,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.0404
+        },
+        "meeting-down": {
+          "bits_per_second": 596380.224072986,
+          "jitter_ms": 0.629932737184981,
+          "lost_packets": 8,
+          "packets": 4376,
+          "lost_percent": 0.179372197309417,
+          "seconds": 14.999934
+        },
+        "roommate-down": {
+          "bits_per_second": 18524830.31677979,
+          "bytes": 34734080,
+          "seconds": 15.00001
+        }
+      }
+    },
+    {
+      "name": "r5-fifo-idle",
+      "mode": "fifo",
+      "scenario": "idle",
+      "p95_ms": 40.1,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600089.519395736,
+          "jitter_ms": 0.4122480712157154,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.040316
+        },
+        "meeting-down": {
+          "bits_per_second": 600063.959995736,
+          "jitter_ms": 0.00445585432612236,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 15.000001
+        }
+      }
+    },
+    {
+      "name": "r5-fifo-upload",
+      "mode": "fifo",
+      "scenario": "upload",
+      "p95_ms": 233.0,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 595245.7599391188,
+          "jitter_ms": 2.232334342570184,
+          "lost_packets": 43,
+          "packets": 4458,
+          "lost_percent": 0.9645580978017048,
+          "seconds": 15.19023
+        },
+        "meeting-down": {
+          "bits_per_second": 600066.8003117348,
+          "jitter_ms": 0.008521085491005937,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 14.99993
+        },
+        "roommate-up": {
+          "bits_per_second": 4075511.8106605234,
+          "bytes": 7733248,
+          "seconds": 15.17993
+        }
+      }
+    },
+    {
+      "name": "r5-meeting-both",
+      "mode": "meeting",
+      "scenario": "both",
+      "p95_ms": 44.2,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 599984.5243099956,
+          "jitter_ms": 0.9943537347508673,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.042948
+        },
+        "meeting-down": {
+          "bits_per_second": 600083.082642028,
+          "jitter_ms": 0.1933329863263909,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 14.999523
+        },
+        "roommate-up": {
+          "bits_per_second": 3624397.830358011,
+          "bytes": 6815744,
+          "seconds": 15.044141
+        },
+        "roommate-down": {
+          "bits_per_second": 17126397.663620215,
+          "bytes": 32112640,
+          "seconds": 15.000301
+        }
+      }
+    },
+    {
+      "name": "r5-meeting-download",
+      "mode": "meeting",
+      "scenario": "download",
+      "p95_ms": 40.9,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 599993.7777193958,
+          "jitter_ms": 0.0507153557232043,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.042716
+        },
+        "meeting-down": {
+          "bits_per_second": 600065.8802064246,
+          "jitter_ms": 0.17799932267315516,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 14.999953
+        },
+        "roommate-down": {
+          "bits_per_second": 17825850.231110755,
+          "bytes": 33423360,
+          "seconds": 14.999951
+        }
+      }
+    },
+    {
+      "name": "r5-meeting-idle",
+      "mode": "meeting",
+      "scenario": "idle",
+      "p95_ms": 40.4,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600088.8810167223,
+          "jitter_ms": 0.0051867141391509965,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.040332
+        },
+        "meeting-down": {
+          "bits_per_second": 600045.8786144658,
+          "jitter_ms": 0.0011443987719621065,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 15.000453
+        }
+      }
+    },
+    {
+      "name": "r5-meeting-upload",
+      "mode": "meeting",
+      "scenario": "upload",
+      "p95_ms": 44.0,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600026.6056938445,
+          "jitter_ms": 0.6275746587921668,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.041893
+        },
+        "meeting-down": {
+          "bits_per_second": 599929.106472891,
+          "jitter_ms": 0.0304318730707091,
+          "lost_packets": 0,
+          "packets": 4394,
+          "lost_percent": 0,
+          "seconds": 14.999959
+        },
+        "roommate-up": {
+          "bits_per_second": 4182247.417145852,
+          "bytes": 7864320,
+          "seconds": 15.043242
+        }
+      }
+    },
+    {
+      "name": "r5-sqm-both",
+      "mode": "sqm",
+      "scenario": "both",
+      "p95_ms": 44.0,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600070.129239119,
+          "jitter_ms": 0.6289347283779304,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.040802
+        },
+        "meeting-down": {
+          "bits_per_second": 600046.4386408958,
+          "jitter_ms": 0.297249984999321,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 15.000439
+        },
+        "roommate-up": {
+          "bits_per_second": 3555591.961308368,
+          "bytes": 6684672,
+          "seconds": 15.040358
+        },
+        "roommate-down": {
+          "bits_per_second": 17616178.97383805,
+          "bytes": 33030144,
+          "seconds": 14.999913
+        }
+      }
+    },
+    {
+      "name": "r5-sqm-download",
+      "mode": "sqm",
+      "scenario": "download",
+      "p95_ms": 40.9,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600085.6492438074,
+          "jitter_ms": 0.0365110983741156,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.040413
+        },
+        "meeting-down": {
+          "bits_per_second": 600104.2069818678,
+          "jitter_ms": 0.25565880332684415,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 14.998995
+        },
+        "roommate-down": {
+          "bits_per_second": 17965066.774343457,
+          "bytes": 33685504,
+          "seconds": 15.000447
+        }
+      }
+    },
+    {
+      "name": "r5-sqm-idle",
+      "mode": "sqm",
+      "scenario": "idle",
+      "p95_ms": 40.5,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 599957.4208186134,
+          "jitter_ms": 0.004826750056483892,
+          "lost_packets": 0,
+          "packets": 4406,
+          "lost_percent": 0,
+          "seconds": 15.040214
+        },
+        "meeting-down": {
+          "bits_per_second": 600122.1973825017,
+          "jitter_ms": 0.03335501736890522,
+          "lost_packets": 0,
+          "packets": 4396,
+          "lost_percent": 0,
+          "seconds": 15.001958
+        }
+      }
+    },
+    {
+      "name": "r5-sqm-upload",
+      "mode": "sqm",
+      "scenario": "upload",
+      "p95_ms": 43.9,
+      "flows": {
+        "meeting-up": {
+          "bits_per_second": 600051.538208082,
+          "jitter_ms": 0.6970241915543112,
+          "lost_packets": 0,
+          "packets": 4407,
+          "lost_percent": 0,
+          "seconds": 15.041268
+        },
+        "meeting-down": {
+          "bits_per_second": 600060.9996950015,
+          "jitter_ms": 0.014804620065793453,
+          "lost_packets": 0,
+          "packets": 4395,
+          "lost_percent": 0,
+          "seconds": 15.000075
+        },
+        "roommate-up": {
+          "bits_per_second": 4182705.079966248,
+          "bytes": 7864320,
+          "seconds": 15.041596
+        }
+      }
+    }
+  ],
+  "max_guest_cpu_busy_pct": 98.58,
+  "receiver_start_offset_range_seconds": [
+    -0.9081041812896729,
+    0.09189581871032715
+  ]
+}
