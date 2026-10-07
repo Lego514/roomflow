@@ -1,0 +1,71 @@
+{
+  "kind": "linux-lab-selftest",
+  "checks": [
+    {
+      "name": "fifo-idle",
+      "ok": true
+    },
+    {
+      "name": "fifo-upload",
+      "ok": true
+    },
+    {
+      "name": "fifo-download",
+      "ok": true
+    },
+    {
+      "name": "fifo-both",
+      "ok": true
+    },
+    {
+      "name": "sqm-idle",
+      "ok": true
+    },
+    {
+      "name": "sqm-upload",
+      "ok": true
+    },
+    {
+      "name": "sqm-download",
+      "ok": true
+    },
+    {
+      "name": "sqm-both",
+      "ok": true
+    },
+    {
+      "name": "meeting-idle",
+      "ok": true
+    },
+    {
+      "name": "meeting-upload",
+      "ok": true
+    },
+    {
+      "name": "meeting-download",
+      "ok": true
+    },
+    {
+      "name": "untrusted-dscp",
+      "ok": true,
+      "evidence": "Roommate CS6 tagged TCP; selected and forced-Best-Effort action counters both active"
+    },
+    {
+      "name": "meeting-both",
+      "ok": true
+    },
+    {
+      "name": "timed-kernel-restore",
+      "ok": true
+    },
+    {
+      "name": "restart-expiry-reconciliation",
+      "ok": true
+    },
+    {
+      "name": "early-stop-kernel-restore",
+      "ok": true
+    }
+  ],
+  "passed": true
+}

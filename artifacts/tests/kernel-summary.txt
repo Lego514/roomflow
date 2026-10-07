@@ -1,0 +1,54 @@
+{
+  "runCount": 36,
+  "both": [
+    {
+      "policy": "fifo",
+      "scenario": "both",
+      "repeats": 3,
+      "rttP95MeanMs": 290.3333333333333,
+      "rttP95MinMs": 287,
+      "rttP95MaxMs": 296,
+      "meetingUpLossMeanPct": 2.485624000359484,
+      "meetingDownLossMeanPct": 0.194020607684959,
+      "meetingUpJitterMeanMs": 4.370547186321937,
+      "meetingDownJitterMeanMs": 3.3240741481102902,
+      "meetingUpMeanMbps": 0.583467978630969,
+      "meetingDownMeanMbps": 0.5970475034804991,
+      "backgroundUpMeanMbps": 3.552949385124486,
+      "backgroundDownMeanMbps": 18.291647721500805
+    },
+    {
+      "policy": "sqm",
+      "scenario": "both",
+      "repeats": 3,
+      "rttP95MeanMs": 63,
+      "rttP95MinMs": 47.6,
+      "rttP95MaxMs": 92.7,
+      "meetingUpLossMeanPct": 8.58974358974359,
+      "meetingDownLossMeanPct": 8.73573641653442,
+      "meetingUpJitterMeanMs": 1.4894922823032883,
+      "meetingDownJitterMeanMs": 1.2390981647568655,
+      "meetingUpMeanMbps": 0.5487675809284045,
+      "meetingDownMeanMbps": 0.54759802196291,
+      "backgroundUpMeanMbps": 3.0891038322299034,
+      "backgroundDownMeanMbps": 11.582056890880125
+    },
+    {
+      "policy": "meeting",
+      "scenario": "both",
+      "repeats": 3,
+      "rttP95MeanMs": 62.36666666666667,
+      "rttP95MinMs": 47.9,
+      "rttP95MaxMs": 91,
+      "meetingUpLossMeanPct": 0,
+      "meetingDownLossMeanPct": 3.80758501093267,
+      "meetingUpJitterMeanMs": 2.3225547848746166,
+      "meetingDownJitterMeanMs": 1.9849597906681373,
+      "meetingUpMeanMbps": 0.5999834894748641,
+      "meetingDownMeanMbps": 0.5772044592105149,
+      "backgroundUpMeanMbps": 2.9713531038920618,
+      "backgroundDownMeanMbps": 10.99862283139966
+    }
+  ],
+  "warnings": []
+}

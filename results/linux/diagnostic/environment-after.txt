@@ -1,0 +1,64 @@
+Wed Oct  7 15:10:01 UTC 2026
+Linux localhost 6.18.52-0-virt #1-Alpine SMP PREEMPT_DYNAMIC 2026-09-15 05:37:48 x86_64 Linux
+
+/proc/stat
+cpu  2380 0 3903 344381 19 7136 13816 0 0 0
+cpu0 1239 0 2037 172088 12 3510 6939 0 0 0
+cpu1 1141 0 1866 172292 6 3626 6877 0 0 0
+intr 1501943 221 9 0 0 9996 0 2 0 1 0 0 0 86 0 0 461 0 0 0 0 0 0 0 0 0 1134 1211 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ctxt 2658435
+btime 1791383785
+processes 6644
+procs_running 1
+procs_blocked 0
+softirq 2307588 0 111768 569442 1024687 444 0 11720 466697 30790 92040
+
+/proc/uptime
+2016.49 3443.82
+
+/proc/softirqs
+                    CPU0       CPU1       
+          HI:          0          0
+       TIMER:      59791      51980
+      NET_TX:     284873     284569
+      NET_RX:     512381     512306
+       BLOCK:         38        406
+    IRQ_POLL:          0          0
+     TASKLET:       5976       5744
+       SCHED:     232847     233854
+     HRTIMER:      15497      15293
+         RCU:      46796      45247
+
+/proc/net/softnet_stat
+00271622 00000000 00000218 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+00265746 00000000 00000269 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000001 00000000 00000000
+
+/proc/interrupts
+           CPU0       CPU1       
+  0:        221          0  IO-APIC   2-edge      timer
+  1:          0          9  IO-APIC   1-edge      i8042
+  4:          0       9996  IO-APIC   4-edge      ttyS0
+  6:          0          2  IO-APIC   6-edge      floppy
+  8:          1          0  IO-APIC   8-edge      rtc0
+  9:          0          0  IO-APIC   9-fasteoi   acpi
+ 12:         86          0  IO-APIC  12-edge      i8042
+ 14:          0          0  IO-APIC  14-edge      ata_piix
+ 15:          0        461  IO-APIC  15-edge      ata_piix
+ 24:          0          0 PCI-MSIX-0000:00:03.0   0-edge      virtio0-config
+ 25:          0       1134 PCI-MSIX-0000:00:03.0   1-edge      virtio0-input.0
+ 26:       1211          0 PCI-MSIX-0000:00:03.0   2-edge      virtio0-output.0
+NMI:          0          0   Non-maskable interrupts
+LOC:     526081     524690   Local timer interrupts
+SPU:          0          0   Spurious interrupts
+PMI:          0          0   Performance monitoring interrupts
+IWI:          0          0   IRQ work interrupts
+RTR:          0          0   APIC ICR read retries
+RES:      24639      25557   Rescheduling interrupts
+CAL:     192215     195654   Function call interrupts
+TLB:        713        672   TLB shootdowns
+TRM:          0          0   Thermal event interrupts
+ERR:          0
+MIS:          0
+PIN:          0          0   Posted-interrupt notification event
+NPI:          0          0   Nested posted-interrupt event
+PIW:          0          0   Posted-interrupt wakeup event

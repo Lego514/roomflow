@@ -1,0 +1,10 @@
+{
+  "ok": true,
+  "deleted": [
+    "meeting",
+    "roommate",
+    "router",
+    "delay",
+    "server"
+  ]
+}

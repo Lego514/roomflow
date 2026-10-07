@@ -1,0 +1,57 @@
+{
+  "kind": "linux-kernel-measurement",
+  "mode": "fifo",
+  "scenario": "both",
+  "duration_seconds": 15,
+  "warmup_seconds": 3,
+  "bulk_tos": 0,
+  "up_mbps": 5,
+  "down_mbps": 20,
+  "base_rtt_ms": 40,
+  "udp_target_bps_each_direction": 600000,
+  "udp_payload_bytes": 256,
+  "kernel": "6.18.52-0-virt",
+  "note": "UDP surrogate, not WebRTC quality or a real Wi-Fi measurement",
+  "started_at_unix": 1791384756.8265362,
+  "measurement_start_unix": 1791384759.8265362,
+  "rtt": {
+    "samples": 135,
+    "mean_ms": 258.51851851851853,
+    "p95_ms": 287.0,
+    "ping_loss_including_warmup_pct": 9.03955
+  },
+  "flows": {
+    "meeting-up": {
+      "bits_per_second": 569548.1382283544,
+      "jitter_ms": 5.00148101712232,
+      "lost_packets": 198,
+      "packets": 4408,
+      "lost_percent": 4.491833030852995,
+      "seconds": 15.138457
+    },
+    "meeting-down": {
+      "bits_per_second": 596498.107417514,
+      "jitter_ms": 3.972073801413356,
+      "lost_packets": 6,
+      "packets": 4375,
+      "lost_percent": 0.13455931823278763,
+      "seconds": 15.000403
+    },
+    "roommate-up": {
+      "bits_per_second": 3484014.3675189666,
+      "bytes": 6553600,
+      "seconds": 15.048388
+    },
+    "roommate-down": {
+      "bits_per_second": 18314332.624630757,
+      "bytes": 34340864,
+      "seconds": 15.000651
+    }
+  },
+  "cpu_busy_percent": {
+    "cpu": 16.84,
+    "cpu0": 17.21,
+    "cpu1": 16.43
+  },
+  "cpu_warning": false
+}

@@ -1,0 +1,240 @@
+Linux localhost 6.18.52-0-virt #1-Alpine SMP PREEMPT_DYNAMIC 2026-09-15 05:37:48 x86_64 Linux
+Wed Oct  7 14:56:20 UTC 2026
+nc-lab-meeting
+[{"ifindex":1,"ifname":"lo","flags":["LOOPBACK","UP","LOWER_UP"],"mtu":65536,"qdisc":"noqueue","operstate":"UNKNOWN","group":"default","txqlen":1000,"link_type":"loopback","address":"00:00:00:00:00:00","broadcast":"00:00:00:00:00:00","addr_info":[{"family":"inet","local":"127.0.0.1","prefixlen":8,"scope":"host","label":"lo","valid_life_time":4294967295,"preferred_life_time":4294967295},{"family":"inet6","local":"::1","prefixlen":128,"scope":"host","protocol":"kernel_lo","valid_life_time":4294967295,"preferred_life_time":4294967295}]},{"ifindex":2,"link_index":2,"ifname":"eth0","flags":["BROADCAST","MULTICAST","UP","LOWER_UP"],"mtu":1500,"qdisc":"noqueue","operstate":"UP","group":"default","txqlen":1000,"link_type":"ether","address":"02:23:f3:32:94:9c","broadcast":"ff:ff:ff:ff:ff:ff","link_netnsid":0,"addr_info":[{"family":"inet","local":"10.77.1.2","prefixlen":24,"scope":"global","label":"eth0","valid_life_time":4294967295,"preferred_life_time":4294967295},{"family":"inet6","local":"fe80::23:f3ff:fe32:949c","prefixlen":64,"scope":"link","protocol":"kernel_ll","valid_life_time":4294967295,"preferred_life_time":4294967295}]}]
+[{"dst":"default","gateway":"10.77.1.1","dev":"eth0","flags":[]},{"dst":"10.77.1.0/24","dev":"eth0","protocol":"kernel","scope":"link","prefsrc":"10.77.1.2","flags":[]}]
+qdisc noqueue 0: dev lo root refcnt 2 
+ Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0) 
+ backlog 0b 0p requeues 0
+qdisc noqueue 0: dev eth0 root refcnt 2 
+ Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0) 
+ backlog 0b 0p requeues 0
+nc-lab-roommate
+[{"ifindex":1,"ifname":"lo","flags":["LOOPBACK","UP","LOWER_UP"],"mtu":65536,"qdisc":"noqueue","operstate":"UNKNOWN","group":"default","txqlen":1000,"link_type":"loopback","address":"00:00:00:00:00:00","broadcast":"00:00:00:00:00:00","addr_info":[{"family":"inet","local":"127.0.0.1","prefixlen":8,"scope":"host","label":"lo","valid_life_time":4294967295,"preferred_life_time":4294967295},{"family":"inet6","local":"::1","prefixlen":128,"scope":"host","protocol":"kernel_lo","valid_life_time":4294967295,"preferred_life_time":4294967295}]},{"ifindex":2,"link_index":3,"ifname":"eth0","flags":["BROADCAST","MULTICAST","UP","LOWER_UP"],"mtu":1500,"qdisc":"noqueue","operstate":"UP","group":"default","txqlen":1000,"link_type":"ether","address":"26:22:7d:21:b3:62","broadcast":"ff:ff:ff:ff:ff:ff","link_netnsid":0,"addr_info":[{"family":"inet","local":"10.77.2.2","prefixlen":24,"scope":"global","label":"eth0","valid_life_time":4294967295,"preferred_life_time":4294967295},{"family":"inet6","local":"fe80::2422:7dff:fe21:b362","prefixlen":64,"scope":"link","protocol":"kernel_ll","valid_life_time":4294967295,"preferred_life_time":4294967295}]}]
+[{"dst":"default","gateway":"10.77.2.1","dev":"eth0","flags":[]},{"dst":"10.77.2.0/24","dev":"eth0","protocol":"kernel","scope":"link","prefsrc":"10.77.2.2","flags":[]}]
+qdisc noqueue 0: dev lo root refcnt 2 
+ Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0) 
+ backlog 0b 0p requeues 0
+qdisc noqueue 0: dev eth0 root refcnt 2 
+ Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0) 
+ backlog 0b 0p requeues 0
+nc-lab-router
+[{"ifindex":1,"ifname":"lo","flags":["LOOPBACK","UP","LOWER_UP"],"mtu":65536,"qdisc":"noqueue","operstate":"UNKNOWN","group":"default","txqlen":1000,"link_type":"loopback","address":"00:00:00:00:00:00","broadcast":"00:00:00:00:00:00","addr_info":[{"family":"inet","local":"127.0.0.1","prefixlen":8,"scope":"host","label":"lo","valid_life_time":4294967295,"preferred_life_time":4294967295},{"family":"inet6","local":"::1","prefixlen":128,"scope":"host","protocol":"kernel_lo","valid_life_time":4294967295,"preferred_life_time":4294967295}]},{"ifindex":2,"link_index":2,"ifname":"mlan","flags":["BROADCAST","MULTICAST","UP","LOWER_UP"],"mtu":1500,"qdisc":"noqueue","operstate":"UP","group":"default","txqlen":1000,"link_type":"ether","address":"7e:aa:6c:ae:6d:e8","broadcast":"ff:ff:ff:ff:ff:ff","link_netnsid":0,"addr_info":[{"family":"inet","local":"10.77.1.1","prefixlen":24,"scope":"global","label":"mlan","valid_life_time":4294967295,"preferred_life_time":4294967295},{"family":"inet6","local":"fe80::7caa:6cff:feae:6de8","prefixlen":64,"scope":"link","protocol":"kernel_ll","valid_life_time":4294967295,"preferred_life_time":4294967295}]},{"ifindex":3,"link_index":2,"ifname":"rlan","flags":["BROADCAST","MULTICAST","UP","LOWER_UP"],"mtu":1500,"qdisc":"noqueue","operstate":"UP","group":"default","txqlen":1000,"link_type":"ether","address":"16:21:d1:2a:e3:45","broadcast":"ff:ff:ff:ff:ff:ff","link_netnsid":1,"addr_info":[{"family":"inet","local":"10.77.2.1","prefixlen":24,"scope":"global","label":"rlan","valid_life_time":4294967295,"preferred_life_time":4294967295},{"family":"inet6","local":"fe80::1421:d1ff:fe2a:e345","prefixlen":64,"scope":"link","protocol":"kernel_ll","valid_life_time":4294967295,"preferred_life_time":4294967295}]},{"ifindex":4,"link_index":2,"ifname":"wan","flags":["BROADCAST","MULTICAST","UP","LOWER_UP"],"mtu":1500,"qdisc":"cake","operstate":"UP","group":"default","txqlen":1000,"link_type":"ether","address":"e2:ad:dc:35:d3:ae","broadcast":"ff:ff:ff:ff:ff:ff","link_netnsid":2,"addr_info":[{"family":"inet","local":"10.77.3.1","prefixlen":30,"scope":"global","label":"wan","valid_life_time":4294967295,"preferred_life_time":4294967295},{"family":"inet6","local":"fe80::e0ad:dcff:fe35:d3ae","prefixlen":64,"scope":"link","protocol":"kernel_ll","valid_life_time":4294967295,"preferred_life_time":4294967295}]}]
+[{"dst":"10.77.1.0/24","dev":"mlan","protocol":"kernel","scope":"link","prefsrc":"10.77.1.1","flags":[]},{"dst":"10.77.2.0/24","dev":"rlan","protocol":"kernel","scope":"link","prefsrc":"10.77.2.1","flags":[]},{"dst":"10.77.3.0/30","dev":"wan","protocol":"kernel","scope":"link","prefsrc":"10.77.3.1","flags":[]},{"dst":"10.77.4.0/30","gateway":"10.77.3.2","dev":"wan","flags":[]}]
+qdisc noqueue 0: dev lo root refcnt 2 
+ Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0) 
+ backlog 0b 0p requeues 0
+qdisc noqueue 0: dev mlan root refcnt 2 
+ Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0) 
+ backlog 0b 0p requeues 0
+qdisc noqueue 0: dev rlan root refcnt 2 
+ Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0) 
+ backlog 0b 0p requeues 0
+qdisc cake 1: dev wan root refcnt 3 bandwidth 5Mbit besteffort dual-srchost nonat wash no-ack-filter split-gso rtt 40ms raw overhead 0 
+ Sent 70 bytes 1 pkt (dropped 0, overlimits 0 requeues 0) 
+ backlog 0b 0p requeues 0
+ memory used: 960b of 4Mb
+ capacity estimate: 5Mbit
+ min/max network layer size:           70 /      70
+ min/max overhead-adjusted size:       70 /      70
+ average network hdr offset:            0
+
+                  Tin 0
+  thresh          5Mbit
+  target         3.63ms
+  interval       41.6ms
+  pk_delay         21us
+  av_delay          0us
+  sp_delay          0us
+  backlog            0b
+  pkts                1
+  bytes              70
+  way_inds            0
+  way_miss            1
+  way_cols            0
+  drops               0
+  marks               0
+  ack_drop            0
+  sp_flows            1
+  bk_flows            0
+  un_flows            0
+  max_len            70
+  quantum           300
+
+nc-lab-delay
+[{"ifindex":1,"ifname":"lo","flags":["LOOPBACK","UP","LOWER_UP"],"mtu":65536,"qdisc":"noqueue","operstate":"UNKNOWN","group":"default","txqlen":1000,"link_type":"loopback","address":"00:00:00:00:00:00","broadcast":"00:00:00:00:00:00","addr_info":[{"family":"inet","local":"127.0.0.1","prefixlen":8,"scope":"host","label":"lo","valid_life_time":4294967295,"preferred_life_time":4294967295},{"family":"inet6","local":"::1","prefixlen":128,"scope":"host","protocol":"kernel_lo","valid_life_time":4294967295,"preferred_life_time":4294967295}]},{"ifindex":2,"link_index":4,"ifname":"torouter","flags":["BROADCAST","MULTICAST","UP","LOWER_UP"],"mtu":1500,"qdisc":"cake","operstate":"UP","group":"default","txqlen":1000,"link_type":"ether","address":"8e:ec:5b:b1:31:b8","broadcast":"ff:ff:ff:ff:ff:ff","link_netnsid":0,"addr_info":[{"family":"inet","local":"10.77.3.2","prefixlen":30,"scope":"global","label":"torouter","valid_life_time":4294967295,"preferred_life_time":4294967295},{"family":"inet6","local":"fe80::8cec:5bff:feb1:31b8","prefixlen":64,"scope":"link","protocol":"kernel_ll","valid_life_time":4294967295,"preferred_life_time":4294967295}]},{"ifindex":3,"link_index":2,"ifname":"toserver","flags":["BROADCAST","MULTICAST","UP","LOWER_UP"],"mtu":1500,"qdisc":"netem","operstate":"UP","group":"default","txqlen":1000,"link_type":"ether","address":"a6:e8:12:29:e4:b9","broadcast":"ff:ff:ff:ff:ff:ff","link_netnsid":1,"addr_info":[{"family":"inet","local":"10.77.4.1","prefixlen":30,"scope":"global","label":"toserver","valid_life_time":4294967295,"preferred_life_time":4294967295},{"family":"inet6","local":"fe80::a4e8:12ff:fe29:e4b9","prefixlen":64,"scope":"link","protocol":"kernel_ll","valid_life_time":4294967295,"preferred_life_time":4294967295}]}]
+[{"dst":"10.77.1.0/24","gateway":"10.77.3.1","dev":"torouter","flags":[]},{"dst":"10.77.2.0/24","gateway":"10.77.3.1","dev":"torouter","flags":[]},{"dst":"10.77.3.0/30","dev":"torouter","protocol":"kernel","scope":"link","prefsrc":"10.77.3.2","flags":[]},{"dst":"10.77.4.0/30","dev":"toserver","protocol":"kernel","scope":"link","prefsrc":"10.77.4.1","flags":[]}]
+qdisc noqueue 0: dev lo root refcnt 2 
+ Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0) 
+ backlog 0b 0p requeues 0
+qdisc cake 1: dev torouter root refcnt 3 bandwidth 20Mbit besteffort dual-dsthost nonat wash no-ack-filter split-gso rtt 40ms raw overhead 0 
+ Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0) 
+ backlog 0b 0p requeues 0
+ memory used: 0b of 4Mb
+ capacity estimate: 20Mbit
+ min/max network layer size:        65535 /       0
+ min/max overhead-adjusted size:    65535 /       0
+ average network hdr offset:            0
+
+                  Tin 0
+  thresh         20Mbit
+  target            2ms
+  interval         40ms
+  pk_delay          0us
+  av_delay          0us
+  sp_delay          0us
+  backlog            0b
+  pkts                0
+  bytes               0
+  way_inds            0
+  way_miss            0
+  way_cols            0
+  drops               0
+  marks               0
+  ack_drop            0
+  sp_flows            0
+  bk_flows            0
+  un_flows            0
+  max_len             0
+  quantum           610
+
+qdisc netem 8003: dev toserver root refcnt 3 limit 10000 delay 20ms seed 10751327845606087255
+ Sent 265460900 bytes 613945 pkt (dropped 0, overlimits 0 requeues 0) 
+ backlog 0b 0p requeues 0
+nc-lab-server
+[{"ifindex":1,"ifname":"lo","flags":["LOOPBACK","UP","LOWER_UP"],"mtu":65536,"qdisc":"noqueue","operstate":"UNKNOWN","group":"default","txqlen":1000,"link_type":"loopback","address":"00:00:00:00:00:00","broadcast":"00:00:00:00:00:00","addr_info":[{"family":"inet","local":"127.0.0.1","prefixlen":8,"scope":"host","label":"lo","valid_life_time":4294967295,"preferred_life_time":4294967295},{"family":"inet6","local":"::1","prefixlen":128,"scope":"host","protocol":"kernel_lo","valid_life_time":4294967295,"preferred_life_time":4294967295}]},{"ifindex":2,"link_index":3,"ifname":"eth0","flags":["BROADCAST","MULTICAST","UP","LOWER_UP"],"mtu":1500,"qdisc":"netem","operstate":"UP","group":"default","txqlen":1000,"link_type":"ether","address":"ca:8d:28:f6:80:24","broadcast":"ff:ff:ff:ff:ff:ff","link_netnsid":0,"addr_info":[{"family":"inet","local":"10.77.4.2","prefixlen":30,"scope":"global","label":"eth0","valid_life_time":4294967295,"preferred_life_time":4294967295},{"family":"inet6","local":"fe80::c88d:28ff:fef6:8024","prefixlen":64,"scope":"link","protocol":"kernel_ll","valid_life_time":4294967295,"preferred_life_time":4294967295}]}]
+[{"dst":"default","gateway":"10.77.4.1","dev":"eth0","flags":[]},{"dst":"10.77.4.0/30","dev":"eth0","protocol":"kernel","scope":"link","prefsrc":"10.77.4.2","flags":[]}]
+qdisc noqueue 0: dev lo root refcnt 2 
+ Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0) 
+ backlog 0b 0p requeues 0
+qdisc netem 8004: dev eth0 root refcnt 3 limit 10000 delay 20ms seed 9957576642174267461
+ Sent 843322549 bytes 819964 pkt (dropped 0, overlimits 0 requeues 0) 
+ backlog 0b 0p requeues 0
+Features for wan:
+rx-checksumming: on
+tx-checksumming: on
+	tx-checksum-ipv4: off [fixed]
+	tx-checksum-ip-generic: on
+	tx-checksum-ipv6: off [fixed]
+	tx-checksum-fcoe-crc: off [fixed]
+	tx-checksum-sctp: on
+scatter-gather: on
+	tx-scatter-gather: on
+	tx-scatter-gather-fraglist: on
+tcp-segmentation-offload: off
+	tx-tcp-segmentation: off
+	tx-tcp-ecn-segmentation: off
+	tx-tcp-mangleid-segmentation: off
+	tx-tcp6-segmentation: off
+	tx-tcp-accecn-segmentation: off
+generic-segmentation-offload: off
+generic-receive-offload: off
+large-receive-offload: off [fixed]
+rx-vlan-offload: on
+tx-vlan-offload: on
+ntuple-filters: off [fixed]
+receive-hashing: off [fixed]
+highdma: on
+rx-vlan-filter: off [fixed]
+vlan-challenged: off [fixed]
+tx-gso-robust: off [fixed]
+tx-fcoe-segmentation: off [fixed]
+tx-gre-segmentation: on
+tx-gre-csum-segmentation: on
+tx-ipxip4-segmentation: on
+tx-ipxip6-segmentation: on
+tx-udp_tnl-segmentation: on
+tx-udp_tnl-csum-segmentation: on
+tx-gso-partial: off [fixed]
+tx-tunnel-remcsum-segmentation: off [fixed]
+tx-sctp-segmentation: on
+tx-esp-segmentation: off [fixed]
+tx-udp-segmentation: on
+tx-gso-list: on
+tx-nocache-copy: off
+loopback: off [fixed]
+rx-fcs: off [fixed]
+rx-all: off [fixed]
+tx-vlan-stag-hw-insert: on
+rx-vlan-stag-hw-parse: on
+rx-vlan-stag-filter: off [fixed]
+l2-fwd-offload: off [fixed]
+hw-tc-offload: off [fixed]
+esp-hw-offload: off [fixed]
+esp-tx-csum-hw-offload: off [fixed]
+rx-udp_tunnel-port-offload: off [fixed]
+tls-hw-tx-offload: off [fixed]
+tls-hw-rx-offload: off [fixed]
+rx-gro-hw: off [fixed]
+tls-hw-record: off [fixed]
+rx-gro-list: off
+macsec-hw-offload: off [fixed]
+rx-udp-gro-forwarding: off
+hsr-tag-ins-offload: off [fixed]
+hsr-tag-rm-offload: off [fixed]
+hsr-fwd-offload: off [fixed]
+hsr-dup-offload: off [fixed]
+Features for torouter:
+rx-checksumming: on
+tx-checksumming: on
+	tx-checksum-ipv4: off [fixed]
+	tx-checksum-ip-generic: on
+	tx-checksum-ipv6: off [fixed]
+	tx-checksum-fcoe-crc: off [fixed]
+	tx-checksum-sctp: on
+scatter-gather: on
+	tx-scatter-gather: on
+	tx-scatter-gather-fraglist: on
+tcp-segmentation-offload: off
+	tx-tcp-segmentation: off
+	tx-tcp-ecn-segmentation: off
+	tx-tcp-mangleid-segmentation: off
+	tx-tcp6-segmentation: off
+	tx-tcp-accecn-segmentation: off
+generic-segmentation-offload: off
+generic-receive-offload: off
+large-receive-offload: off [fixed]
+rx-vlan-offload: on
+tx-vlan-offload: on
+ntuple-filters: off [fixed]
+receive-hashing: off [fixed]
+highdma: on
+rx-vlan-filter: off [fixed]
+vlan-challenged: off [fixed]
+tx-gso-robust: off [fixed]
+tx-fcoe-segmentation: off [fixed]
+tx-gre-segmentation: on
+tx-gre-csum-segmentation: on
+tx-ipxip4-segmentation: on
+tx-ipxip6-segmentation: on
+tx-udp_tnl-segmentation: on
+tx-udp_tnl-csum-segmentation: on
+tx-gso-partial: off [fixed]
+tx-tunnel-remcsum-segmentation: off [fixed]
+tx-sctp-segmentation: on
+tx-esp-segmentation: off [fixed]
+tx-udp-segmentation: on
+tx-gso-list: on
+tx-nocache-copy: off
+loopback: off [fixed]
+rx-fcs: off [fixed]
+rx-all: off [fixed]
+tx-vlan-stag-hw-insert: on
+rx-vlan-stag-hw-parse: on
+rx-vlan-stag-filter: off [fixed]
+l2-fwd-offload: off [fixed]
+hw-tc-offload: off [fixed]
+esp-hw-offload: off [fixed]
+esp-tx-csum-hw-offload: off [fixed]
+rx-udp_tunnel-port-offload: off [fixed]
+tls-hw-tx-offload: off [fixed]
+tls-hw-rx-offload: off [fixed]
+rx-gro-hw: off [fixed]
+tls-hw-record: off [fixed]
+rx-gro-list: off
+macsec-hw-offload: off [fixed]
+rx-udp-gro-forwarding: off
+hsr-tag-ins-offload: off [fixed]
+hsr-tag-rm-offload: off [fixed]
+hsr-fwd-offload: off [fixed]
+hsr-dup-offload: off [fixed]

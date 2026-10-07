@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#153b35">
+  <title>同住 NetTogether｜會議模式實驗室</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/dynamic-i18n.js" defer></script>
+  <script src="/i18n.js" defer></script>
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="專案資訊">
+      <a class="brand" href="/" aria-label="同住首頁"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>同住<small>NET TOGETHER</small></span></a>
+      <div class="sidebar-caption">讓共享網路，更好相處。</div>
+      <nav class="sidebar-nav" aria-label="頁面導覽">
+        <a href="#overview" class="nav-item selected"><span aria-hidden="true">◈</span>會議模式</a>
+        <a href="#experiment" class="nav-item"><span aria-hidden="true">⌁</span>網路實驗室</a>
+        <a href="#results" class="nav-item"><span aria-hidden="true">▤</span>測試報告</a>
+      </nav>
+      <div class="sidebar-note"><span class="note-icon" aria-hidden="true">↗</span><strong>先量測，再下結論。</strong><p>比較連線穩定性，也看其他室友的傳輸速度。好的策略需要一起衡量。</p></div>
+      <div class="environment"><span class="status-dot"></span><div><strong>本機模擬環境</strong><small>離散事件佇列模型</small></div></div>
+      <div class="sidebar-footer">NET TOGETHER / EXPERIMENT 01</div>
+    </aside>
+
+    <main>
+      <header class="topbar"><span class="breadcrumb"><span class="breadcrumb-prefix">居家網路 / </span><strong>會議模式實驗室</strong></span><div class="topbar-actions"><div class="language-switch"><label for="ui-language">語言</label><select id="ui-language" aria-label="中文 / English"><option value="zh-Hant">繁體中文</option><option value="en">English</option></select></div><span class="local-badge"><span class="status-dot"></span>LOCAL LAB</span></div></header>
+      <section class="page-intro" id="overview">
+        <div><div class="eyebrow">SHARED CONNECTIONS, CALMER MEETINGS</div><h1>一起上網，<br class="mobile-break">重要的時刻更穩。</h1><p>模擬室友上傳與下載，看看流量策略能否減少會議延遲。</p></div>
+        <div class="model-badge"><span aria-hidden="true">◇</span><div><strong>模擬環境</strong><small>結果來自佇列模型</small></div></div>
+      </section>
+      <div class="scope-notice"><span aria-hidden="true">ⓘ</span><p>這裡控制的是<strong>模擬策略</strong>，不會修改家中路由器。公平排隊與優先模式是模型實作，非 Linux CAKE；結果不代表真實視訊通話品質。</p></div>
+
+      <section class="overview-grid" aria-label="會議模式與模擬拓樸">
+        <article class="card session-card">
+          <div class="card-heading"><h2>留一點空間，給你的會議。</h2><span class="pill" id="session-pill">讀取中</span></div>
+          <p class="section-description">指定會議裝置與時間，到期後自動回到一般模式。</p>
+          <form id="session-form">
+            <label for="meeting-device">會議裝置</label>
+            <div class="device-option"><span class="device-icon" aria-hidden="true">▱</span><div><strong>我的電腦</strong><small>模擬會議端 · meeting</small></div><select id="meeting-device" name="device" aria-label="會議裝置"><option value="meeting">已選取</option></select></div>
+            <div class="field-row"><div class="field"><label for="session-duration">模式持續時間</label><select id="session-duration"><option value="10">10 秒 · 自動恢復測試</option><option value="60">1 分鐘 · 快速測試</option><option value="300">5 分鐘</option><option value="900">15 分鐘</option><option value="3600" selected>60 分鐘</option></select></div><div class="timer"><span>剩餘時間</span><strong id="session-timer">—</strong></div></div>
+            <button class="button primary full-width" id="session-start" type="submit"><span aria-hidden="true">▶</span>啟用模擬會議模式</button>
+            <button class="button secondary full-width" id="session-stop" type="button" hidden>提前結束，恢復一般模式</button>
+          </form>
+          <p class="session-feedback" id="session-feedback" role="status" aria-live="polite">正在確認伺服器上的模式狀態…</p>
+          <div class="session-preview" aria-label="目前策略快照">
+            <div class="preview-heading"><span>目前策略快照</span><strong id="preview-policy">等待有效快照</strong></div>
+            <div class="preview-metric"><span>p95 RTT</span><strong id="preview-rtt">—<small>ms</small></strong></div>
+            <p>固定混合負載的 5 秒模型試算；非即時網路量測。</p>
+          </div>
+        </article>
+
+        <article class="card topology-card">
+          <div class="card-heading"><h2>同一條網路，兩種需求。</h2><span class="tiny-label">SIMULATED TOPOLOGY</span></div>
+          <div class="topology" role="img" aria-label="我的電腦與室友電腦共用一個模擬路由器，經過上下行頻寬瓶頸連到虛擬伺服器">
+            <svg class="topology-lines" viewBox="0 0 560 170" preserveAspectRatio="none" aria-hidden="true"><path d="M92 48 H176 V86 H260"/><path d="M92 125 H176 V86"/><path d="M305 86 H462"/><circle cx="176" cy="86" r="4"/></svg>
+            <div class="topology-clients"><div class="topology-node client-node"><span class="node-symbol" aria-hidden="true">▱</span><div><strong>我的電腦</strong><small>即時 UDP 流量</small></div><span class="node-dot"></span></div><div class="topology-node client-node roommate-node"><span class="node-symbol" aria-hidden="true">▱</span><div><strong>室友電腦</strong><small>TCP 背景傳輸</small></div><span class="node-dot"></span></div></div>
+            <div class="topology-node router-node"><span class="router-symbol" aria-hidden="true"><i></i><i></i></span><strong>模擬路由器</strong><small id="topology-policy">一般模式</small></div>
+            <div class="topology-node server-node"><span class="server-symbol" aria-hidden="true">▤</span><strong>虛擬伺服器</strong><small>同機內部流量</small></div>
+          </div>
+          <div class="topology-specs"><div><span>共用下載頻寬</span><strong id="topology-down">20 <small>Mbps</small></strong></div><div><span>共用上傳頻寬</span><strong id="topology-up">5 <small>Mbps</small></strong></div><div><span>基礎往返延遲</span><strong id="topology-rtt">40 <small>ms</small></strong></div></div>
+          <p class="topology-footnote">對照實驗固定比較三種策略；計時模式為模型控制示範，不影響比較條件。</p>
+        </article>
+      </section>
+
+      <section class="experiment-section" id="experiment">
+        <div class="section-heading"><div><div class="eyebrow">MAKE THE DIFFERENCE MEASURABLE</div><h2>建立一次可重現的實驗</h2><p>固定頻寬與負載，讓三種策略在相同條件下比較。</p></div><span class="step-label">01 / CONFIGURE</span></div>
+        <form class="card experiment-card" id="experiment-form">
+          <fieldset class="scenario-fieldset"><legend>室友正在做什麼？</legend><div class="scenario-options">
+            <label class="scenario-option"><input type="radio" name="scenario" value="idle"><span class="scenario-icon" aria-hidden="true">☕</span><strong>沒有背景傳輸</strong><small>正常連線基準</small></label>
+            <label class="scenario-option"><input type="radio" name="scenario" value="upload"><span class="scenario-icon" aria-hidden="true">↑</span><strong>上傳檔案</strong><small>照片備份、雲端同步</small></label>
+            <label class="scenario-option"><input type="radio" name="scenario" value="download"><span class="scenario-icon" aria-hidden="true">↓</span><strong>大量下載</strong><small>遊戲與大型檔案</small></label>
+            <label class="scenario-option"><input type="radio" name="scenario" value="mixed" checked><span class="scenario-icon" aria-hidden="true">⇅</span><strong>上傳與下載</strong><small>混合壅塞情境</small></label>
+          </div></fieldset>
+          <div class="experiment-fields">
+            <div class="field"><label for="down-mbps">下載頻寬 <span>Mbps</span></label><input type="number" id="down-mbps" min="3" max="100" step="1" value="20" required></div>
+            <div class="field"><label for="up-mbps">上傳頻寬 <span>Mbps</span></label><input type="number" id="up-mbps" min="2" max="100" step="1" value="5" required></div>
+            <div class="field"><label for="base-rtt">基礎 RTT <span>ms</span></label><input type="number" id="base-rtt" min="1" max="300" step="1" value="40" required></div>
+            <div class="field"><label for="test-duration">每次模擬 <span>秒</span></label><input type="number" id="test-duration" min="5" max="180" step="1" value="60" required></div>
+            <div class="field"><label for="repeats">各策略重複 <span>次</span></label><input type="number" id="repeats" min="1" max="5" step="1" value="3" required></div>
+            <div class="field"><label for="seed">隨機種子</label><input type="number" id="seed" min="0" max="2147483647" step="1" value="42" required></div>
+          </div>
+          <div class="experiment-footer"><div class="policy-list"><span><i class="policy-dot fifo"></i>普通 FIFO</span><span><i class="policy-dot fair"></i>公平排隊模型</span><span><i class="policy-dot priority"></i>會議優先模型</span></div><button class="button primary" id="experiment-start" type="submit"><span aria-hidden="true">↗</span>開始比較實驗</button></div>
+          <div class="experiment-progress" id="experiment-progress" hidden><div class="progress-label"><span id="progress-text">準備實驗…</span><strong id="progress-number">0%</strong></div><progress id="progress-bar" value="0" max="100" aria-label="實驗進度"></progress></div>
+          <p class="experiment-feedback" id="experiment-feedback" role="status" aria-live="polite">60 秒是模型中的時間，計算速度可能快於實際時間。</p>
+        </form>
+      </section>
+
+      <section class="results-section" id="results" aria-label="實驗結果">
+        <div class="section-heading"><div><div class="eyebrow">EVIDENCE BEFORE PROMISES</div><h2>改善了多少？用結果說話。</h2><p id="results-description">完成實驗後，這裡會顯示模型實際輸出的指標。</p></div><div class="export-actions" id="export-actions" hidden><a class="button compact secondary" id="export-csv" href="#">匯出 CSV</a><a class="button compact secondary" id="export-json" href="#">匯出 JSON</a></div></div>
+        <div class="card empty-state" id="empty-state"><span class="empty-chart" aria-hidden="true"><i></i><i></i><i></i><i></i></span><h3>第一份實驗報告，從一次比較開始。</h3><p>執行上方實驗，查看會議穩定性和室友傳輸速度的取捨。</p><a href="#experiment">設定實驗 <span aria-hidden="true">↑</span></a></div>
+        <div id="result-content" hidden>
+          <div class="metric-grid" id="metric-grid"></div>
+          <p class="result-insight" id="result-insight"></p>
+          <article class="card chart-card"><div class="card-heading"><div><h3>會議往返延遲</h3><p>顯示第一次重複測試的模型時間序列；數值越低越好。</p></div><span class="tiny-label">RTT / MILLISECONDS</span></div><div id="rtt-chart" class="chart-container"></div><div class="policy-list chart-legend"><span><i class="policy-dot fifo"></i>普通 FIFO</span><span><i class="policy-dot fair"></i>公平排隊模型</span><span><i class="policy-dot priority"></i>會議優先模型</span></div></article>
+          <article class="card table-card"><div class="card-heading"><h3>三種策略，同時看穩定與速度。</h3><span class="tiny-label">RUN SUMMARY</span></div><div class="table-scroll"><table><caption class="sr-only">各策略的會議延遲、抖動、封包遺失、會議流量與背景傳輸比較</caption><thead><tr><th scope="col">流量策略</th><th scope="col">p95 RTT <small>ms</small></th><th scope="col">UDP jitter <small>ms</small></th><th scope="col">封包遺失 <small>%</small></th><th scope="col">會議傳輸 <small>Mbps</small></th><th scope="col">背景傳輸 <small>Mbps</small></th></tr></thead><tbody id="summary-body"></tbody></table></div><p class="table-note">各欄為每次重複測試指標的平均值，p95 RTT 並非合併所有封包後重算的百分位數。原始結果可下載核對。</p></article>
+          <div class="limitations" id="limitations"></div>
+        </div>
+      </section>
+
+      <section class="kernel-section" id="kernel-evidence" aria-label="保存的 Linux 封包實測">
+        <div class="section-heading"><div><div class="eyebrow">A SEPARATE PACKET LAB</div><h2>保存的 Linux 封包實測</h2><p>隔離虛擬拓樸；非目前家中 Wi-Fi。上方 Web 計時卡仍控制模型。</p></div><span class="pill" id="kernel-status">讀取中</span></div>
+        <div class="card kernel-pending" id="kernel-pending"><strong id="kernel-pending-title">正在讀取已保存的封包實測。</strong><p id="kernel-message" role="status" aria-live="polite">尚未載入實測指標。這個區塊的資料與上方模型結果分開保存。</p></div>
+        <div id="kernel-content" hidden>
+          <article class="card kernel-card">
+            <div class="kernel-config" id="kernel-config"></div>
+            <div class="kernel-controls"><div><h3>三種核心排隊策略</h3><p>每個情境採相同瓶頸、固定負載，各自重複量測。</p></div><div class="kernel-control-actions"><div class="field"><label for="kernel-scenario">實測情境</label><select id="kernel-scenario"><option value="both" selected>上傳與下載</option><option value="upload">上傳檔案</option><option value="download">大量下載</option><option value="idle">沒有背景傳輸</option></select></div><a class="button compact secondary" id="kernel-export" href="#">下載實測 CSV</a></div></div>
+            <div class="table-scroll"><table><caption class="sr-only">Linux 核心各策略的 RTT、各方向會議遺失率和背景傳輸速度</caption><thead><tr><th scope="col">核心策略</th><th scope="col">p95 RTT 平均 <small>ms</small></th><th scope="col">會議上傳遺失 <small>%</small></th><th scope="col">會議下載遺失 <small>%</small></th><th scope="col">背景上傳 <small>Mbps</small></th><th scope="col">背景下載 <small>Mbps</small></th></tr></thead><tbody id="kernel-summary"></tbody></table></div>
+            <p class="table-note">RTT 為各次測試 p95 的平均；下方區間為各次 p95 的最小與最大值。遺失率與背景速度分別呈現上傳、下載，不與模型欄位合併。</p>
+            <details class="kernel-details"><summary>查看各方向 UDP jitter</summary><p>這裡使用 iperf3 報告的 jitter；與上方佇列模型的定義不同，請分別解讀。</p><div class="table-scroll"><table><caption class="sr-only">各核心策略的上傳與下載 UDP jitter</caption><thead><tr><th scope="col">核心策略</th><th scope="col">會議上傳 jitter <small>ms</small></th><th scope="col">會議下載 jitter <small>ms</small></th></tr></thead><tbody id="kernel-jitter"></tbody></table></div></details>
+          </article>
+          <div class="limitations kernel-findings" id="kernel-findings"></div>
+        </div>
+      </section>
+      <section class="history-section"><div class="history-heading"><h3>過去的實驗</h3><button class="text-button" id="history-refresh" type="button">重新整理 ↻</button></div><div class="card history-card" id="history-list"><p class="muted">正在讀取實驗紀錄…</p></div></section>
+      <footer class="page-footer"><span>同住 NetTogether</span><p>從共享生活的問題出發，讓每次改善都有證據。</p><span>本機實驗 · v1</span></footer>
+    </main>
+  </div>
+  <div id="connection-alert" class="connection-alert" role="alert" hidden></div>
+</body>
+</html>

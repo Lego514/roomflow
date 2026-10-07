@@ -1,0 +1,5 @@
+* text=auto eol=lf
+# Raw measurements and evidence: keep the exact bytes (their SHA-256 hashes are recorded).
+results/** -text
+artifacts/** -text
+roomflow-linux-measurements.csv -text

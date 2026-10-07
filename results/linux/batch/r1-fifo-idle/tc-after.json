@@ -1,0 +1,16 @@
+{
+  "mode": "fifo",
+  "up_mbps": 5,
+  "down_mbps": 20,
+  "rtt_ms": 40,
+  "snapshots": {
+    "router/wan": {
+      "qdisc": "qdisc htb 1: root refcnt 3 r2q 10 default 0x10 direct_packets_stat 0 direct_qlen 1000\n Sent 1592907 bytes 5494 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\nqdisc pfifo 10: parent 1:10 limit 125p\n Sent 1592907 bytes 5494 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n",
+      "filters": ""
+    },
+    "delay/torouter": {
+      "qdisc": "qdisc htb 1: root refcnt 3 r2q 10 default 0x10 direct_packets_stat 0 direct_qlen 1000\n Sent 1615404 bytes 5505 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\nqdisc pfifo 10: parent 1:10 limit 500p\n Sent 1615404 bytes 5505 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n",
+      "filters": ""
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "session": {
+    "id": "1d6092bf70754be7bbe9e61d075e7eb9",
+    "active": false,
+    "baseline_mode": "sqm",
+    "lab_token": "232c294dc5d743a4bcab14474fbcd54c",
+    "started_at": 1791384127.7624125,
+    "expires_at": 1791384157.762419,
+    "ended_at": 1791384129.070135,
+    "end_reason": "stopped"
+  },
+  "lab": {
+    "mode": "sqm",
+    "up_mbps": 5,
+    "down_mbps": 20,
+    "rtt_ms": 40,
+    "snapshots": {
+      "router/wan": {
+        "qdisc": "qdisc cake 1: root refcnt 3 bandwidth 5Mbit besteffort dual-srchost nonat wash no-ack-filter split-gso rtt 40ms raw overhead 0 \n Sent 1150944 bytes 3972 pkt (dropped 0, overlimits 3975 requeues 0) \n backlog 0b 0p requeues 0\n memory used: 4800b of 4Mb\n capacity estimate: 5Mbit\n min/max network layer size:           46 /     371\n min/max overhead-adjusted size:       46 /     371\n average network hdr offset:           14\n\n                  Tin 0\n  thresh          5Mbit\n  target         3.63ms\n  interval       41.6ms\n  pk_delay       13.8ms\n  av_delay        9.6ms\n  sp_delay         18us\n  backlog            0b\n  pkts             3972\n  bytes         1150944\n  way_inds            0\n  way_miss            5\n  way_cols            0\n  drops               0\n  marks               0\n  ack_drop            0\n  sp_flows            1\n  bk_flows            1\n  un_flows            0\n  max_len           371\n  quantum           300\n\n",
+        "filters": ""
+      },
+      "delay/torouter": {
+        "qdisc": "qdisc cake 1: root refcnt 3 bandwidth 20Mbit besteffort dual-dsthost nonat wash no-ack-filter split-gso rtt 40ms raw overhead 0 \n Sent 1086337 bytes 3704 pkt (dropped 287, overlimits 4043 requeues 0) \n backlog 0b 0p requeues 0\n memory used: 13978b of 4Mb\n capacity estimate: 20Mbit\n min/max network layer size:           46 /    1514\n min/max overhead-adjusted size:       46 /    1514\n average network hdr offset:           14\n\n                  Tin 0\n  thresh         20Mbit\n  target            2ms\n  interval         40ms\n  pk_delay       14.9ms\n  av_delay       8.57ms\n  sp_delay        322us\n  backlog            0b\n  pkts             3991\n  bytes         1171863\n  way_inds            0\n  way_miss            5\n  way_cols            0\n  drops             287\n  marks               0\n  ack_drop            0\n  sp_flows            2\n  bk_flows            1\n  un_flows            0\n  max_len          1514\n  quantum           610\n\n",
+        "filters": ""
+      }
+    }
+  }
+}

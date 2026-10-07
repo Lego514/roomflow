@@ -1,0 +1,23 @@
+test_both_clients_have_one_shared_bottleneck_each_direction (test_netlab.CommandPlanTests.test_both_clients_have_one_shared_bottleneck_each_direction) ... ok
+test_downstream_has_shared_destination_classification (test_netlab.CommandPlanTests.test_downstream_has_shared_destination_classification) ... ok
+test_fifo_is_one_htb_class_and_fifo_queue (test_netlab.CommandPlanTests.test_fifo_is_one_htb_class_and_fifo_queue) ... ok
+test_invalid_configuration_rejected_before_commands (test_netlab.CommandPlanTests.test_invalid_configuration_rejected_before_commands) ... ok
+test_prerequisite_probe_deletes_htb_before_cake (test_netlab.CommandPlanTests.test_prerequisite_probe_deletes_htb_before_cake) ... ok
+test_same_bandwidth_in_all_modes (test_netlab.CommandPlanTests.test_same_bandwidth_in_all_modes) ... ok
+test_selected_priority_requires_ingress_and_source (test_netlab.CommandPlanTests.test_selected_priority_requires_ingress_and_source) ... ok
+test_cpu_percent (test_netlab.MeasurementTests.test_cpu_percent) ... ok
+test_scenarios_share_two_meeting_flows (test_netlab.MeasurementTests.test_scenarios_share_two_meeting_flows) ... ok
+test_udp_receiver_metrics_kept (test_netlab.MeasurementTests.test_udp_receiver_metrics_kept) ... ok
+test_warmup_excluded_and_p95_nearest_rank (test_netlab.MeasurementTests.test_warmup_excluded_and_p95_nearest_rank) ... ok
+test_zero_replies_not_reported_as_zero_latency (test_netlab.MeasurementTests.test_zero_replies_not_reported_as_zero_latency) ... ok
+test_active_session_requires_actual_meeting_readback (test_netlab.SafetyTests.test_active_session_requires_actual_meeting_readback) ... ok
+test_expired_session_reconciles_to_baseline (test_netlab.SafetyTests.test_expired_session_reconciles_to_baseline) ... ok
+test_failed_readback_rolls_back_both_directions (test_netlab.SafetyTests.test_failed_readback_rolls_back_both_directions) ... ok
+test_failed_rollback_records_unknown_mode (test_netlab.SafetyTests.test_failed_rollback_records_unknown_mode) ... ok
+test_foreign_marker_refuses_teardown_without_deleting (test_netlab.SafetyTests.test_foreign_marker_refuses_teardown_without_deleting) ... ok
+test_restore_failure_preserves_session_for_retry (test_netlab.SafetyTests.test_restore_failure_preserves_session_for_retry) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 0.004s
+
+OK

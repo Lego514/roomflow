@@ -1,0 +1,32 @@
+✔ HTTP experiment, export, expiry, and restart recovery work end to end (352.2861ms)
+✔ bounded experiment inputs reject invalid and expensive requests (0.7914ms)
+✔ missing or corrupted saved results become failed jobs instead of false completion (72.5427ms)
+✔ worker termination handles metadata write failure without an uncaught callback (39.6064ms)
+✔ aggregation preserves missing RTT and missing policies instead of zero success (0.299ms)
+✔ saved kernel evidence handles pending, exact JSON and CSV exports, malformed files, and recovery (178.4777ms)
+✔ lease expiry restores normal mode and survives reconstruction (8.2259ms)
+✔ early stop restores state, is idempotent, and a second start conflicts (2.9248ms)
+✔ apply failure returns error, rolls back, and does not persist false success (0.9404ms)
+✔ invalid device and duration are rejected without mutation (0.856ms)
+✔ readback mismatch cannot be reported as successful start (0.8092ms)
+✔ expiry persistence failure rolls back, reports failure, and retries safely (3.8671ms)
+✔ an unloaded link delivers fixed-rate media without fictitious congestion (24.3854ms)
+✔ congestion creates actual FIFO queue delay; fair scheduling protects sparse traffic (62.4298ms)
+✔ priority remains bounded and every bulk flow progresses under media overload (19.4426ms)
+✔ all modes conserve bytes and packets after draining even when UDP overloads (194.6573ms)
+✔ identical seeds reproduce complete event traces; startup phase varies with seed (27.4266ms)
+✔ directional bottlenecks are shared by media and bulk, with no cross-direction bulk (15.5895ms)
+✔ reported media rate and loss are derived from raw packet records after warmup (14.1133ms)
+✔ serialized packets cannot arrive faster than each bottleneck capacity (16.2446ms)
+✔ larger propagation delay is included in observed RTT (3.3994ms)
+✔ sample bins hold measured byte counts rather than invented chart values (1.5868ms)
+✔ input validation rejects unsafe sizes, NaN, numeric strings, and invalid modes (0.5761ms)
+✔ absence of completed samples is represented honestly with null (2.6919ms)
+ℹ tests 24
+ℹ suites 0
+ℹ pass 24
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 751.0882

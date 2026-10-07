@@ -1,0 +1,11 @@
+Measured diagnostic: idle-start
+Measured diagnostic: r1-fifo
+Measured diagnostic: r1-sqm
+Measured diagnostic: r1-meeting
+Measured diagnostic: r2-sqm
+Measured diagnostic: r2-meeting
+Measured diagnostic: r2-fifo
+Measured diagnostic: r3-meeting
+Measured diagnostic: r3-fifo
+Measured diagnostic: r3-sqm
+Measured diagnostic: idle-end

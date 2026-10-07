@@ -1,0 +1,10 @@
+engine,policy,scenario,repeat,seed,p95_rtt_ms,jitter_ms,meeting_loss_pct,meeting_mbps,background_mbps
+discrete-event-model,fifo,upload,1,42,239.66487,0.561175,0.43287,2.489193,4.004073
+discrete-event-model,fair,upload,1,42,47.095797,0.740796,0,2.500189,3.980945
+discrete-event-model,priority,upload,1,42,45.489397,0.653466,0,2.500015,3.973527
+discrete-event-model,fair,upload,2,43,47.661795,0.714915,0,2.500015,3.976582
+discrete-event-model,priority,upload,2,43,45.933795,0.652985,0,2.49984,3.9768
+discrete-event-model,fifo,upload,2,43,239.69037,0.540286,0.404915,2.489193,4.004291
+discrete-event-model,priority,upload,3,44,46.331608,0.664033,0,2.500015,3.975055
+discrete-event-model,fifo,upload,3,44,239.699129,0.554724,0.404915,2.490066,4.003418
+discrete-event-model,fair,upload,3,44,47.304408,0.731516,0,2.500015,3.977891

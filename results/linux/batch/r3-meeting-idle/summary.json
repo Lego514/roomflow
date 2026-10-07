@@ -1,0 +1,47 @@
+{
+  "kind": "linux-kernel-measurement",
+  "mode": "meeting",
+  "scenario": "idle",
+  "duration_seconds": 15,
+  "warmup_seconds": 3,
+  "bulk_tos": 0,
+  "up_mbps": 5,
+  "down_mbps": 20,
+  "base_rtt_ms": 40,
+  "udp_target_bps_each_direction": 600000,
+  "udp_payload_bytes": 256,
+  "kernel": "6.18.52-0-virt",
+  "note": "UDP surrogate, not WebRTC quality or a real Wi-Fi measurement",
+  "started_at_unix": 1791384777.078846,
+  "measurement_start_unix": 1791384780.078846,
+  "rtt": {
+    "samples": 140,
+    "mean_ms": 62.42071428571428,
+    "p95_ms": 78.5,
+    "ping_loss_including_warmup_pct": 0.588235
+  },
+  "flows": {
+    "meeting-up": {
+      "bits_per_second": 599568.8373249003,
+      "jitter_ms": 5.452378342434235,
+      "lost_packets": 0,
+      "packets": 4409,
+      "lost_percent": 0,
+      "seconds": 15.060209
+    },
+    "meeting-down": {
+      "bits_per_second": 529791.5289643158,
+      "jitter_ms": 8.46090935232943,
+      "lost_packets": 504,
+      "packets": 4388,
+      "lost_percent": 11.428571428571429,
+      "seconds": 15.014268
+    }
+  },
+  "cpu_busy_percent": {
+    "cpu": 5.66,
+    "cpu0": 5.66,
+    "cpu1": 5.6
+  },
+  "cpu_warning": false
+}
