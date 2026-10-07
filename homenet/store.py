@@ -1,7 +1,8 @@
 """SQLite history, so an evening of interviews can be compared with a normal day.
 
 Stored: radio facts (band, channel, signal, link rates) and latency summaries.
-Never stored: network names (SSID), MAC addresses, or the router's address.
+Never stored: network names (SSID), MAC addresses, the router's address, or
+the addresses of routers along the path (a trace keeps hop numbers and segments).
 """
 
 from __future__ import annotations
@@ -20,6 +21,10 @@ create table if not exists checks (
 create table if not exists latency (
   at text not null, layer text not null, target text not null,
   sent integer, loss_pct real, p50_ms real, p95_ms real, jitter_ms real
+);
+create table if not exists trace (
+  at text not null, target text not null, hop integer not null, segment text,
+  loss_pct real, p50_ms real, effective_ms real, added_ms real, note text
 );
 create table if not exists bloat (
   at text not null, phase text not null, mbps real,
@@ -74,3 +79,12 @@ def hourly(db: sqlite3.Connection) -> list[tuple]:
         group by hour order by hour
         """
     ).fetchall()
+
+
+def save_trace(db: sqlite3.Connection, at: str, target: str, verdict) -> None:
+    for r in verdict.rows:
+        s = r.series
+        db.execute("insert into trace values (?,?,?,?,?,?,?,?,?)",
+                   (at, target, r.hop.index, r.segment, s.loss_pct if s else None, s.p50 if s else None,
+                    r.effective_ms, r.added_ms, r.note))
+    db.commit()

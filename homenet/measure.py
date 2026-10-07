@@ -81,6 +81,104 @@ def parse_wifi(output: str) -> WifiLink | None:
     )
 
 
+@dataclass(frozen=True)
+class Bss:
+    """One access point heard in a scan: radio facts only, no name or address."""
+
+    band: str | None
+    channel: int | None
+    signal_pct: int | None
+    radio: str | None
+    utilization_pct: int | None  # from Bss Load, when the AP advertises it
+    stations: int | None
+    own: bool = False  # broadcast by the router this machine is connected to
+
+
+_BSSID_LINE = re.compile(r"^\s*BSSID \d+\s*:\s*(\S+)")  # "BSSID 3 : ..." starts a record
+_MAC = re.compile(r"^[0-9a-f]{2}(:[0-9a-f]{2}){5}$")
+
+
+def same_radio(a: str | None, b: str | None) -> bool:
+    """Do two BSSIDs belong to the same router? Compared in memory, never stored.
+
+    A router that broadcasts several networks (main, guest, another band) derives
+    their BSSIDs from one base address: it changes the last byte and often sets
+    the "locally administered" bit in the first byte. So the middle four bytes
+    identify the hardware. A heuristic, not a guarantee.
+    """
+    if not a or not b:
+        return False
+    a, b = a.lower(), b.lower()
+    if not (_MAC.match(a) and _MAC.match(b)):
+        return False
+    return a.split(":")[1:5] == b.split(":")[1:5]
+_UTIL = re.compile(r"\((\d+)\s*%\)")
+
+
+def parse_bss(output: str, own_bssid: str | None = None) -> list[Bss]:
+    """Parse `netsh wlan show networks mode=bssid` into access points.
+
+    SSIDs are never read. Each BSSID is looked at once, to mark access points
+    that belong to the router this machine is connected to (`own_bssid`), and
+    then dropped; the returned records hold no address. "Colocated APs" lines
+    (which also carry addresses) match no field below and are ignored.
+    """
+    records: list[dict[str, str]] = []
+    for line in output.splitlines():
+        m = _BSSID_LINE.match(line)
+        if m:
+            records.append({"own": "1" if same_radio(m.group(1), own_bssid) else ""})
+            continue
+        if not records:
+            continue
+        key, sep, value = line.partition(":")
+        if not sep:
+            continue
+        key, value = key.strip(), value.strip()
+        if key in ("Signal", "Radio type", "Band", "Channel", "Channel Utilization", "Connected Stations"):
+            records[-1].setdefault(key, value)
+
+    def num(rec: dict[str, str], key: str) -> int | None:
+        m = re.search(r"\d+", rec.get(key, ""))
+        return int(m.group()) if m else None
+
+    out = []
+    for rec in records:
+        util = _UTIL.search(rec.get("Channel Utilization", ""))
+        out.append(
+            Bss(
+                band=rec.get("Band"),
+                channel=num(rec, "Channel"),
+                signal_pct=num(rec, "Signal"),
+                radio=rec.get("Radio type"),
+                utilization_pct=int(util.group(1)) if util else None,
+                stations=num(rec, "Connected Stations"),
+                own=bool(rec.get("own")),
+            )
+        )
+    return out
+
+
+def connected_bssid(output: str) -> str | None:
+    """The connected access point's BSSID from `netsh wlan show interfaces`. Kept in memory only."""
+    for line in output.splitlines():
+        key, sep, value = line.partition(":")
+        if sep and key.strip() in ("AP BSSID", "BSSID"):  # Windows 11 says "AP BSSID"
+            return value.strip()
+    return None
+
+
+def scan() -> list[Bss]:
+    """Access points currently heard, with this machine's own router marked.
+
+    Windows may return the last cached scan rather than a fresh one.
+    """
+    if not WINDOWS:
+        return []
+    own = connected_bssid(_run(["netsh", "wlan", "show", "interfaces"], timeout=10))
+    return parse_bss(_run(["netsh", "wlan", "show", "networks", "mode=bssid"], timeout=20), own)
+
+
 def wifi_link() -> WifiLink | None:
     if not WINDOWS:
         return None  # Linux would read `iw dev <if> link`; not needed on this machine yet
