@@ -5,9 +5,13 @@
     python -m homenet trace            hop by hop: where latency is added, whether loss carries through
     python -m homenet dns              your resolvers vs 1.1.1.1 / 8.8.8.8 / 9.9.9.9, cached and uncached
     python -m homenet ipv6             the same services over IPv4 and IPv6
+    python -m homenet path             trace, then ipv6 (what the schedule runs every 2 hours)
     python -m homenet bloat            bufferbloat test (uses data: ~10 s each way at full speed)
     python -m homenet watch --every 300   run `check` every 5 minutes
-    python -m homenet report           history by hour of day
+    python -m homenet report           what the scheduled runs found: by hour, bufferbloat, path, IPv6
+
+Scheduled runs (scripts/schedule-homenet.ps1) add --log data/homenet.log, which
+appends output and errors to that file instead of a console.
 """
 
 from __future__ import annotations
@@ -49,7 +53,21 @@ def print_check(r) -> None:
     print("\nverdict: all layers ok" if status == "ok" else f"\nverdict: {layer} {status}. {FIXES[layer]}")
 
 
+BLOAT_LOCK = DB.parent / ".bloat-running"
+
+
+def bloat_running() -> bool:
+    """A bufferbloat test saturates the link; a check during it would record the load, not the network."""
+    try:
+        return time.time() - BLOAT_LOCK.stat().st_mtime < 180
+    except OSError:
+        return False
+
+
 def cmd_check(args) -> int:
+    if getattr(args, "skip_during_bloat", False) and bloat_running():
+        print("skipped: a bufferbloat test is running")
+        return 0
     r = run_check(args.count)
     print_check(r)
     with store.connect(DB) as db:
@@ -143,12 +161,27 @@ def cmd_ipv6(args) -> int:
         v6 = fmt(p.v6.p50) if p.v6 else "-"
         print(f"{p.label:<20} {v4:>9} {v6:>9}  {p.verdict}")
     print(f"\n{ipv6.summary(pairs)}")
+    with store.connect(DB) as db:
+        store.save_ipv6(db, now(), pairs)
     return 0
+
+
+def cmd_path(args) -> int:
+    """trace, then ipv6, in one process (one scheduled action, measured one after the other)."""
+    args.target = "1.1.1.1"
+    code = cmd_trace(args)
+    print()
+    return cmd_ipv6(args) or code
 
 
 def cmd_bloat(args) -> int:
     print(f"measuring idle, then download, then upload, {args.seconds:.0f} s each...")
-    r = bufferbloat(args.seconds)
+    BLOAT_LOCK.parent.mkdir(parents=True, exist_ok=True)
+    BLOAT_LOCK.touch()
+    try:
+        r = bufferbloat(args.seconds)
+    finally:
+        BLOAT_LOCK.unlink(missing_ok=True)
     print(f"\n{'phase':<9} {'Mbps':>7} {'internet p50':>13} {'internet p95':>13} {'router p95':>11}  grade")
     for phase in (r.idle, r.download, r.upload):
         grade = ""
@@ -178,21 +211,44 @@ def cmd_watch(args) -> int:
 
 def cmd_report(args) -> int:
     with store.connect(DB) as db:
-        rows = store.hourly(db)
-    if not rows:
-        print("no checks yet: run `python -m homenet check` or `watch` first")
+        hours = store.hourly(db)
+        blo = store.bloat_runs(db)
+        v6 = store.ipv6_summary(db)
+        tr = store.trace_summary(db)
+    if not (hours or blo or v6 or tr):
+        print("nothing recorded yet: run a command, or install the schedule (scripts/schedule-homenet.ps1)")
         return 0
-    print(f"{'hour':>4} {'checks':>6} {'internet p95':>13} {'worst p95':>10} {'loss%':>6}")
-    for hour, checks, p95, worst, loss in rows:
-        print(f"{hour:>4} {checks:>6} {fmt(p95):>13} {fmt(worst):>10} {fmt(loss, 2):>6}")
+
+    if hours:
+        print("Latency to the internet by hour of day (from scheduled checks)")
+        print(f"{'hour':>4} {'checks':>6} {'avg p95':>8} {'worst p95':>10} {'loss%':>6}")
+        for hour, checks, p95, worst, loss in hours:
+            print(f"{hour:>4} {checks:>6} {fmt(p95):>8} {fmt(worst):>10} {fmt(loss, 2):>6}")
+    if blo:
+        print("\nBufferbloat runs")
+        print(f"{'when':<20} {'down Mbps':>9} {'grade':>5} {'added':>7}   {'up Mbps':>7} {'grade':>5} {'added':>7}")
+        for when, dm, dg, da, um, ug, ua in blo:
+            print(f"{when:<20} {fmt(dm):>9} {dg or '?':>5} {fmt(da, 0):>7}   {fmt(um):>7} {ug or '?':>5} {fmt(ua, 0):>7}")
+    if tr:
+        runs, total, seg, times, added = tr
+        print(f"\nPath ({runs} traces): median {fmt(total)} ms end to end; the most latency is added at the "
+              f"{seg} in {times} of {runs} runs (median +{fmt(added, 0)} ms).")
+    if v6:
+        print("\nIPv4 vs IPv6")
+        print(f"{'target':<20} {'runs':>4} {'IPv4 p50':>9} {'IPv6 p50':>9}  IPv6 slower")
+        for target, runs, v4, v6p, slower, both in v6:
+            share = f"{slower} of {both} runs" if both else "no IPv6"
+            print(f"{target:<20} {runs:>4} {fmt(v4):>9} {fmt(v6p):>9}  {share}")
     return 0
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="homenet")
+    parser.add_argument("--log", type=Path, help="append output and errors to this file (for scheduled runs)")
     sub = parser.add_subparsers(dest="cmd", required=True)
     c = sub.add_parser("check")
     c.add_argument("--count", type=int, default=10)
+    c.add_argument("--skip-during-bloat", action="store_true", help="do nothing while a bloat test runs")
     c.set_defaults(fn=cmd_check)
     sub.add_parser("wifi").set_defaults(fn=cmd_wifi)
     t = sub.add_parser("trace")
@@ -203,6 +259,9 @@ def main(argv: list[str] | None = None) -> int:
     d.add_argument("--rounds", type=int, default=5)
     d.add_argument("--system", type=int, default=4, help="how many of the system's resolvers to include")
     d.set_defaults(fn=cmd_dns)
+    pa = sub.add_parser("path")
+    pa.add_argument("--count", type=int, default=10)
+    pa.set_defaults(fn=cmd_path)
     v = sub.add_parser("ipv6")
     v.add_argument("--count", type=int, default=10)
     v.set_defaults(fn=cmd_ipv6)
@@ -215,7 +274,36 @@ def main(argv: list[str] | None = None) -> int:
     w.set_defaults(fn=cmd_watch)
     sub.add_parser("report").set_defaults(fn=cmd_report)
     args = parser.parse_args(argv)
-    return args.fn(args)
+    if args.log is None:
+        return args.fn(args)
+    return run_logged(args)
+
+
+def run_logged(args) -> int:
+    """Scheduled runs have no console: send output and any traceback to the log file.
+
+    Output is collected in memory and appended in one write at the end. Scheduled
+    tasks can overlap (a check every 5 minutes, a path run every 2 hours), and two
+    processes appending line by line to one file interleave or overwrite each
+    other's lines; a single append per run keeps every run's block intact.
+    """
+    import io
+    import traceback
+
+    buf = io.StringIO()
+    sys.stdout = sys.stderr = buf
+    print(f"\n=== {datetime.now():%Y-%m-%d %H:%M:%S} {args.cmd}")
+    try:
+        code = args.fn(args)
+    except Exception:
+        traceback.print_exc()
+        code = 1
+    finally:
+        sys.stdout, sys.stderr = sys.__stdout__, sys.__stderr__
+    args.log.parent.mkdir(parents=True, exist_ok=True)
+    with open(args.log, "a", encoding="utf-8") as log:
+        log.write(buf.getvalue())
+    return code
 
 
 if __name__ == "__main__":

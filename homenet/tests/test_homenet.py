@@ -123,5 +123,28 @@ class Storage(unittest.TestCase):
         self.assertIn("5 GHz", dump)
 
 
+class LoggedRuns(unittest.TestCase):
+    def test_output_and_errors_go_to_the_log_in_one_block(self):
+        import argparse
+        from homenet.__main__ import run_logged
+
+        def ok(_):
+            print("measured")
+            return 0
+
+        def boom(_):
+            print("half done")
+            raise RuntimeError("probe failed")
+
+        with tempfile.TemporaryDirectory() as d:
+            log = Path(d) / "sub" / "homenet.log"
+            self.assertEqual(run_logged(argparse.Namespace(log=log, cmd="check", fn=ok)), 0)
+            self.assertEqual(run_logged(argparse.Namespace(log=log, cmd="path", fn=boom)), 1)
+            text = log.read_text(encoding="utf-8")
+        self.assertIn("check\nmeasured", text)
+        self.assertIn("path\nhalf done", text)
+        self.assertIn("RuntimeError: probe failed", text)
+
+
 if __name__ == "__main__":
     unittest.main()

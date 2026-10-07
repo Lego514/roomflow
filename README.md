@@ -57,7 +57,8 @@ The lab answers "if the problem is bufferbloat, which queue fixes it?". [`homene
 - **`python -m homenet trace`** is MTR-style: it traces the route, pings every hop in parallel, and reports where along the path latency is added and whether any loss carries through. Routers answer pings addressed to themselves at low priority, so a single slow or lossy middle hop is usually not a problem; the tool only counts what persists to every later hop and the destination, and labels the rest.
 - **`python -m homenet dns`** sends hand-built DNS queries (RFC 1035 wire format) straight to each resolver, the system's own and 1.1.1.1, 8.8.8.8 and 9.9.9.9, timing cached popular names and uncached random names that force a full lookup. Differences under 5 ms are reported as a tie.
 - **`python -m homenet ipv6`** reaches the same services over IPv4 and IPv6. Apps prefer IPv6 when it works, so a slower IPv6 path quietly slows calls down.
-- **`python -m homenet watch`** repeats `check` on a schedule and **`report`** summarizes it by hour of day.
+- **`python -m homenet watch`** repeats `check` in a terminal; **`report`** summarizes everything recorded: latency by hour of day, each bufferbloat run, where the path adds latency across traces, and how often IPv6 is slower per service.
+- **`scripts/schedule-homenet.ps1 install`** runs it all unattended with Windows Task Scheduler, for the current user and only while logged on: `check` every 5 minutes (skipped while a bufferbloat test is saturating the link), `path` (trace, then IPv4 vs IPv6) every 2 hours, and `bloat` three times a day. Runs have no console window and append to a log file one block at a time, so overlapping runs can't interleave. `uninstall` removes it.
 
 History goes to a local SQLite file. Network names, MAC addresses and the router's address are never recorded; a test checks that.
 

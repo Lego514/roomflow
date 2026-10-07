@@ -17,9 +17,15 @@ from dataclasses import dataclass
 WINDOWS = platform.system() == "Windows"
 
 
+# Scheduled runs use pythonw (no console); without this flag every ping, netsh and
+# tracert it starts would flash a console window on screen.
+_NO_WINDOW = getattr(subprocess, "CREATE_NO_WINDOW", 0)
+
+
 def _run(cmd: list[str], timeout: float) -> str:
     try:
-        return subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, errors="replace").stdout
+        return subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, errors="replace",
+                              creationflags=_NO_WINDOW).stdout
     except (OSError, subprocess.TimeoutExpired):
         return ""
 
