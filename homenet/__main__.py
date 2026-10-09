@@ -7,6 +7,7 @@
     python -m homenet ipv6             the same services over IPv4 and IPv6
     python -m homenet path             trace, then ipv6 (what the schedule runs every 2 hours)
     python -m homenet bloat            bufferbloat test (uses data: ~10 s each way at full speed)
+    python -m homenet capacity         available download/upload right now (~5 s each way at full speed)
     python -m homenet watch --every 300   run `check` every 5 minutes
     python -m homenet report           what the scheduled runs found: by hour, bufferbloat, path, IPv6
 
@@ -53,11 +54,11 @@ def print_check(r) -> None:
     print("\nverdict: all layers ok" if status == "ok" else f"\nverdict: {layer} {status}. {FIXES[layer]}")
 
 
-BLOAT_LOCK = DB.parent / ".bloat-running"
+BLOAT_LOCK = DB.parent / ".bloat-running"  # held by bloat and capacity, which both saturate the link
 
 
 def bloat_running() -> bool:
-    """A bufferbloat test saturates the link; a check during it would record the load, not the network."""
+    """A load test saturates the link; a check during it would record the load, not the network."""
     try:
         return time.time() - BLOAT_LOCK.stat().st_mtime < 180
     except OSError:
@@ -174,6 +175,22 @@ def cmd_path(args) -> int:
     return cmd_ipv6(args) or code
 
 
+def cmd_capacity(args) -> int:
+    from .load import capacity
+
+    BLOAT_LOCK.parent.mkdir(parents=True, exist_ok=True)
+    BLOAT_LOCK.touch()
+    try:
+        r = capacity(args.seconds)
+    finally:
+        BLOAT_LOCK.unlink(missing_ok=True)
+    print(f"available now: download {fmt(r.download.mbps)} Mbps, upload {fmt(r.upload.mbps)} Mbps")
+    print(f"latency while loaded (p50): download {fmt(r.download.internet.p50)} ms, upload {fmt(r.upload.internet.p50)} ms")
+    with store.connect(DB) as db:
+        store.save_capacity(db, now(), r)
+    return 0
+
+
 def cmd_bloat(args) -> int:
     print(f"measuring idle, then download, then upload, {args.seconds:.0f} s each...")
     BLOAT_LOCK.parent.mkdir(parents=True, exist_ok=True)
@@ -212,10 +229,11 @@ def cmd_watch(args) -> int:
 def cmd_report(args) -> int:
     with store.connect(DB) as db:
         hours = store.hourly(db)
+        cap = store.capacity_by_hour(db)
         blo = store.bloat_runs(db)
         v6 = store.ipv6_summary(db)
         tr = store.trace_summary(db)
-    if not (hours or blo or v6 or tr):
+    if not (hours or blo or v6 or tr or cap):
         print("nothing recorded yet: run a command, or install the schedule (scripts/schedule-homenet.ps1)")
         return 0
 
@@ -224,6 +242,11 @@ def cmd_report(args) -> int:
         print(f"{'hour':>4} {'checks':>6} {'avg p95':>8} {'worst p95':>10} {'loss%':>6}")
         for hour, checks, p95, worst, loss in hours:
             print(f"{hour:>4} {checks:>6} {fmt(p95):>8} {fmt(worst):>10} {fmt(loss, 2):>6}")
+    if cap:
+        print("\nAvailable throughput by hour of day (what's left for this machine)")
+        print(f"{'hour':>4} {'runs':>4} {'down Mbps':>10} {'up Mbps':>8}")
+        for hour, runs, down, up in cap:
+            print(f"{hour:>4} {runs:>4} {fmt(down):>10} {fmt(up):>8}")
     if blo:
         print("\nBufferbloat runs")
         print(f"{'when':<20} {'down Mbps':>9} {'grade':>5} {'added':>7}   {'up Mbps':>7} {'grade':>5} {'added':>7}")
@@ -234,11 +257,15 @@ def cmd_report(args) -> int:
         print(f"\nPath ({runs} traces): median {fmt(total)} ms end to end; the most latency is added at the "
               f"{seg} in {times} of {runs} runs (median +{fmt(added, 0)} ms).")
     if v6:
-        print("\nIPv4 vs IPv6")
-        print(f"{'target':<20} {'runs':>4} {'IPv4 p50':>9} {'IPv6 p50':>9}  IPv6 slower")
-        for target, runs, v4, v6p, slower, both in v6:
-            share = f"{slower} of {both} runs" if both else "no IPv6"
-            print(f"{target:<20} {runs:>4} {fmt(v4):>9} {fmt(v6p):>9}  {share}")
+        print("\nIPv4 vs IPv6 (latency compared only on runs where both answered)")
+        print(f"{'target':<20} {'runs':>4} {'both ok':>7} {'IPv4 p50':>9} {'IPv6 p50':>9} {'v6 slower':>9} {'v6 failed':>9}")
+        for s in v6:
+            print(f"{s.target:<20} {s.runs:>4} {s.paired:>7} {fmt(s.v4_p50):>9} {fmt(s.v6_p50):>9} "
+                  f"{s.v6_slower:>9} {s.v6_failed:>9}")
+        failing = [s for s in v6 if s.v6_failed]
+        if failing:
+            print("'v6 failed' counts runs where IPv4 answered and IPv6 didn't; check whether they line up "
+                  "with the slow hours above.")
     return 0
 
 
@@ -265,6 +292,9 @@ def main(argv: list[str] | None = None) -> int:
     v = sub.add_parser("ipv6")
     v.add_argument("--count", type=int, default=10)
     v.set_defaults(fn=cmd_ipv6)
+    cp = sub.add_parser("capacity")
+    cp.add_argument("--seconds", type=float, default=3)
+    cp.set_defaults(fn=cmd_capacity)
     b = sub.add_parser("bloat")
     b.add_argument("--seconds", type=float, default=10)
     b.set_defaults(fn=cmd_bloat)

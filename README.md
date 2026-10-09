@@ -51,12 +51,27 @@ The repository also has a browser dashboard and a Node.js queueing model for exp
 
 The lab answers "if the problem is bufferbloat, which queue fixes it?". [`homenet/`](homenet/) answers the question that comes first, on the real home network: when a call stutters, is it the Wi-Fi, the router's queue under load, the ISP, or the far end?
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/home-latency-dark.svg">
+  <img alt="Home latency every 5 minutes over a day and a half. Latency to the home router stays near a few milliseconds throughout. Latency to the internet alternates between about 25 ms and plateaus near 200 ms that last several hours and start and stop abruptly." src="docs/home-latency-light.svg" width="760">
+</picture>
+
+What the first day and a half of scheduled checks show (provisional; more days are being collected):
+
+- **Inside the home is fine.** The router answers in a few milliseconds throughout, so it isn't the Wi-Fi.
+- **Several times a day, latency to the internet jumps from about 25 ms to a flat ~200 ms for hours**, then drops back abruptly. Every hop-by-hop trace puts the added delay on the ISP access line, the first hop past the router.
+- **Even the median sits near 200 ms during those periods**, so the queue on the line stays full, not just spiky. Plateaus that switch on and off at different hours each day look like one device saturating the line (a backup, a large upload or download) rather than evening congestion at the ISP. The hourly capacity probe below is there to tell which direction is being used up.
+- **IPv6 stops working during those periods.** When both protocols answer, they're equally fast; but in most slow runs, IPv6 connections or even IPv6 DNS lookups fail, so apps fall back to IPv4.
+
+This is the bufferbloat the lab measures, on a real line: a full queue upstream of the router. The lab's answer is to keep that queue short with CAKE at the router, which would need a router that supports it.
+
 - **`python -m homenet check`** reads the Wi-Fi link (band, channel, signal, RSSI, link rate), then measures latency bottom-up: the router, public IPs, DNS, and the services calls actually use (Zoom, Teams). The verdict names the lowest layer that is degraded, because a dead ISP also breaks DNS and every service, and those aren't the cause.
 - **`python -m homenet bloat`** is the lab's experiment on the real link: latency at idle, then while parallel transfers to Cloudflare's speed-test endpoints saturate the download and then the upload. It samples TCP handshakes to 1.1.1.1 five times a second and pings the router once a second, so it can tell whether the queue builds locally (Wi-Fi, router) or upstream (modem, ISP), and grades the added latency.
 - **`python -m homenet wifi`** scans nearby access points and shows how crowded your channel is. Wi-Fi radios take turns, so a neighbor on an overlapping channel takes airtime, not just adds noise. It groups 5 GHz channels into the 80 MHz blocks routers use, leaves out your own router's networks (matched by its hardware address in memory, never stored), reports the channel utilization access points advertise, and points to the quietest block, flagging DFS channels a router must leave when it detects radar.
 - **`python -m homenet trace`** is MTR-style: it traces the route, pings every hop in parallel, and reports where along the path latency is added and whether any loss carries through. Routers answer pings addressed to themselves at low priority, so a single slow or lossy middle hop is usually not a problem; the tool only counts what persists to every later hop and the destination, and labels the rest.
 - **`python -m homenet dns`** sends hand-built DNS queries (RFC 1035 wire format) straight to each resolver, the system's own and 1.1.1.1, 8.8.8.8 and 9.9.9.9, timing cached popular names and uncached random names that force a full lookup. Differences under 5 ms are reported as a tie.
 - **`python -m homenet ipv6`** reaches the same services over IPv4 and IPv6. Apps prefer IPv6 when it works, so a slower IPv6 path quietly slows calls down.
+- **`python -m homenet capacity`** measures the throughput available right now in each direction, about 5 seconds each way. Run hourly, it shows whether the slow periods coincide with someone else using up the download or the upload.
 - **`python -m homenet watch`** repeats `check` in a terminal; **`report`** summarizes everything recorded: latency by hour of day, each bufferbloat run, where the path adds latency across traces, and how often IPv6 is slower per service.
 - **`scripts/schedule-homenet.ps1 install`** runs it all unattended with Windows Task Scheduler, for the current user and only while logged on: `check` every 5 minutes (skipped while a bufferbloat test is saturating the link), `path` (trace, then IPv4 vs IPv6) every 2 hours, and `bloat` three times a day. Runs have no console window and append to a log file one block at a time, so overlapping runs can't interleave. `uninstall` removes it.
 

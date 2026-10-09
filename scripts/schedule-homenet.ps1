@@ -10,6 +10,8 @@
 
       check        every 5 minutes   Wi-Fi + latency layer by layer (skipped while a bloat test runs)
       path         every 2 hours     hop-by-hop trace to 1.1.1.1, then IPv4 vs IPv6
+      capacity     every hour (:20)  available download/upload, ~5 s each way at full speed
+                                     (about 0.15 GB each time at 200/40 Mbps)
       bloat        08:30 13:00 21:00 bufferbloat test: saturates the connection for ~40 s,
                                      about 0.3 GB of data each time at 200/40 Mbps
 
@@ -58,6 +60,12 @@ function Install-Tasks {
             # One action: Task Scheduler starts multiple actions without waiting for each other.
             Actions = @(New-HomenetAction $pythonw "path")
             Trigger = New-ScheduledTaskTrigger -Once -At $start.AddMinutes(2) -RepetitionInterval (New-TimeSpan -Hours 2)
+        },
+        @{
+            Name    = "capacity"
+            Actions = @(New-HomenetAction $pythonw "capacity")
+            Trigger = New-ScheduledTaskTrigger -Once -At ((Get-Date).Date.AddHours((Get-Date).Hour).AddMinutes(20)) `
+                -RepetitionInterval (New-TimeSpan -Hours 1)
         },
         @{
             Name    = "bloat"

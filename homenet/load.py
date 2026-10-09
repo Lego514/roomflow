@@ -150,3 +150,23 @@ def bufferbloat(seconds: float = 10, gateway: str | None = None) -> BloatResult:
     time.sleep(2)  # let the download queue drain
     up = run_phase("upload", seconds, gateway)
     return BloatResult(idle, down, up)
+
+
+@dataclass
+class CapacityResult:
+    download: Phase
+    upload: Phase
+
+
+def capacity(seconds: float = 3) -> CapacityResult:
+    """How much of the line is available right now, in each direction.
+
+    A short version of the bufferbloat test's loaded phases. When someone else on
+    the network is saturating a direction, this measures only what's left, so a
+    low upload figure in the slow hours points at a device uploading constantly.
+    Latency to the internet is sampled during each phase as well.
+    """
+    down = run_phase("download", seconds, gateway=None)
+    time.sleep(1)  # let the download queue drain before loading the other direction
+    up = run_phase("upload", seconds, gateway=None)
+    return CapacityResult(down, up)

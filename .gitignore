@@ -8,3 +8,6 @@ results/browser/
 # Interview prep notes, kept local
 docs/JD_MAPPING.md
 LEARN.md
+
+# Scratch output, not part of the project
+tmp/

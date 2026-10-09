@@ -8,6 +8,7 @@ the addresses of routers along the path (a trace keeps hop numbers and segments)
 from __future__ import annotations
 
 import sqlite3
+from dataclasses import dataclass
 from pathlib import Path
 
 from .check import CheckResult
@@ -28,6 +29,9 @@ create table if not exists trace (
 );
 create table if not exists ipv6 (
   at text not null, target text not null, v4_p50 real, v6_p50 real, verdict text
+);
+create table if not exists capacity (
+  at text not null, down_mbps real, up_mbps real, down_loaded_p50 real, up_loaded_p50 real
 );
 create table if not exists bloat (
   at text not null, phase text not null, mbps real,
@@ -120,15 +124,42 @@ def bloat_runs(db: sqlite3.Connection) -> list[tuple]:
     return rows
 
 
-def ipv6_summary(db: sqlite3.Connection) -> list[tuple]:
-    """Per target: runs, median IPv4 and IPv6, and in how many runs IPv6 was at least 3 ms slower."""
+@dataclass(frozen=True)
+class Ipv6Summary:
+    target: str
+    runs: int
+    paired: int  # runs where both IPv4 and IPv6 answered
+    v4_p50: float | None  # median over paired runs only
+    v6_p50: float | None
+    v6_slower: int  # paired runs where IPv6 was at least 3 ms slower
+    v6_failed: int  # runs where IPv4 answered but IPv6 didn't (target has an IPv6 address)
+
+
+def ipv6_summary(db: sqlite3.Connection) -> list[Ipv6Summary]:
+    """Per target, comparing IPv4 and IPv6 only on runs where both answered.
+
+    Medians over all runs would compare different moments: if IPv6 fails exactly
+    when the line is congested, its surviving samples all come from quiet hours
+    and IPv6 looks far faster than it is. Failures are counted separately.
+    """
     out = []
     targets = [r[0] for r in db.execute("select distinct target from ipv6 order by target")]
     for t in targets:
-        rows = db.execute("select v4_p50, v6_p50 from ipv6 where target = ?", (t,)).fetchall()
-        both = [(a, b) for a, b in rows if a is not None and b is not None]
-        slower = sum(1 for a, b in both if b - a >= 3.0)
-        out.append((t, len(rows), _median([a for a, _ in rows]), _median([b for _, b in rows]), slower, len(both)))
+        rows = db.execute("select v4_p50, v6_p50, verdict from ipv6 where target = ?", (t,)).fetchall()
+        both = [(a, b) for a, b, _ in rows if a is not None and b is not None]
+        # A name that resolved to an IPv6 address in other runs but not in this one
+        # failed too (the AAAA lookup itself failed), it isn't IPv4-only.
+        has_v6 = any(verdict != "no IPv6 address" for _, _, verdict in rows)
+        failed = sum(1 for a, b, _ in rows if a is not None and b is None and has_v6)
+        out.append(Ipv6Summary(
+            target=t,
+            runs=len(rows),
+            paired=len(both),
+            v4_p50=_median([a for a, _ in both]),
+            v6_p50=_median([b for _, b in both]),
+            v6_slower=sum(1 for a, b in both if b - a >= 3.0),
+            v6_failed=failed,
+        ))
     return out
 
 
@@ -153,3 +184,21 @@ def trace_summary(db: sqlite3.Connection) -> tuple | None:
         return None
     top = max(biggest_segments.items(), key=lambda kv: kv[1])
     return len(totals), _median(totals), top[0], top[1], _median(biggest_added)
+
+
+def save_capacity(db: sqlite3.Connection, at: str, r) -> None:
+    db.execute("insert into capacity values (?,?,?,?,?)",
+               (at, r.download.mbps, r.upload.mbps, r.download.internet.p50, r.upload.internet.p50))
+    db.commit()
+
+
+def capacity_by_hour(db: sqlite3.Connection) -> list[tuple]:
+    """Per local hour: runs, median download and upload Mbps available."""
+    by_hour: dict[str, tuple[list[float], list[float]]] = {}
+    for hour, down, up in db.execute(
+        "select strftime('%H', at, 'localtime'), down_mbps, up_mbps from capacity order by at"
+    ):
+        downs, ups = by_hour.setdefault(hour, ([], []))
+        downs.append(down)
+        ups.append(up)
+    return [(h, len(d), _median(d), _median(u)) for h, (d, u) in sorted(by_hour.items())]

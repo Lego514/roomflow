@@ -146,5 +146,27 @@ class LoggedRuns(unittest.TestCase):
         self.assertIn("RuntimeError: probe failed", text)
 
 
+class Ipv6History(unittest.TestCase):
+    def test_compares_only_paired_runs_and_counts_failures(self):
+        with tempfile.TemporaryDirectory() as d:
+            db = store.connect(Path(d) / "h.sqlite")
+            rows = [
+                ("t1", "zoom.us", 22.0, 21.0, "about the same"),   # quiet hour: both answer
+                ("t2", "zoom.us", 200.0, None, "no IPv6 address"),  # congested: AAAA lookup failed
+                ("t3", "zoom.us", 190.0, None, "IPv6 fails"),       # congested: IPv6 connect failed
+                ("t4", "zoom.us", 24.0, 30.0, "IPv6 6 ms slower"),
+                ("t1", "v4only.example", 20.0, None, "no IPv6 address"),
+            ]
+            db.executemany("insert into ipv6 values (?,?,?,?,?)", rows)
+            summary = {s.target: s for s in store.ipv6_summary(db)}
+            db.close()
+        zoom = summary["zoom.us"]
+        self.assertEqual((zoom.runs, zoom.paired, zoom.v6_failed, zoom.v6_slower), (4, 2, 2, 1))
+        # Medians over paired runs only: the congested 200/190 ms runs don't make IPv6 look faster.
+        self.assertEqual((zoom.v4_p50, zoom.v6_p50), (23.0, 25.5))
+        v4only = summary["v4only.example"]
+        self.assertEqual((v4only.paired, v4only.v6_failed), (0, 0))  # never had IPv6: not a failure
+
+
 if __name__ == "__main__":
     unittest.main()
