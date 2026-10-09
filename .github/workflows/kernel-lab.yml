@@ -81,7 +81,7 @@ jobs:
           if [ -f "ci/$P/batch/measurements.csv" ]; then
             python3 lab/ci_summary.py --input "ci/$P/batch/measurements.csv" \
               --environment "Profile $P: ${{ matrix.profile.up }}/${{ matrix.profile.down }} Mbps up/down, ${{ matrix.profile.rtt }} ms base RTT, FIFO queue ${{ matrix.profile.fifo }} ms. GitHub Actions ubuntu-24.04, kernel $(uname -r), $(nproc) vCPU, seed $SEED" \
-              | tee -a "$GITHUB_STEP_SUMMARY" "ci/$P/summary.md"
+              | tee -a "$GITHUB_STEP_SUMMARY" | sudo tee "ci/$P/summary.md" > /dev/null  # ci/ was created by root
           fi
       - name: Upload raw results
         if: always()

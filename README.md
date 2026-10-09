@@ -65,6 +65,20 @@ What the first day and a half of scheduled checks show (provisional; more days a
 
 This is the bufferbloat the lab measures, on a real line: a full queue upstream of the router. The lab's answer is to keep that queue short with CAKE at the router, which would need a router that supports it.
 
+**What CAKE would do on this line.** CI runs the lab a second time at the home line's measured speeds: 35 Mbps up, 250 Mbps down, 25 ms base RTT, with the FIFO queue sized at 180 ms, the latency the plateaus add ([results](results/native-ci-home/summary.md), five runs per cell, audited like the first matrix):
+
+| Both directions busy | Meeting p95 RTT, mean (range) | Meeting loss up / down | Roommate throughput up / down |
+|---|---:|---:|---:|
+| FIFO (180 ms queue) | 196 ms (195–198) | 2.3% / 0.1% | 20.5 / 237.5 Mbps |
+| CAKE SQM | 25.8 ms (25.8–25.9) | 0% / 0% | 26.6 / 227.6 Mbps |
+| CAKE + meeting priority | 25.6 ms (25.6–25.6) | 0% / 0% | 26.6 / 226.8 Mbps |
+
+- The FIFO row matches the ~200 ms plateaus at home, but only because the queue was sized from them; it's the calibration, not a finding. The prediction is the CAKE row: **under one millisecond above the idle 25 ms**, with no meeting loss.
+- CAKE costs about 4% of download throughput, and the roommate's upload *rises* from 20.5 to 26.6 Mbps: under FIFO, the download's TCP acknowledgments wait in the same full upload queue as the upload itself.
+- Meeting priority again adds nothing measurable.
+- On a real router, CAKE has to be set a little below the line rate (typically 90–95%) so that the queue forms in the router, where CAKE manages it, rather than in the modem. The lab puts CAKE exactly at the bottleneck, so it is the best case.
+- The runner's CPU averaged above 85% in some runs of both profiles, idle runs included, so this isn't from the higher rate; latency ranges stayed within about a millisecond.
+
 - **`python -m homenet check`** reads the Wi-Fi link (band, channel, signal, RSSI, link rate), then measures latency bottom-up: the router, public IPs, DNS, and the services calls actually use (Zoom, Teams). The verdict names the lowest layer that is degraded, because a dead ISP also breaks DNS and every service, and those aren't the cause.
 - **`python -m homenet bloat`** is the lab's experiment on the real link: latency at idle, then while parallel transfers to Cloudflare's speed-test endpoints saturate the download and then the upload. It samples TCP handshakes to 1.1.1.1 five times a second and pings the router once a second, so it can tell whether the queue builds locally (Wi-Fi, router) or upstream (modem, ISP), and grades the added latency.
 - **`python -m homenet wifi`** scans nearby access points and shows how crowded your channel is. Wi-Fi radios take turns, so a neighbor on an overlapping channel takes airtime, not just adds noise. It groups 5 GHz channels into the 80 MHz blocks routers use, leaves out your own router's networks (matched by its hardware address in memory, never stored), reports the channel utilization access points advertise, and points to the quietest block, flagging DFS channels a router must leave when it detects radar.
@@ -103,4 +117,4 @@ Details: [Linux lab guide](docs/linux-lab.md), [model definition](docs/simulator
 
 - Five 15-second runs per cell on one kind of CI runner: the differences that matter are far larger than the run-to-run spread, but this is not a statistical study across hardware.
 - UDP at a fixed rate stands in for a call; there are no real codecs, adaptive bitrate, or Zoom/Teams quality scores.
-- Everything runs in an isolated lab. Wi-Fi, a real home router, and ISP behavior are not tested.
+- The policies are compared only in the lab. `homenet` measures one real home connection, but CAKE hasn't been tried on a real router there yet, so the home-speed numbers are a prediction.

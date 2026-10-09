@@ -130,8 +130,18 @@ def audit(root, diagnostic=False, up_mbps=5, down_mbps=20, rtt_ms=40, fifo_ms=No
                 tins = list(map(int, tin_match.groups())) if tin_match else []
                 if len(counts) != 2 or len(tins) != 4 or not all(counts):
                     failures.append(f"{folder.name}/{link}: missing classification/action counter evidence")
-                elif tins[0] or tins[2] or tins[3] != counts[0] or tins[1] != counts[1]:
+                elif tins[0] or tins[2] or tins[3] != counts[0]:
                     failures.append(f"{folder.name}/{link}: priority action counters do not match Voice/Best Effort tins")
+                elif tins[1] != counts[1]:
+                    # The qdisc and the filters are read by two tc calls a moment apart while
+                    # the bulk flows drain, and non-IP frames (ARP) skip the IPv4 filter, so the
+                    # Best Effort count can differ slightly. The Voice tin above must match exactly.
+                    if abs(tins[1] - counts[1]) > counts[1] * 0.001:
+                        failures.append(f"{folder.name}/{link}: Best Effort tin differs from its action counter by "
+                                        f"{tins[1] - counts[1]:+d} packets")
+                    else:
+                        observations.append({"kind": "best_effort_counter_skew", "name": folder.name, "link": link,
+                                             "tin_packets": tins[1], "action_packets": counts[1]})
                 if link == "router/wan" and ("indev mlan" not in snapshot["filters"] or "src_ip 10.77.1.2" not in snapshot["filters"]):
                     failures.append(f"{folder.name}/{link}: source/ingress trust boundary missing")
                 if link == "delay/torouter" and "dst_ip 10.77.1.2" not in snapshot["filters"]:
