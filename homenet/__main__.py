@@ -9,7 +9,7 @@
     python -m homenet bloat            bufferbloat test (uses data: ~10 s each way at full speed)
     python -m homenet capacity         available download/upload right now (~5 s each way at full speed)
     python -m homenet watch --every 300   run `check` every 5 minutes
-    python -m homenet report           what the scheduled runs found: by hour, bufferbloat, path, IPv6
+    python -m homenet report           what the scheduled runs found: slow periods, by hour, bufferbloat, path, IPv6
 
 Scheduled runs (scripts/schedule-homenet.ps1) add --log data/homenet.log, which
 appends output and errors to that file instead of a console.
@@ -20,7 +20,7 @@ from __future__ import annotations
 import argparse
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from . import store
@@ -184,11 +184,14 @@ def cmd_capacity(args) -> int:
         r = capacity(args.seconds)
     finally:
         BLOAT_LOCK.unlink(missing_ok=True)
-    print(f"available now: download {fmt(r.download.mbps)} Mbps, upload {fmt(r.upload.mbps)} Mbps")
+    def show(phase) -> str:
+        return f"failed ({phase.failure})" if phase.failure else f"{fmt(phase.mbps)} Mbps"
+
+    print(f"available now: download {show(r.download)}, upload {show(r.upload)}")
     print(f"latency while loaded (p50): download {fmt(r.download.internet.p50)} ms, upload {fmt(r.upload.internet.p50)} ms")
     with store.connect(DB) as db:
         store.save_capacity(db, now(), r)
-    return 0
+    return 1 if r.download.failure or r.upload.failure else 0
 
 
 def cmd_bloat(args) -> int:
@@ -202,7 +205,9 @@ def cmd_bloat(args) -> int:
     print(f"\n{'phase':<9} {'Mbps':>7} {'internet p50':>13} {'internet p95':>13} {'router p95':>11}  grade")
     for phase in (r.idle, r.download, r.upload):
         grade = ""
-        if phase is not r.idle:
+        if phase.failure:
+            grade = f"?  {phase.failure}"
+        elif phase is not r.idle:
             g, added, meaning = r.grade(phase)
             grade = f"{g}  +{fmt(added, 0)} ms ({meaning})"
         mbps = "" if phase is r.idle else fmt(phase.mbps)
@@ -226,27 +231,68 @@ def cmd_watch(args) -> int:
         time.sleep(args.every)
 
 
+def print_slow_periods(timeline, cap_runs, v6_runs) -> None:
+    from . import episodes as ep
+
+    normal = ep.normal_latency(timeline)
+    found = ep.find(timeline, normal)
+    print(f"Slow periods (internet latency more than {ep.SLOW_ABOVE_MS:.0f} ms above its normal "
+          f"{fmt(normal)} ms, for {ep.MIN_CHECKS}+ checks)")
+    if not found:
+        print("  none so far")
+        return
+    print(f"{'start':<17} {'end':<17} {'lasted':>11} {'checks':>6} {'internet':>9} {'router':>7}")
+    for e in found:
+        end = f"{e.end:%a %m-%d %H:%M}" + ("+" if e.open_end else "")
+        print(f"{e.start:%a %m-%d %H:%M}  {end:<17} {ep.fmt_duration(e.duration):>11} {e.checks:>6} "
+              f"{fmt(e.internet_p50):>6} ms {fmt(e.router_p50):>4} ms")
+    total = sum((e.duration for e in found), timedelta())
+    print(f"{len(found)} periods, {ep.fmt_duration(total)} in all"
+          + ("; '+' means the checks stopped (laptop asleep) before it ended" if any(e.open_end for e in found) else ""))
+
+    # Line up the other measurements against the periods: this is the test of
+    # "a device is using up the line" (less capacity left during slow periods).
+    def split(rows):
+        return ([r for r in rows if ep.during(r[0], found)], [r for r in rows if not ep.during(r[0], found)])
+
+    if cap_runs:
+        print(f"\n{'available throughput':<22} {'runs':>4} {'down Mbps':>10} {'up Mbps':>8}  (medians)")
+        for label, rows in zip(("during slow periods", "the rest of the time"), split(cap_runs)):
+            down = ep.median([r[1] for r in rows if r[1] is not None])
+            up = ep.median([r[2] for r in rows if r[2] is not None])
+            print(f"{label:<22} {len(rows):>4} {fmt(down):>10} {fmt(up):>8}")
+    if v6_runs:
+        inside, outside = split(v6_runs)
+        print(f"\nIPv6 failed in {sum(r[1] for r in inside)} of {len(inside)} runs during slow periods, "
+              f"{sum(r[1] for r in outside)} of {len(outside)} the rest of the time.")
+
+
 def cmd_report(args) -> int:
     with store.connect(DB) as db:
+        timeline = store.check_timeline(db)
         hours = store.hourly(db)
         cap = store.capacity_by_hour(db)
+        cap_runs = store.capacity_runs(db)
         blo = store.bloat_runs(db)
         v6 = store.ipv6_summary(db)
+        v6_runs = store.ipv6_runs(db)
         tr = store.trace_summary(db)
     if not (hours or blo or v6 or tr or cap):
         print("nothing recorded yet: run a command, or install the schedule (scripts/schedule-homenet.ps1)")
         return 0
 
+    if timeline:
+        print_slow_periods(timeline, cap_runs, v6_runs)
     if hours:
-        print("Latency to the internet by hour of day (from scheduled checks)")
+        print("\nLatency to the internet by hour of day (from scheduled checks)")
         print(f"{'hour':>4} {'checks':>6} {'avg p95':>8} {'worst p95':>10} {'loss%':>6}")
         for hour, checks, p95, worst, loss in hours:
             print(f"{hour:>4} {checks:>6} {fmt(p95):>8} {fmt(worst):>10} {fmt(loss, 2):>6}")
     if cap:
         print("\nAvailable throughput by hour of day (what's left for this machine)")
-        print(f"{'hour':>4} {'runs':>4} {'down Mbps':>10} {'up Mbps':>8}")
-        for hour, runs, down, up in cap:
-            print(f"{hour:>4} {runs:>4} {fmt(down):>10} {fmt(up):>8}")
+        print(f"{'hour':>4} {'runs':>4} {'down Mbps':>10} {'up Mbps':>8} {'failed':>6}")
+        for hour, runs, down, up, failed in cap:
+            print(f"{hour:>4} {runs:>4} {fmt(down):>10} {fmt(up):>8} {failed or '':>6}")
     if blo:
         print("\nBufferbloat runs")
         print(f"{'when':<20} {'down Mbps':>9} {'grade':>5} {'added':>7}   {'up Mbps':>7} {'grade':>5} {'added':>7}")

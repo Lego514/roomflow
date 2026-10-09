@@ -149,14 +149,14 @@ def prerequisite_check():
             "features": ["netns", "veth", "htb", "pfifo", "cake", "netem", "flower", "skbedit"]}
 
 
-def shaping_commands(mode, iface, mbps, address_key, indev, rtt_ms):
+def shaping_commands(mode, iface, mbps, address_key, indev, rtt_ms, fifo_ms=300):
     """Pure command plan; every mode uses exactly the same configured wire rate."""
-    if mode not in MODES or not 0.1 <= mbps <= 1000 or not 1 <= rtt_ms <= 1000:
-        raise LabError("Invalid shaping mode, capacity or RTT")
+    if mode not in MODES or not 0.1 <= mbps <= 1000 or not 1 <= rtt_ms <= 1000 or not 10 <= fifo_ms <= 2000:
+        raise LabError("Invalid shaping mode, capacity, RTT or FIFO buffer")
     rate = f"{mbps:g}mbit"
     if mode == "fifo":
-        # HTB performs shaping, with one FIFO child. Size is ~300 ms at this rate.
-        packet_limit = max(20, math.ceil(mbps * 1_000_000 / 8 * 0.3 / 1500))
+        # HTB performs shaping, with one FIFO child holding fifo_ms of traffic at this rate.
+        packet_limit = max(20, math.ceil(mbps * 1_000_000 / 8 * fifo_ms / 1000 / 1500))
         return [
             ["tc", "qdisc", "replace", "dev", iface, "root", "handle", "1:", "htb", "default", "10"],
             ["tc", "class", "replace", "dev", iface, "parent", "1:", "classid", "1:10", "htb", "rate", rate,
@@ -179,6 +179,10 @@ def shaping_commands(mode, iface, mbps, address_key, indev, rtt_ms):
     return commands
 
 
+def fifo_buffer_ms(state):
+    return state.get("fifo_ms", 300)  # state files from before the option existed
+
+
 def set_mode(state, mode):
     assert_owned(state)
     previous = state.get("mode", "sqm")
@@ -188,7 +192,7 @@ def set_mode(state, mode):
         for role, iface, capacity, key, indev in SHAPERS:
             # Delete old root first, to reset statistics and old root filters.
             ns(role, "tc", "qdisc", "del", "dev", iface, "root", check=False)
-            for command in shaping_commands(mode, iface, state[capacity], key, indev, state["rtt_ms"]):
+            for command in shaping_commands(mode, iface, state[capacity], key, indev, state["rtt_ms"], fifo_buffer_ms(state)):
                 ns(role, *command)
         verify_mode(state, mode)
     except LabError as exc:
@@ -196,7 +200,7 @@ def set_mode(state, mode):
         for role, iface, capacity, key, indev in SHAPERS:
             try:
                 ns(role, "tc", "qdisc", "del", "dev", iface, "root", check=False)
-                for command in shaping_commands(previous, iface, state[capacity], key, indev, state["rtt_ms"]):
+                for command in shaping_commands(previous, iface, state[capacity], key, indev, state["rtt_ms"], fifo_buffer_ms(state)):
                     ns(role, *command)
             except LabError as rollback:
                 failures.append(str(rollback))
@@ -244,15 +248,15 @@ def status(state):
             "filters": ns(role, "tc", "-s", "filter", "show", "dev", iface, "parent", "1:", check=False).stdout,
         }
     return {"mode": state["mode"], "up_mbps": state["up_mbps"], "down_mbps": state["down_mbps"],
-            "rtt_ms": state["rtt_ms"], "snapshots": snapshots}
+            "rtt_ms": state["rtt_ms"], "fifo_ms": fifo_buffer_ms(state), "snapshots": snapshots}
 
 
-def setup(up_mbps, down_mbps, rtt_ms):
+def setup(up_mbps, down_mbps, rtt_ms, fifo_ms=300):
     prerequisite_check()
     if STATE.exists() or STATE.is_symlink() or existing_names() & set(NAMES.values()):
         raise LabError("Existing state/topology found. Refusing to overwrite. Run owned teardown or inspect conflicts manually.")
     state = {"version": 1, "token": uuid.uuid4().hex, "names": NAMES, "created": [],
-             "up_mbps": up_mbps, "down_mbps": down_mbps, "rtt_ms": rtt_ms, "mode": "sqm"}
+             "up_mbps": up_mbps, "down_mbps": down_mbps, "rtt_ms": rtt_ms, "fifo_ms": fifo_ms, "mode": "sqm"}
     marker = "netcare-lab:" + state["token"]
     save_state(state)
     try:
@@ -373,6 +377,7 @@ def experiment(state, mode, scenario, duration, warmup, output, bulk_tos=0):
     metadata = {"kind": "linux-kernel-measurement", "mode": mode, "scenario": scenario,
                 "duration_seconds": duration, "warmup_seconds": warmup, "bulk_tos": bulk_tos,
                 "up_mbps": state["up_mbps"], "down_mbps": state["down_mbps"], "base_rtt_ms": state["rtt_ms"],
+                "fifo_buffer_ms": fifo_buffer_ms(state),
                 "udp_target_bps_each_direction": 600000, "udp_payload_bytes": 256,
                 "kernel": os.uname().release, "note": "UDP surrogate, not WebRTC quality or a real Wi-Fi measurement"}
     save_json(output / "metadata.json", metadata)
@@ -548,6 +553,8 @@ def main(argv=None):
     setup_parser.add_argument("--up-mbps", type=float, default=5)
     setup_parser.add_argument("--down-mbps", type=float, default=20)
     setup_parser.add_argument("--rtt-ms", type=float, default=40)
+    setup_parser.add_argument("--fifo-ms", type=float, default=300,
+                              help="how much traffic the FIFO policy's queue holds, in ms at the link rate")
     commands.add_parser("status")
     commands.add_parser("teardown")
     mode_parser = commands.add_parser("mode")
@@ -574,9 +581,9 @@ def main(argv=None):
             result = prerequisite_check()
         elif args.command == "setup":
             # Validate before touching any namespaces.
-            shaping_commands("sqm", "wan", args.up_mbps, "src_ip", "mlan", args.rtt_ms)
-            shaping_commands("sqm", "wan", args.down_mbps, "dst_ip", None, args.rtt_ms)
-            result = setup(args.up_mbps, args.down_mbps, args.rtt_ms)
+            shaping_commands("fifo", "wan", args.up_mbps, "src_ip", "mlan", args.rtt_ms, args.fifo_ms)
+            shaping_commands("fifo", "wan", args.down_mbps, "dst_ip", None, args.rtt_ms, args.fifo_ms)
+            result = setup(args.up_mbps, args.down_mbps, args.rtt_ms, args.fifo_ms)
         else:
             state = load_state()
             session_path = HERE / ".session-state.json"

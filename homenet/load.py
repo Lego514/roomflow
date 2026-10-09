@@ -18,6 +18,7 @@ import os
 import ssl
 import threading
 import time
+from collections import Counter
 from dataclasses import dataclass, field
 
 from . import measure
@@ -40,10 +41,29 @@ class Phase:
     gateway: Series = field(default_factory=lambda: Series("gateway"))
     bytes_moved: int = 0
     seconds: float = 0.0
+    errors: Counter = field(default_factory=Counter)  # "HTTP 403", "TimeoutError", ... -> count
 
     @property
-    def mbps(self) -> float:
-        return self.bytes_moved * 8 / self.seconds / 1e6 if self.seconds else 0.0
+    def failure(self) -> str | None:
+        """Why a load phase measured nothing, or None if data moved.
+
+        A rejected request or a dead connection moves no data; recording that as
+        0 Mbps would read as "someone used up the whole line".
+        """
+        if self.name == "idle" or self.bytes_moved:
+            return None
+        return describe(self.errors) or "no data received"
+
+    @property
+    def mbps(self) -> float | None:
+        if not (self.bytes_moved and self.seconds):
+            return None
+        return self.bytes_moved * 8 / self.seconds / 1e6
+
+
+def describe(errors: Counter) -> str:
+    """'HTTP 403 x6, TimeoutError x1': most frequent first."""
+    return ", ".join(f"{what} x{n}" for what, n in errors.most_common())
 
 
 def _sample(stop: threading.Event, phase: Phase, gateway: str | None) -> list[threading.Thread]:
@@ -65,26 +85,34 @@ def _sample(stop: threading.Event, phase: Phase, gateway: str | None) -> list[th
     return threads
 
 
-def _downloader(stop: threading.Event, counter: list[int], lock: threading.Lock) -> None:
+def _downloader(stop: threading.Event, counter: list[int], lock: threading.Lock, errors: Counter) -> None:
     ctx = ssl.create_default_context()
     while not stop.is_set():
         conn = http.client.HTTPSConnection(SPEED_HOST, timeout=10, context=ctx)
         try:
             conn.request("GET", DOWN_PATH, headers=HEADERS)
             resp = conn.getresponse()
+            if resp.status != 200:
+                # An error page is data too; counting it would turn a refusal into a tiny speed.
+                with lock:
+                    errors[f"HTTP {resp.status}"] += 1
+                time.sleep(1)
+                continue
             while not stop.is_set():
                 data = resp.read(CHUNK)
                 if not data:
                     break
                 with lock:
                     counter[0] += len(data)
-        except OSError:
+        except (OSError, http.client.HTTPException) as e:
+            with lock:
+                errors[type(e).__name__] += 1
             time.sleep(0.5)
         finally:
             conn.close()
 
 
-def _uploader(stop: threading.Event, counter: list[int], lock: threading.Lock) -> None:
+def _uploader(stop: threading.Event, counter: list[int], lock: threading.Lock, errors: Counter) -> None:
     ctx = ssl.create_default_context()
     block = os.urandom(CHUNK)  # incompressible
 
@@ -101,8 +129,15 @@ def _uploader(stop: threading.Event, counter: list[int], lock: threading.Lock) -
         try:
             conn.request("POST", UP_PATH, body=body(), headers={**HEADERS, "Content-Type": "application/octet-stream"},
                          encode_chunked=True)
-            conn.getresponse().read()
-        except OSError:
+            resp = conn.getresponse()
+            resp.read()
+            if resp.status != 200:
+                with lock:
+                    errors[f"HTTP {resp.status}"] += 1
+                time.sleep(1)
+        except (OSError, http.client.HTTPException) as e:
+            with lock:
+                errors[type(e).__name__] += 1
             time.sleep(0.5)
         finally:
             conn.close()
@@ -115,7 +150,7 @@ def run_phase(name: str, seconds: float, gateway: str | None) -> Phase:
     workers: list[threading.Thread] = []
     if name in ("download", "upload"):
         target = _downloader if name == "download" else _uploader
-        workers = [threading.Thread(target=target, args=(stop, counter, lock), daemon=True) for _ in range(STREAMS)]
+        workers = [threading.Thread(target=target, args=(stop, counter, lock, phase.errors), daemon=True) for _ in range(STREAMS)]
         for w in workers:
             w.start()
         time.sleep(2)  # let TCP ramp up and fill the queue before measuring
@@ -140,6 +175,9 @@ class BloatResult:
     upload: Phase
 
     def grade(self, phase: Phase) -> tuple[str, float | None, str]:
+        if phase.failure:
+            # Latency during a load that never ran is idle latency; grading it would say "A".
+            return "?", None, f"not loaded: {phase.failure}"
         return bloat_grade(self.idle.internet.p50, phase.internet.p95)
 
 

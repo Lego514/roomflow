@@ -9,47 +9,28 @@ different hours on different days; averaging by hour would blur that on/off
 shape, which is the clue to the cause. Two lines show where the delay lives:
 if the router line stays flat while the internet line rises, the queue is
 outside the home. Gaps longer than 15 minutes (the laptop asleep) break the lines.
+Shaded bands are the slow periods homenet's report detects (homenet/episodes.py).
 
     python scripts/plot-home.py data/home.sqlite docs/
 """
 from __future__ import annotations
 
-import sqlite3
-import statistics
 import sys
-from collections import defaultdict
 from datetime import datetime, timedelta
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from homenet import episodes, store  # noqa: E402
+
 THEMES = {
     "light": {"surface": "#fcfcfb", "ink": "#0b0b0b", "ink2": "#52514e", "muted": "#898781",
-              "grid": "#e1e0d9", "axis": "#c3c2b7", "series": ["#2a78d6", "#eb6834"]},
+              "grid": "#e1e0d9", "axis": "#c3c2b7", "band": "#efede6", "series": ["#2a78d6", "#eb6834"]},
     "dark": {"surface": "#1a1a19", "ink": "#ffffff", "ink2": "#c3c2b7", "muted": "#898781",
-             "grid": "#2c2c2a", "axis": "#383835", "series": ["#3987e5", "#d95926"]},
+             "grid": "#2c2c2a", "axis": "#383835", "band": "#262624", "series": ["#3987e5", "#d95926"]},
 }
 W, H = 760, 380
 LEFT, RIGHT, TOP, BOTTOM = 56, 150, 78, 48
 FONT = 'system-ui, -apple-system, "Segoe UI", sans-serif'
-
-
-def timeline(db_path: Path) -> tuple[list[tuple[datetime, float | None, float | None]], int]:
-    db = sqlite3.connect(db_path)
-    per_check: dict[str, dict[str, list[float]]] = defaultdict(lambda: defaultdict(list))
-    for at, layer, p50 in db.execute(
-        "select datetime(at, 'localtime'), layer, p50_ms from latency "
-        "where layer in ('gateway', 'internet') and p50_ms is not null"
-    ):
-        per_check[at][layer].append(p50)
-    db.close()
-    rows = []
-    for at in sorted(per_check):
-        layers = per_check[at]
-        rows.append((
-            datetime.fromisoformat(at),
-            statistics.fmean(layers["gateway"]) if layers.get("gateway") else None,
-            statistics.fmean(layers["internet"]) if layers.get("internet") else None,
-        ))
-    return rows, len(rows)
 
 
 GAP = timedelta(minutes=15)
@@ -92,7 +73,7 @@ def draw(segs: list[list[str]], color: str) -> list[str]:
     return svg
 
 
-def svg(theme: dict, rows, checks: int) -> str:
+def svg(theme: dict, rows, checks: int, slow: list) -> str:
     t0, t1 = rows[0][0], rows[-1][0]
     top = 300.0  # clip the rare spike so the plateaus stay readable
     span = f"{t0:%b %d %H:%M} to {t1:%b %d %H:%M}"
@@ -108,6 +89,10 @@ def svg(theme: dict, rows, checks: int) -> str:
         f'<text x="{LEFT}" y="52" font-size="12.5" fill="{theme["ink2"]}">'
         f"Median latency every 5 minutes · {checks} checks, {span} · capped at {top:.0f} ms</text>",
     ]
+    for e in slow:  # behind the grid and the lines
+        x0, x1 = xt(e.start, t0, t1), xt(e.end, t0, t1)
+        out.append(f'<rect x="{x0:.1f}" y="{TOP}" width="{max(x1 - x0, 1):.1f}" height="{H - TOP - BOTTOM}" '
+                   f'fill="{theme["band"]}"/>')
     for ms in range(0, int(top) + 1, 100):
         yy = y(ms, top)
         stroke = theme["axis"] if ms == 0 else theme["grid"]
@@ -132,20 +117,29 @@ def svg(theme: dict, rows, checks: int) -> str:
         out.append(f'<line x1="{lx}" x2="{lx + 14}" y1="{ly - 4:.1f}" y2="{ly - 4:.1f}" stroke="{theme["series"][i]}" '
                    'stroke-width="3" stroke-linecap="round"/>')
         out.append(f'<text x="{lx + 20}" y="{ly:.1f}" font-size="12.5" fill="{theme["ink"]}">{name}</text>')
+    if slow:
+        ly = y(100, top) + 4
+        out.append(f'<rect x="{lx}" y="{ly - 10:.1f}" width="14" height="12" fill="{theme["band"]}" '
+                   f'stroke="{theme["axis"]}" stroke-width="0.5"/>')
+        out.append(f'<text x="{lx + 20}" y="{ly:.1f}" font-size="12.5" fill="{theme["ink"]}">Slow period</text>')
     out.append("</svg>")
     return "\n".join(out) + "\n"
 
 
 def main() -> int:
     db_path, out_dir = Path(sys.argv[1]), Path(sys.argv[2])
-    rows, checks = timeline(db_path)
+    db = store.connect(db_path)
+    rows = store.check_timeline(db)
+    db.close()
+    checks = len(rows)
+    slow = episodes.find(rows)
     if len(rows) < 2:
         print("not enough checks recorded yet")
         return 1
     out_dir.mkdir(parents=True, exist_ok=True)
     for name, theme in THEMES.items():
-        (out_dir / f"home-latency-{name}.svg").write_text(svg(theme, rows, checks), encoding="utf-8", newline="\n")
-    print(f"{checks} checks, {rows[0][0]} to {rows[-1][0]}")
+        (out_dir / f"home-latency-{name}.svg").write_text(svg(theme, rows, checks, slow), encoding="utf-8", newline="\n")
+    print(f"{checks} checks, {rows[0][0]} to {rows[-1][0]}; {len(slow)} slow periods shaded")
     return 0
 
 

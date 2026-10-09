@@ -8,7 +8,10 @@ the addresses of routers along the path (a trace keeps hop numbers and segments)
 from __future__ import annotations
 
 import sqlite3
+import statistics
+from collections import defaultdict
 from dataclasses import dataclass
+from datetime import datetime
 from pathlib import Path
 
 from .check import CheckResult
@@ -31,20 +34,30 @@ create table if not exists ipv6 (
   at text not null, target text not null, v4_p50 real, v6_p50 real, verdict text
 );
 create table if not exists capacity (
-  at text not null, down_mbps real, up_mbps real, down_loaded_p50 real, up_loaded_p50 real
+  at text not null, down_mbps real, up_mbps real, down_loaded_p50 real, up_loaded_p50 real,
+  down_error text, up_error text
 );
 create table if not exists bloat (
   at text not null, phase text not null, mbps real,
   internet_p50 real, internet_p95 real, gateway_p50 real, gateway_p95 real,
-  grade text, added_ms real
+  grade text, added_ms real, error text
 );
 """
+
+# Columns added after the first release; older databases get them on connect.
+ADDED_COLUMNS = {"capacity": ("down_error text", "up_error text"), "bloat": ("error text",)}
 
 
 def connect(path: Path) -> sqlite3.Connection:
     path.parent.mkdir(parents=True, exist_ok=True)
     db = sqlite3.connect(path)
     db.executescript(SCHEMA)
+    for table, columns in ADDED_COLUMNS.items():
+        have = {row[1] for row in db.execute(f"pragma table_info({table})")}
+        for column in columns:
+            if column.split()[0] not in have:
+                db.execute(f"alter table {table} add column {column}")
+    db.commit()
     return db
 
 
@@ -66,10 +79,10 @@ def save_check(db: sqlite3.Connection, at: str, r: CheckResult) -> None:
 def save_bloat(db: sqlite3.Connection, at: str, r: BloatResult) -> None:
     for phase in (r.idle, r.download, r.upload):
         grade, added, _ = r.grade(phase) if phase is not r.idle else ("", None, "")
-        db.execute("insert into bloat values (?,?,?,?,?,?,?,?,?)",
+        db.execute("insert into bloat values (?,?,?,?,?,?,?,?,?,?)",
                    (at, phase.name, phase.mbps if phase is not r.idle else None,
                     phase.internet.p50, phase.internet.p95, phase.gateway.p50, phase.gateway.p95,
-                    grade or None, added))
+                    None if grade in ("", "?") else grade, added, phase.failure))
     db.commit()
 
 
@@ -187,18 +200,62 @@ def trace_summary(db: sqlite3.Connection) -> tuple | None:
 
 
 def save_capacity(db: sqlite3.Connection, at: str, r) -> None:
-    db.execute("insert into capacity values (?,?,?,?,?)",
-               (at, r.download.mbps, r.upload.mbps, r.download.internet.p50, r.upload.internet.p50))
+    """A direction whose transfers all failed is stored as NULL Mbps plus the reason, never as 0."""
+    db.execute("insert into capacity values (?,?,?,?,?,?,?)",
+               (at, r.download.mbps, r.upload.mbps, r.download.internet.p50, r.upload.internet.p50,
+                r.download.failure, r.upload.failure))
     db.commit()
 
 
 def capacity_by_hour(db: sqlite3.Connection) -> list[tuple]:
-    """Per local hour: runs, median download and upload Mbps available."""
-    by_hour: dict[str, tuple[list[float], list[float]]] = {}
-    for hour, down, up in db.execute(
-        "select strftime('%H', at, 'localtime'), down_mbps, up_mbps from capacity order by at"
+    """Per local hour: runs, median download and upload Mbps available, failed measurements."""
+    by_hour: dict[str, tuple[list[float], list[float], list[int]]] = {}
+    for hour, down, up, failed in db.execute(
+        "select strftime('%H', at, 'localtime'), down_mbps, up_mbps, "
+        "(down_error is not null) + (up_error is not null) from capacity order by at"
     ):
-        downs, ups = by_hour.setdefault(hour, ([], []))
+        downs, ups, fails = by_hour.setdefault(hour, ([], [], []))
         downs.append(down)
         ups.append(up)
-    return [(h, len(d), _median(d), _median(u)) for h, (d, u) in sorted(by_hour.items())]
+        fails.append(failed)
+    return [(h, len(d), _median(d), _median(u), sum(f)) for h, (d, u, f) in sorted(by_hour.items())]
+
+
+def capacity_runs(db: sqlite3.Connection) -> list[tuple[datetime, float | None, float | None]]:
+    """Every capacity run in local time: (when, down Mbps, up Mbps); None where that direction failed."""
+    return [(datetime.fromisoformat(at), down, up) for at, down, up in db.execute(
+        "select datetime(at, 'localtime'), down_mbps, up_mbps from capacity order by at")]
+
+
+def ipv6_runs(db: sqlite3.Connection) -> list[tuple[datetime, bool]]:
+    """Every IPv6 run in local time: (when, whether any target with IPv6 failed over IPv6 while IPv4 worked)."""
+    v6_targets = {t for (t,) in db.execute("select distinct target from ipv6 where verdict != 'no IPv6 address'")}
+    runs: dict[str, bool] = {}
+    for at, target, v4, v6 in db.execute(
+        "select datetime(at, 'localtime'), target, v4_p50, v6_p50 from ipv6 order by at"
+    ):
+        failed = target in v6_targets and v4 is not None and v6 is None
+        runs[at] = runs.get(at, False) or failed
+    return [(datetime.fromisoformat(at), failed) for at, failed in runs.items()]
+
+
+def check_timeline(db: sqlite3.Connection) -> list[tuple[datetime, float | None, float | None]]:
+    """One row per scheduled check in local time: (when, router p50, internet p50).
+
+    The internet value is the mean of the per-target medians (1.1.1.1 and 8.8.8.8).
+    """
+    per_check: dict[str, dict[str, list[float]]] = defaultdict(lambda: defaultdict(list))
+    for at, layer, p50 in db.execute(
+        "select datetime(at, 'localtime'), layer, p50_ms from latency "
+        "where layer in ('gateway', 'internet') and p50_ms is not null"
+    ):
+        per_check[at][layer].append(p50)
+    rows = []
+    for at in sorted(per_check):
+        layers = per_check[at]
+        rows.append((
+            datetime.fromisoformat(at),
+            statistics.fmean(layers["gateway"]) if layers.get("gateway") else None,
+            statistics.fmean(layers["internet"]) if layers.get("internet") else None,
+        ))
+    return rows

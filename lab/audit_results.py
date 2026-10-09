@@ -22,7 +22,7 @@ DIAGNOSTIC_NAMES = {
 }
 
 
-def audit(root, diagnostic=False):
+def audit(root, diagnostic=False, up_mbps=5, down_mbps=20, rtt_ms=40, fifo_ms=None):
     failures, observations, measurements, offsets, cpus = [], [], [], [], []
     flow_count = 0
     for path in sorted(root.glob("*/summary.json")):
@@ -113,11 +113,13 @@ def audit(root, diagnostic=False):
         before, after = read(folder / "tc-before.json"), read(folder / "tc-after.json")
         if set(after["snapshots"]) != {"router/wan", "delay/torouter"}:
             failures.append(f"{folder.name}: missing paired shared shapers")
-        if after["up_mbps"] != 5 or after["down_mbps"] != 20 or after["rtt_ms"] != 40:
-            failures.append(f"{folder.name}: default selftest capacity/RTT parameters changed")
+        if after["up_mbps"] != up_mbps or after["down_mbps"] != down_mbps or after["rtt_ms"] != rtt_ms:
+            failures.append(f"{folder.name}: capacity/RTT differ from the expected {up_mbps:g}/{down_mbps:g} Mbps, {rtt_ms:g} ms")
+        if fifo_ms is not None and after.get("fifo_ms") != fifo_ms:
+            failures.append(f"{folder.name}: FIFO buffer is not the expected {fifo_ms:g} ms")
         if summary["mode"] in ("sqm", "meeting"):
             for link, snapshot in after["snapshots"].items():
-                expected_rate = "5Mbit" if link == "router/wan" else "20Mbit"
+                expected_rate = f"{up_mbps:g}Mbit" if link == "router/wan" else f"{down_mbps:g}Mbit"
                 expected_policy = "besteffort" if summary["mode"] == "sqm" else "diffserv4"
                 if f"bandwidth {expected_rate}" not in snapshot["qdisc"] or expected_policy not in snapshot["qdisc"]:
                     failures.append(f"{folder.name}/{link}: raw kernel rate/strategy mismatch")
@@ -155,8 +157,14 @@ def main():
     parser.add_argument("--input", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--diagnostic", action="store_true", help="Require the exact eleven-run diagnostic sequence instead of the full factorial matrix")
+    # The profile the batch was set up with; the audit checks the kernel config against it independently.
+    parser.add_argument("--up-mbps", type=float, default=5)
+    parser.add_argument("--down-mbps", type=float, default=20)
+    parser.add_argument("--rtt-ms", type=float, default=40)
+    parser.add_argument("--fifo-ms", type=float, default=None)
     args = parser.parse_args()
-    result = audit(args.input, diagnostic=args.diagnostic)
+    result = audit(args.input, diagnostic=args.diagnostic, up_mbps=args.up_mbps, down_mbps=args.down_mbps,
+                   rtt_ms=args.rtt_ms, fifo_ms=args.fifo_ms)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({key: value for key, value in result.items() if key != "data"}, indent=2))

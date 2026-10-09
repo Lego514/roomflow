@@ -37,6 +37,15 @@ class CommandPlanTests(unittest.TestCase):
         self.assertIn("pfifo", commands[2])
         self.assertNotIn("netem", str(commands))
 
+    def test_fifo_buffer_holds_the_configured_milliseconds(self):
+        def limit(mbps, **kwargs):
+            return int(netlab.shaping_commands("fifo", "wan", mbps, "src_ip", "mlan", 40, **kwargs)[2][-1])
+        self.assertEqual(limit(20), 500)  # default 300 ms: 20 Mbit/s * 0.3 s / 1500 B
+        self.assertEqual(limit(250, fifo_ms=180), 3750)  # the home line: 250 Mbit/s * 0.18 s / 1500 B
+        self.assertEqual(limit(0.5, fifo_ms=20), 20)  # never below 20 packets
+        with self.assertRaises(netlab.LabError):
+            netlab.shaping_commands("fifo", "wan", 20, "src_ip", "mlan", 40, fifo_ms=5000)
+
     def test_selected_priority_requires_ingress_and_source(self):
         commands = netlab.shaping_commands("meeting", "wan", 5, "src_ip", "mlan", 40)
         self.assertIn("indev", commands[1])

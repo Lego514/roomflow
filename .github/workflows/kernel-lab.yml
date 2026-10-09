@@ -30,13 +30,24 @@ jobs:
       - run: python3 -m unittest discover -s homenet/tests -t . -v
 
   kernel:
-    name: Packet lab on a native kernel
+    name: Packet lab on a native kernel (${{ matrix.profile.name }})
     needs: unit
     runs-on: ubuntu-24.04
     timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        profile:
+          # The reference matrix the README's first table comes from.
+          - { name: reference, up: 5, down: 20, rtt: 40, fifo: 300 }
+          # The home line homenet measured: ~35 Mbps up, ~250 Mbps down, ~25 ms to
+          # 1.1.1.1, and plateaus ~180 ms above that when the line is full, which
+          # sets how much the FIFO queue holds. Predicts what CAKE would do there.
+          - { name: home, up: 35, down: 250, rtt: 25, fifo: 180 }
     env:
       REPEATS: ${{ inputs.repeats || '5' }}
       SEED: ${{ inputs.seed || '20261007' }}
+      P: ${{ matrix.profile.name }}
     steps:
       - uses: actions/checkout@v4
       - name: Install tools
@@ -49,28 +60,33 @@ jobs:
       - name: Check kernel features (CAKE, netem, HTB, flower, skbedit)
         run: sudo python3 lab/netlab.py check
       - name: Build the topology
-        run: sudo python3 lab/netlab.py setup
+        run: >
+          sudo python3 lab/netlab.py setup --up-mbps ${{ matrix.profile.up }} --down-mbps ${{ matrix.profile.down }}
+          --rtt-ms ${{ matrix.profile.rtt }} --fifo-ms ${{ matrix.profile.fifo }}
       - name: Self-test
-        run: sudo python3 lab/netlab.py selftest --duration 8 --output ci/selftest
+        run: sudo python3 lab/netlab.py selftest --duration 8 --output "ci/$P/selftest"
       - name: Measurement matrix
-        run: sudo python3 lab/netlab.py batch --duration 15 --repeats "$REPEATS" --seed "$SEED" --output ci/batch
+        run: sudo python3 lab/netlab.py batch --duration 15 --repeats "$REPEATS" --seed "$SEED" --output "ci/$P/batch"
       - name: Tear down
         if: always()
         run: sudo python3 lab/netlab.py teardown || true
       - name: Audit the raw data
-        run: sudo python3 lab/audit_results.py --input ci/batch --output ci/batch-audit.json
+        run: >
+          sudo python3 lab/audit_results.py --input "ci/$P/batch" --output "ci/$P/batch-audit.json"
+          --up-mbps ${{ matrix.profile.up }} --down-mbps ${{ matrix.profile.down }}
+          --rtt-ms ${{ matrix.profile.rtt }} --fifo-ms ${{ matrix.profile.fifo }}
       - name: Summary
         if: always()
         run: |
-          if [ -f ci/batch/measurements.csv ]; then
-            python3 lab/ci_summary.py --input ci/batch/measurements.csv \
-              --environment "GitHub Actions ubuntu-24.04, kernel $(uname -r), $(nproc) vCPU, seed $SEED" \
-              | tee -a "$GITHUB_STEP_SUMMARY"
+          if [ -f "ci/$P/batch/measurements.csv" ]; then
+            python3 lab/ci_summary.py --input "ci/$P/batch/measurements.csv" \
+              --environment "Profile $P: ${{ matrix.profile.up }}/${{ matrix.profile.down }} Mbps up/down, ${{ matrix.profile.rtt }} ms base RTT, FIFO queue ${{ matrix.profile.fifo }} ms. GitHub Actions ubuntu-24.04, kernel $(uname -r), $(nproc) vCPU, seed $SEED" \
+              | tee -a "$GITHUB_STEP_SUMMARY" "ci/$P/summary.md"
           fi
       - name: Upload raw results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: kernel-lab-results
+          name: kernel-lab-results-${{ matrix.profile.name }}
           path: ci/
           if-no-files-found: ignore
