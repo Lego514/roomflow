@@ -1,4 +1,9 @@
-"""One quick health check of the home connection, bottom-up."""
+"""Selected home-network probes, grouped from local observations to named targets.
+
+A first flagged layer guides investigation; it does not establish a root cause.
+Successful gateway probes do not exclude Wi-Fi issues under other loads, and
+service TCP connections do not measure video media or application quality.
+"""
 
 from __future__ import annotations
 
@@ -9,7 +14,7 @@ from .stats import Series, diagnose, layer_status, wifi_status
 
 INTERNET_IPS = ["1.1.1.1", "8.8.8.8"]
 DNS_NAMES = ["www.udel.edu", "zoom.us"]
-SERVICES = ["zoom.us", "teams.microsoft.com"]  # where calls actually go
+SERVICES = ["zoom.us", "teams.microsoft.com"]  # website endpoints, not verified call-media paths
 
 
 @dataclass

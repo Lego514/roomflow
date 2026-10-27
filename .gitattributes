@@ -1,5 +1,6 @@
 * text=auto eol=lf
 # Raw measurements and evidence: keep the exact bytes (their SHA-256 hashes are recorded).
-results/** -text
-artifacts/** -text
+results/** -text whitespace=cr-at-eol
+artifacts/** -text whitespace=cr-at-eol
 roomflow-linux-measurements.csv -text
+docs/evidence/** -text whitespace=cr-at-eol

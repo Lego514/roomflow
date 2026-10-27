@@ -1,14 +1,17 @@
-"""Bufferbloat test: latency at idle, then while the link is saturated each way.
+"""Load test: probe latency at idle, then during parallel transfers each way.
 
-This is the home version of the lab's experiment. The lab built a bottleneck and
-a roommate; here the bottleneck is the real router and ISP link, and the
-"roommate" is a set of parallel transfers to Cloudflare's speed-test endpoints.
+The lab used a controlled bottleneck and background traffic. Here parallel
+transfers to Cloudflare's speed-test endpoints generate load on a real path;
+the limiting device or link is not assumed in advance.
 
 Latency is sampled two ways at the same time:
   - TCP handshakes to 1.1.1.1:443, five a second (internet path)
   - ping to the default gateway, once a second (the local hop: Wi-Fi + router)
-If latency to the internet rises under load but the gateway stays flat, the
-queue is upstream (modem/ISP); if the gateway rises too, it is local.
+If external TCP connect time rises but gateway echo RTT stays flat, that is a
+candidate for investigation beyond the gateway. It does not prove an upstream
+queue or exclude Wi-Fi: the probes use different protocols and loads, and
+gateway control-plane behavior can differ from forwarding. Link saturation and
+the cause of added latency require separate evidence.
 """
 
 from __future__ import annotations

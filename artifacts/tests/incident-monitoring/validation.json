@@ -1,0 +1,78 @@
+{
+  "verifiedAtUTC": "2026-10-20T05:28:52.653651+00:00",
+  "unitAndIntegrationTests": {
+    "node": 34,
+    "homenet": 100,
+    "lab": 26,
+    "total": 160,
+    "allPassed": true
+  },
+  "actualDrills": {
+    "delay": {
+      "actualPackets": true,
+      "samples": 7,
+      "incidents": 1,
+      "transitions": 2,
+      "resolved": true,
+      "namespaceCleanupVerified": true,
+      "durationSeconds": 9.224
+    },
+    "loss": {
+      "actualPackets": true,
+      "samples": 7,
+      "incidents": 1,
+      "transitions": 2,
+      "resolved": true,
+      "namespaceCleanupVerified": true,
+      "durationSeconds": 23.319
+    },
+    "dns": {
+      "actualPackets": true,
+      "samples": 7,
+      "incidents": 1,
+      "transitions": 2,
+      "resolved": true,
+      "namespaceCleanupVerified": true,
+      "durationSeconds": 7.945
+    }
+  },
+  "interruption": {
+    "actualSIGTERM": true,
+    "namespaceCleanupVerified": true,
+    "staleSuccessfulDashboardAbsent": true
+  },
+  "historicalDemo": {
+    "checks": 1238,
+    "incidents": 26,
+    "transitions": 52,
+    "sourceKind": "historical-demo"
+  },
+  "localExportObserved": {
+    "checks": 3333,
+    "incidents": 61,
+    "latestSample": "2026-10-20T05:25:03Z",
+    "timelineLimit": 2000
+  },
+  "browserChecks": {
+    "sourceSwitches": [
+      "demo",
+      "local",
+      "drill/dns"
+    ],
+    "eventSelection": true,
+    "englishAndTraditionalChinese": true,
+    "viewportWidth": 502,
+    "horizontalOverflow": false,
+    "screenshot": "events.png",
+    "standaloneFileURLVisualCheck": false,
+    "fileURLNote": "The in-app browser permits HTTP(S) only. The portable file was statically validated, including embedded data and scripts; its same UI was visually checked through the local web application."
+  },
+  "preservation": {
+    "existingSourceFilesChecked": 59,
+    "unexpectedSourceChanges": 0,
+    "originalSQLiteRowsRetained": true
+  },
+  "remoteCIRun": false,
+  "committedOrPushed": false,
+  "externalNotificationsSent": false
+}

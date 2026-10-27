@@ -5,11 +5,12 @@ timing `getaddrinfo` says little. This module builds DNS queries by hand
 (RFC 1035 wire format, standard library only) and sends each one to a chosen
 resolver over UDP, timing the answer.
 
-Two kinds of question, because they measure different things:
-  - popular names (zoom.us, ...): almost always cached at the resolver, so this
-    is mostly the round trip to the resolver itself
-  - a random name under example.com: never cached, so the resolver has to walk
-    the DNS tree; the answer is NXDOMAIN, which still proves it did the work
+Two query groups, without assuming the resolver's cache state:
+  - popular names (zoom.us, ...), which may benefit from cached answers
+  - random names under example.com, intended to reduce exact-name cache reuse
+An NXDOMAIN response does not prove a full recursive lookup: a resolver may
+synthesize it from a DNSSEC-validated cache (RFC 8198,
+https://www.rfc-editor.org/rfc/rfc8198.html).
 """
 
 from __future__ import annotations

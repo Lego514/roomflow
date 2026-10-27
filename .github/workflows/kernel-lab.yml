@@ -2,7 +2,8 @@ name: Kernel lab
 
 # Reruns the packet lab on a GitHub-hosted runner: a native Linux kernel with
 # hardware virtualization, instead of the QEMU TCG guest the first results came
-# from, whose software-emulated timing made the smaller differences unreliable.
+# from, where measurements varied. The environment change does not establish
+# software-emulated timing as the sole cause of that variation.
 
 on:
   push:
@@ -41,8 +42,9 @@ jobs:
           # The reference matrix the README's first table comes from.
           - { name: reference, up: 5, down: 20, rtt: 40, fifo: 300 }
           # The home line homenet measured: ~35 Mbps up, ~250 Mbps down, ~25 ms to
-          # 1.1.1.1, and plateaus ~180 ms above that when the line is full, which
-          # sets how much the FIFO queue holds. Predicts what CAKE would do there.
+          # 1.1.1.1, and observed plateaus ~180 ms above that. The FIFO queue is
+          # calibrated to that observation; the queueing cause remains unconfirmed.
+          # This predicts CAKE behavior in the lab, not a measured router repair.
           - { name: home, up: 35, down: 250, rtt: 25, fifo: 180 }
     env:
       REPEATS: ${{ inputs.repeats || '5' }}

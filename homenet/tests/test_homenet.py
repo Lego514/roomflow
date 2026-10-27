@@ -89,7 +89,7 @@ class Stats(unittest.TestCase):
         self.assertEqual(stats.wifi_status(35, True), "degraded")
         self.assertEqual(stats.wifi_status(None, False), "down")
 
-    def test_diagnose_blames_lowest_layer(self):
+    def test_diagnose_selects_first_flagged_observation(self):
         self.assertEqual(stats.diagnose({"wifi": "ok", "gateway": "ok", "internet": "ok"}), ("ok", None))
         self.assertEqual(stats.diagnose({"wifi": "degraded", "gateway": "degraded", "internet": "down"}),
                          ("degraded", "wifi"))
@@ -152,7 +152,7 @@ class Ipv6History(unittest.TestCase):
             db = store.connect(Path(d) / "h.sqlite")
             rows = [
                 ("t1", "zoom.us", 22.0, 21.0, "about the same"),   # quiet hour: both answer
-                ("t2", "zoom.us", 200.0, None, "no IPv6 address"),  # congested: AAAA lookup failed
+                ("t2", "zoom.us", 200.0, None, "no IPv6 address"),  # legacy: lookup outcome unknown
                 ("t3", "zoom.us", 190.0, None, "IPv6 fails"),       # congested: IPv6 connect failed
                 ("t4", "zoom.us", 24.0, 30.0, "IPv6 6 ms slower"),
                 ("t1", "v4only.example", 20.0, None, "no IPv6 address"),
@@ -162,6 +162,7 @@ class Ipv6History(unittest.TestCase):
             db.close()
         zoom = summary["zoom.us"]
         self.assertEqual((zoom.runs, zoom.paired, zoom.v6_failed, zoom.v6_slower), (4, 2, 2, 1))
+        self.assertEqual((zoom.v6_lookup_unavailable, zoom.v6_tcp_failed, zoom.v6_unclassified), (0, 1, 1))
         # Medians over paired runs only: the congested 200/190 ms runs don't make IPv6 look faster.
         self.assertEqual((zoom.v4_p50, zoom.v6_p50), (23.0, 25.5))
         v4only = summary["v4only.example"]

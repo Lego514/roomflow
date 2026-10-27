@@ -1,0 +1,27 @@
+{
+  "existingSourceFilesChecked": 59,
+  "intentionalEdits": [
+    {
+      "path": "homenet/__main__.py",
+      "change": "modified"
+    },
+    {
+      "path": "homenet/store.py",
+      "change": "modified"
+    },
+    {
+      "path": "public/index.html",
+      "change": "modified"
+    },
+    {
+      "path": "src/server.mjs",
+      "change": "modified"
+    },
+    {
+      "path": "docs/README.zh-TW.md",
+      "change": "modified"
+    }
+  ],
+  "unexpectedSourceChanges": [],
+  "ignoredGeneratedFiles": "Python bytecode caches excluded"
+}

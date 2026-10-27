@@ -50,18 +50,27 @@ ADDED_COLUMNS = {"capacity": ("down_error text", "up_error text"), "bloat": ("er
 
 def connect(path: Path) -> sqlite3.Connection:
     path.parent.mkdir(parents=True, exist_ok=True)
-    db = sqlite3.connect(path)
+    db = sqlite3.connect(path, timeout=30)
     db.executescript(SCHEMA)
     for table, columns in ADDED_COLUMNS.items():
         have = {row[1] for row in db.execute(f"pragma table_info({table})")}
         for column in columns:
             if column.split()[0] not in have:
                 db.execute(f"alter table {table} add column {column}")
+    from .incidents import initialize
+    initialize(db)
     db.commit()
     return db
 
 
 def save_check(db: sqlite3.Connection, at: str, r: CheckResult) -> None:
+    # The raw check and its durable incident transitions commit together.
+    # Serialize scheduled writers before reading/replaying history.
+    if not db.in_transaction:
+        db.execute("begin immediate")
+    if db.execute("select 1 from checks where at=? limit 1", (at,)).fetchone():
+        db.commit()  # Retrying a saved timestamp is idempotent.
+        return
     w = r.wifi
     db.execute(
         "insert into checks values (?,?,?,?,?,?,?,?,?)",
@@ -73,6 +82,8 @@ def save_check(db: sqlite3.Connection, at: str, r: CheckResult) -> None:
             target = "gateway" if layer == "gateway" else s.target  # don't store the router's IP
             db.execute("insert into latency values (?,?,?,?,?,?,?,?)",
                        (at, layer, target, s.sent, s.loss_pct, s.p50, s.p95, s.jitter))
+    from .dashboard import from_connection
+    from_connection(db, persist=True)
     db.commit()
 
 
@@ -145,7 +156,33 @@ class Ipv6Summary:
     v4_p50: float | None  # median over paired runs only
     v6_p50: float | None
     v6_slower: int  # paired runs where IPv6 was at least 3 ms slower
-    v6_failed: int  # runs where IPv4 answered but IPv6 didn't (target has an IPv6 address)
+    v6_failed: int  # compatibility name: runs missing a successful IPv6 observation while IPv4 answered
+    v6_lookup_unavailable: int = 0
+    v6_tcp_failed: int = 0
+    v6_unclassified: int = 0  # legacy records do not establish lookup vs connection outcome
+
+
+def _ipv6_missing_kind(v4, v6, verdict, historically_probed: bool) -> str | None:
+    if v4 is None or v6 is not None:
+        return None
+    verdict = verdict or ""
+    if "no IPv6 TCP probes recorded" in verdict:
+        return None
+    if "IPv6 address lookup unavailable" in verdict:
+        return "lookup"
+    if "IPv6 TCP probes had no successful connections" in verdict or verdict == "IPv6 fails":
+        return "tcp"
+    if historically_probed:
+        # Old "no IPv6 address" records cannot distinguish absent AAAA data from
+        # a lookup failure. Another run's success does not resolve that ambiguity.
+        return "unclassified"
+    return None
+
+
+def _historically_probed_ipv6(rows) -> bool:
+    return any(v6 is not None or verdict == "IPv6 fails"
+               or "IPv6 TCP probes had no successful connections" in (verdict or "")
+               for _, v6, verdict in rows)
 
 
 def ipv6_summary(db: sqlite3.Connection) -> list[Ipv6Summary]:
@@ -153,17 +190,16 @@ def ipv6_summary(db: sqlite3.Connection) -> list[Ipv6Summary]:
 
     Medians over all runs would compare different moments: if IPv6 fails exactly
     when the line is congested, its surviving samples all come from quiet hours
-    and IPv6 looks far faster than it is. Failures are counted separately.
+    and IPv6 looks far faster than it is. Missing observations are counted
+    separately, retaining lookup vs TCP outcomes only where the record says so.
     """
     out = []
     targets = [r[0] for r in db.execute("select distinct target from ipv6 order by target")]
     for t in targets:
         rows = db.execute("select v4_p50, v6_p50, verdict from ipv6 where target = ?", (t,)).fetchall()
         both = [(a, b) for a, b, _ in rows if a is not None and b is not None]
-        # A name that resolved to an IPv6 address in other runs but not in this one
-        # failed too (the AAAA lookup itself failed), it isn't IPv4-only.
-        has_v6 = any(verdict != "no IPv6 address" for _, _, verdict in rows)
-        failed = sum(1 for a, b, _ in rows if a is not None and b is None and has_v6)
+        has_v6 = _historically_probed_ipv6(rows)
+        kinds = [_ipv6_missing_kind(a, b, verdict, has_v6) for a, b, verdict in rows]
         out.append(Ipv6Summary(
             target=t,
             runs=len(rows),
@@ -171,13 +207,21 @@ def ipv6_summary(db: sqlite3.Connection) -> list[Ipv6Summary]:
             v4_p50=_median([a for a, _ in both]),
             v6_p50=_median([b for _, b in both]),
             v6_slower=sum(1 for a, b in both if b - a >= 3.0),
-            v6_failed=failed,
+            v6_failed=sum(kind is not None for kind in kinds),
+            v6_lookup_unavailable=kinds.count("lookup"),
+            v6_tcp_failed=kinds.count("tcp"),
+            v6_unclassified=kinds.count("unclassified"),
         ))
     return out
 
 
 def trace_summary(db: sqlite3.Connection) -> tuple | None:
-    """Across trace runs: count, median end-to-end latency, and which segment adds the most latency most often."""
+    """Count, median last-reply ICMP RTT, and the most frequent largest comparison step.
+
+    Historical records did not confirm a destination. Their old owner/link labels
+    are softened on read; raw history is preserved and never recast as end-to-end
+    latency or a demonstrated ISP fault.
+    """
     runs = db.execute("select distinct at from trace").fetchall()
     if not runs:
         return None
@@ -191,6 +235,8 @@ def trace_summary(db: sqlite3.Connection) -> tuple | None:
             continue
         totals.append(rows[-1][1])
         seg, _, added = max(rows, key=lambda r: r[2] or 0)
+        seg = {"home router": "first private hop", "ISP access line": "early upstream hop",
+               "ISP (carrier NAT)": "shared-address hop", "ISP / internet": "upstream hop"}.get(seg, seg)
         biggest_segments[seg] = biggest_segments.get(seg, 0) + 1
         biggest_added.append(added)
     if not totals:
@@ -228,13 +274,20 @@ def capacity_runs(db: sqlite3.Connection) -> list[tuple[datetime, float | None, 
 
 
 def ipv6_runs(db: sqlite3.Connection) -> list[tuple[datetime, bool]]:
-    """Every IPv6 run in local time: (when, whether any target with IPv6 failed over IPv6 while IPv4 worked)."""
-    v6_targets = {t for (t,) in db.execute("select distinct target from ipv6 where verdict != 'no IPv6 address'")}
+    """(When, any target missing a successful IPv6 observation while IPv4 worked).
+
+An observed lookup-unavailable result counts separately from TCP failure in
+ipv6_summary. Legacy ambiguous records remain ambiguous; this run-level OR
+does not imply that every IPv6 target, or an application's connection, failed.
+    """
+    v6_targets = {target for (target,) in db.execute("select distinct target from ipv6")
+                  if _historically_probed_ipv6(db.execute(
+                      "select v4_p50, v6_p50, verdict from ipv6 where target = ?", (target,)).fetchall())}
     runs: dict[str, bool] = {}
-    for at, target, v4, v6 in db.execute(
-        "select datetime(at, 'localtime'), target, v4_p50, v6_p50 from ipv6 order by at"
+    for at, target, v4, v6, verdict in db.execute(
+        "select datetime(at, 'localtime'), target, v4_p50, v6_p50, verdict from ipv6 order by at"
     ):
-        failed = target in v6_targets and v4 is not None and v6 is None
+        failed = _ipv6_missing_kind(v4, v6, verdict, target in v6_targets) is not None
         runs[at] = runs.get(at, False) or failed
     return [(datetime.fromisoformat(at), failed) for at, failed in runs.items()]
 

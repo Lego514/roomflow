@@ -1,0 +1,1045 @@
+{
+  "schemaVersion": 1,
+  "source": "real-linux-packets",
+  "scenario": "loss",
+  "startedAt": "2026-10-20T05:24:34.131Z",
+  "environment": {
+    "kernel": "6.18.54.1-microsoft-standard-WSL2",
+    "python": "3.12.3",
+    "requiredTools": {
+      "ip": "/usr/sbin/ip",
+      "tc": "/usr/sbin/tc",
+      "ping": "/usr/bin/ping",
+      "sysctl": "/usr/sbin/sysctl"
+    }
+  },
+  "measurements": [
+    {
+      "sample": {
+        "at": "2026-10-20T05:24:34.462Z",
+        "status": "ok",
+        "layers": {
+          "gateway": {
+            "p50Ms": 0.069,
+            "p95Ms": 0.093,
+            "attempts": 2,
+            "failed": 0,
+            "failurePct": 0.0,
+            "status": "ok",
+            "flags": [],
+            "complete": true,
+            "observedSeries": 1,
+            "expectedSeries": 1
+          },
+          "internet": {
+            "p50Ms": 1.167,
+            "p95Ms": 2.301,
+            "attempts": 2,
+            "failed": 0,
+            "failurePct": 0.0,
+            "status": "ok",
+            "flags": [],
+            "complete": true,
+            "observedSeries": 1,
+            "expectedSeries": 1
+          },
+          "dns": {
+            "p50Ms": 0.838,
+            "p95Ms": 1.55,
+            "attempts": 2,
+            "failed": 0,
+            "failurePct": 0.0,
+            "status": "ok",
+            "flags": [],
+            "complete": true,
+            "observedSeries": 1,
+            "expectedSeries": 1
+          },
+          "service": {
+            "p50Ms": 5.904,
+            "p95Ms": 11.533,
+            "attempts": 2,
+            "failed": 0,
+            "failurePct": 0.0,
+            "status": "ok",
+            "flags": [],
+            "complete": true,
+            "observedSeries": 1,
+            "expectedSeries": 1
+          }
+        }
+      },
+      "attempts": {
+        "gateway": [
+          {
+            "ok": true,
+            "elapsedMs": 0.093,
+            "error": null
+          },
+          {
+            "ok": true,
+            "elapsedMs": 0.045,
+            "error": null
+          }
+        ],
+        "internet": [
+          {
+            "ok": true,
+            "elapsedMs": 2.301,
+            "error": null,
+            "response": null
+          },
+          {
+            "ok": true,
+            "elapsedMs": 0.033,
+            "error": null,
+            "response": null
+          }
+        ],
+        "dns": [
+          {
+            "ok": true,
+            "elapsedMs": 1.55,
+            "error": null,
+            "response": {
+              "transactionIdMatched": true,
+              "rcode": 0,
+              "answers": 1,
+              "bytes": 47
+            }
+          },
+          {
+            "ok": true,
+            "elapsedMs": 0.126,
+            "error": null,
+            "response": {
+              "transactionIdMatched": true,
+              "rcode": 0,
+              "answers": 1,
+              "bytes": 47
+            }
+          }
+        ],
+        "service": [
+          {
+            "ok": true,
+            "elapsedMs": 11.533,
+            "error": null,
+            "response": {
+              "httpStatus": 200,
+              "bytes": 61
+            }
+          },
+          {
+            "ok": true,
+            "elapsedMs": 0.276,
+            "error": null,
+            "response": {
+              "httpStatus": 200,
+              "bytes": 61
+            }
+          }
+        ]
+      },
+      "icmp": {
+        "stdout": "PING 192.0.2.1 (192.0.2.1) 56(84) bytes of data.\n64 bytes from 192.0.2.1: icmp_seq=1 ttl=64 time=0.093 ms\n64 bytes from 192.0.2.1: icmp_seq=2 ttl=64 time=0.045 ms\n\n--- 192.0.2.1 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 53ms\nrtt min/avg/max/mdev = 0.045/0.069/0.093/0.024 ms\n",
+        "stderr": "",
+        "exitCode": 0
+      },
+      "completedAt": "2026-10-20T05:24:34.534Z",
+      "durationMs": 71.37,
+      "serverReadback": {
+        "dnsReceived": 2,
+        "dnsReplied": 2,
+        "dnsDeliberatelyDropped": 0,
+        "tcpAccepted": 2,
+        "httpAccepted": 2,
+        "at": "2026-10-20T05:24:34.534Z"
+      },
+      "phase": "baseline"
+    },
+    {
+      "sample": {
+        "at": "2026-10-20T05:24:34.662Z",
+        "status": "ok",
+        "layers": {
+          "gateway": {
+            "p50Ms": 0.044,
+            "p95Ms": 0.051,
+            "attempts": 2,
+            "failed": 0,
+            "failurePct": 0.0,
+            "status": "ok",
+            "flags": [],
+            "complete": true,
+            "observedSeries": 1,
+            "expectedSeries": 1
+          },
+          "internet": {
+            "p50Ms": 1.44,
+            "p95Ms": 2.848,
+            "attempts": 2,
+            "failed": 0,
+            "failurePct": 0.0,
+            "status": "ok",
+            "flags": [],
+            "complete": true,
+            "observedSeries": 1,
+            "expectedSeries": 1
+          },
+          "dns": {
+            "p50Ms": 0.597,
+            "p95Ms": 0.64,
+            "attempts": 2,
+            "failed": 0,
+            "failurePct": 0.0,
+            "status": "ok",
+            "flags": [],
+            "complete": true,
+            "observedSeries": 1,
+            "expectedSeries": 1
+          },
+          "service": {
+            "p50Ms": 5.872,
+            "p95Ms": 11.34,
+            "attempts": 2,
+            "failed": 0,
+            "failurePct": 0.0,
+            "status": "ok",
+            "flags": [],
+            "complete": true,
+            "observedSeries": 1,
+            "expectedSeries": 1
+          }
+        }
+      },
+      "attempts": {
+        "gateway": [
+          {
+            "ok": true,
+            "elapsedMs": 0.037,
+            "error": null
+          },
+          {
+            "ok": true,
+            "elapsedMs": 0.051,
+            "error": null
+          }
+        ],
+        "internet": [
+          {
+            "ok": true,
+            "elapsedMs": 2.848,
+            "error": null,
+            "response": null
+          },
+          {
+            "ok": true,
+            "elapsedMs": 0.032,
+            "error": null,
+            "response": null
+          }
+        ],
+        "dns": [
+          {
+            "ok": true,
+            "elapsedMs": 0.554,
+            "error": null,
+            "response": {
+              "transactionIdMatched": true,
+              "rcode": 0,
+              "answers": 1,
+              "bytes": 47
+            }
+          },
+          {
+            "ok": true,
+            "elapsedMs": 0.64,
+            "error": null,
+            "response": {
+              "transactionIdMatched": true,
+              "rcode": 0,
+              "answers": 1,
+              "bytes": 47
+            }
+          }
+        ],
+        "service": [
+          {
+            "ok": true,
+            "elapsedMs": 11.34,
+            "error": null,
+            "response": {
+              "httpStatus": 200,
+              "bytes": 61
+            }
+          },
+          {
+            "ok": true,
+            "elapsedMs": 0.404,
+            "error": null,
+            "response": {
+              "httpStatus": 200,
+              "bytes": 61
+            }
+          }
+        ]
+      },
+      "icmp": {
+        "stdout": "PING 192.0.2.1 (192.0.2.1) 56(84) bytes of data.\n64 bytes from 192.0.2.1: icmp_seq=1 ttl=64 time=0.037 ms\n64 bytes from 192.0.2.1: icmp_seq=2 ttl=64 time=0.051 ms\n\n--- 192.0.2.1 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 53ms\nrtt min/avg/max/mdev = 0.037/0.044/0.051/0.007 ms\n",
+        "stderr": "",
+        "exitCode": 0
+      },
+      "completedAt": "2026-10-20T05:24:34.734Z",
+      "durationMs": 71.289,
+      "serverReadback": {
+        "dnsReceived": 4,
+        "dnsReplied": 4,
+        "dnsDeliberatelyDropped": 0,
+        "tcpAccepted": 4,
+        "httpAccepted": 4,
+        "at": "2026-10-20T05:24:34.733Z"
+      },
+      "phase": "baseline"
+    },
+    {
+      "sample": {
+        "at": "2026-10-20T05:24:34.871Z",
+        "status": "degraded",
+        "layers": {
+          "gateway": {
+            "p50Ms": 0.036,
+            "p95Ms": 0.042,
+            "attempts": 2,
+            "failed": 0,
+            "failurePct": 0.0,
+            "status": "ok",
+            "flags": [],
+            "complete": true,
+            "observedSeries": 1,
+            "expectedSeries": 1
+          },
+          "internet": {
+            "p50Ms": null,
+            "p95Ms": null,
+            "attempts": 2,
+            "failed": 2,
+            "failurePct": 100.0,
+            "status": "degraded",
+            "flags": [
+              "unsuccessful-probes"
+            ],
+            "complete": true,
+            "observedSeries": 1,
+            "expectedSeries": 1
+          },
+          "dns": {
+            "p50Ms": null,
+            "p95Ms": null,
+            "attempts": 2,
+            "failed": 2,
+            "failurePct": 100.0,
+            "status": "degraded",
+            "flags": [
+              "unsuccessful-probes"
+            ],
+            "complete": true,
+            "observedSeries": 1,
+            "expectedSeries": 1
+          },
+          "service": {
+            "p50Ms": null,
+            "p95Ms": null,
+            "attempts": 2,
+            "failed": 2,
+            "failurePct": 100.0,
+            "status": "degraded",
+            "flags": [
+              "unsuccessful-probes"
+            ],
+            "complete": true,
+            "observedSeries": 1,
+            "expectedSeries": 1
+          }
+        }
+      },
+      "attempts": {
+        "gateway": [
+          {
+            "ok": true,
+            "elapsedMs": 0.03,
+            "error": null
+          },
+          {
+            "ok": true,
+            "elapsedMs": 0.042,
+            "error": null
+          }
+        ],
+        "internet": [
+          {
+            "ok": false,
+            "elapsedMs": 1206.185,
+            "error": "timeout"
+          },
+          {
+            "ok": false,
+            "elapsedMs": 1206.788,
+            "error": "timeout"
+          }
+        ],
+        "dns": [
+          {
+            "ok": false,
+            "elapsedMs": 1203.763,
+            "error": "timeout"
+          },
+          {
+            "ok": false,
+            "elapsedMs": 1202.112,
+            "error": "timeout"
+          }
+        ],
+        "service": [
+          {
+            "ok": false,
+            "elapsedMs": 1202.529,
+            "error": "timeout"
+          },
+          {
+            "ok": false,
+            "elapsedMs": 1202.051,
+            "error": "timeout"
+          }
+        ]
+      },
+      "icmp": {
+        "stdout": "PING 192.0.2.1 (192.0.2.1) 56(84) bytes of data.\n64 bytes from 192.0.2.1: icmp_seq=1 ttl=64 time=0.030 ms\n64 bytes from 192.0.2.1: icmp_seq=2 ttl=64 time=0.042 ms\n\n--- 192.0.2.1 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 53ms\nrtt min/avg/max/mdev = 0.030/0.036/0.042/0.006 ms\n",
+        "stderr": "",
+        "exitCode": 0
+      },
+      "completedAt": "2026-10-20T05:24:42.149Z",
+      "durationMs": 7278.751,
+      "serverReadback": {
+        "dnsReceived": 4,
+        "dnsReplied": 4,
+        "dnsDeliberatelyDropped": 0,
+        "tcpAccepted": 4,
+        "httpAccepted": 4,
+        "at": "2026-10-20T05:24:34.733Z"
+      },
+      "phase": "fault"
+    },
+    {
+      "sample": {
+        "at": "2026-10-20T05:24:42.270Z",
+        "status": "degraded",
+        "layers": {
+          "gateway": {
+            "p50Ms": 0.043,
+            "p95Ms": 0.055,
+            "attempts": 2,
+            "failed": 0,
+            "failurePct": 0.0,
+            "status": "ok",
+            "flags": [],
+            "complete": true,
+            "observedSeries": 1,
+            "expectedSeries": 1
+          },
+          "internet": {
+            "p50Ms": null,
+            "p95Ms": null,
+            "attempts": 2,
+            "failed": 2,
+            "failurePct": 100.0,
+            "status": "degraded",
+            "flags": [
+              "unsuccessful-probes"
+            ],
+            "complete": true,
+            "observedSeries": 1,
+            "expectedSeries": 1
+          },
+          "dns": {
+            "p50Ms": null,
+            "p95Ms": null,
+            "attempts": 2,
+            "failed": 2,
+            "failurePct": 100.0,
+            "status": "degraded",
+            "flags": [
+              "unsuccessful-probes"
+            ],
+            "complete": true,
+            "observedSeries": 1,
+            "expectedSeries": 1
+          },
+          "service": {
+            "p50Ms": null,
+            "p95Ms": null,
+            "attempts": 2,
+            "failed": 2,
+            "failurePct": 100.0,
+            "status": "degraded",
+            "flags": [
+              "unsuccessful-probes"
+            ],
+            "complete": true,
+            "observedSeries": 1,
+            "expectedSeries": 1
+          }
+        }
+      },
+      "attempts": {
+        "gateway": [
+          {
+            "ok": true,
+            "elapsedMs": 0.032,
+            "error": null
+          },
+          {
+            "ok": true,
+            "elapsedMs": 0.055,
+            "error": null
+          }
+        ],
+        "internet": [
+          {
+            "ok": false,
+            "elapsedMs": 1203.85,
+            "error": "timeout"
+          },
+          {
+            "ok": false,
+            "elapsedMs": 1200.303,
+            "error": "timeout"
+          }
+        ],
+        "dns": [
+          {
+            "ok": false,
+            "elapsedMs": 1201.261,
+            "error": "timeout"
+          },
+          {
+            "ok": false,
+            "elapsedMs": 1200.353,
+            "error": "timeout"
+          }
+        ],
+        "service": [
+          {
+            "ok": false,
+            "elapsedMs": 1200.522,
+            "error": "timeout"
+          },
+          {
+            "ok": false,
+            "elapsedMs": 1200.344,
+            "error": "timeout"
+          }
+        ]
+      },
+      "icmp": {
+        "stdout": "PING 192.0.2.1 (192.0.2.1) 56(84) bytes of data.\n64 bytes from 192.0.2.1: icmp_seq=1 ttl=64 time=0.032 ms\n64 bytes from 192.0.2.1: icmp_seq=2 ttl=64 time=0.055 ms\n\n--- 192.0.2.1 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 54ms\nrtt min/avg/max/mdev = 0.032/0.043/0.055/0.011 ms\n",
+        "stderr": "",
+        "exitCode": 0
+      },
+      "completedAt": "2026-10-20T05:24:49.533Z",
+      "durationMs": 7262.623,
+      "serverReadback": {
+        "dnsReceived": 4,
+        "dnsReplied": 4,
+        "dnsDeliberatelyDropped": 0,
+        "tcpAccepted": 4,
+        "httpAccepted": 4,
+        "at": "2026-10-20T05:24:34.733Z"
+      },
+      "phase": "fault"
+    },
+    {
+      "sample": {
+        "at": "2026-10-20T05:24:49.654Z",
+        "status": "degraded",
+        "layers": {
+          "gateway": {
+            "p50Ms": 0.09,
+            "p95Ms": 0.132,
+            "attempts": 2,
+            "failed": 0,
+            "failurePct": 0.0,
+            "status": "ok",
+            "flags": [],
+            "complete": true,
+            "observedSeries": 1,
+            "expectedSeries": 1
+          },
+          "internet": {
+            "p50Ms": null,
+            "p95Ms": null,
+            "attempts": 2,
+            "failed": 2,
+            "failurePct": 100.0,
+            "status": "degraded",
+            "flags": [
+              "unsuccessful-probes"
+            ],
+            "complete": true,
+            "observedSeries": 1,
+            "expectedSeries": 1
+          },
+          "dns": {
+            "p50Ms": null,
+            "p95Ms": null,
+            "attempts": 2,
+            "failed": 2,
+            "failurePct": 100.0,
+            "status": "degraded",
+            "flags": [
+              "unsuccessful-probes"
+            ],
+            "complete": true,
+            "observedSeries": 1,
+            "expectedSeries": 1
+          },
+          "service": {
+            "p50Ms": null,
+            "p95Ms": null,
+            "attempts": 2,
+            "failed": 2,
+            "failurePct": 100.0,
+            "status": "degraded",
+            "flags": [
+              "unsuccessful-probes"
+            ],
+            "complete": true,
+            "observedSeries": 1,
+            "expectedSeries": 1
+          }
+        }
+      },
+      "attempts": {
+        "gateway": [
+          {
+            "ok": true,
+            "elapsedMs": 0.132,
+            "error": null
+          },
+          {
+            "ok": true,
+            "elapsedMs": 0.048,
+            "error": null
+          }
+        ],
+        "internet": [
+          {
+            "ok": false,
+            "elapsedMs": 1202.965,
+            "error": "timeout"
+          },
+          {
+            "ok": false,
+            "elapsedMs": 1201.336,
+            "error": "timeout"
+          }
+        ],
+        "dns": [
+          {
+            "ok": false,
+            "elapsedMs": 1201.565,
+            "error": "timeout"
+          },
+          {
+            "ok": false,
+            "elapsedMs": 1201.864,
+            "error": "timeout"
+          }
+        ],
+        "service": [
+          {
+            "ok": false,
+            "elapsedMs": 1201.567,
+            "error": "timeout"
+          },
+          {
+            "ok": false,
+            "elapsedMs": 1201.543,
+            "error": "timeout"
+          }
+        ]
+      },
+      "icmp": {
+        "stdout": "PING 192.0.2.1 (192.0.2.1) 56(84) bytes of data.\n64 bytes from 192.0.2.1: icmp_seq=1 ttl=64 time=0.132 ms\n64 bytes from 192.0.2.1: icmp_seq=2 ttl=64 time=0.048 ms\n\n--- 192.0.2.1 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 59ms\nrtt min/avg/max/mdev = 0.048/0.090/0.132/0.042 ms\n",
+        "stderr": "",
+        "exitCode": 0
+      },
+      "completedAt": "2026-10-20T05:24:57.878Z",
+      "durationMs": 7266.313,
+      "serverReadback": {
+        "dnsReceived": 4,
+        "dnsReplied": 4,
+        "dnsDeliberatelyDropped": 0,
+        "tcpAccepted": 4,
+        "httpAccepted": 4,
+        "at": "2026-10-20T05:24:34.733Z"
+      },
+      "phase": "fault"
+    },
+    {
+      "sample": {
+        "at": "2026-10-20T05:24:57.999Z",
+        "status": "ok",
+        "layers": {
+          "gateway": {
+            "p50Ms": 0.041,
+            "p95Ms": 0.05,
+            "attempts": 2,
+            "failed": 0,
+            "failurePct": 0.0,
+            "status": "ok",
+            "flags": [],
+            "complete": true,
+            "observedSeries": 1,
+            "expectedSeries": 1
+          },
+          "internet": {
+            "p50Ms": 1.273,
+            "p95Ms": 2.514,
+            "attempts": 2,
+            "failed": 0,
+            "failurePct": 0.0,
+            "status": "ok",
+            "flags": [],
+            "complete": true,
+            "observedSeries": 1,
+            "expectedSeries": 1
+          },
+          "dns": {
+            "p50Ms": 0.718,
+            "p95Ms": 1.33,
+            "attempts": 2,
+            "failed": 0,
+            "failurePct": 0.0,
+            "status": "ok",
+            "flags": [],
+            "complete": true,
+            "observedSeries": 1,
+            "expectedSeries": 1
+          },
+          "service": {
+            "p50Ms": 6.337,
+            "p95Ms": 12.246,
+            "attempts": 2,
+            "failed": 0,
+            "failurePct": 0.0,
+            "status": "ok",
+            "flags": [],
+            "complete": true,
+            "observedSeries": 1,
+            "expectedSeries": 1
+          }
+        }
+      },
+      "attempts": {
+        "gateway": [
+          {
+            "ok": true,
+            "elapsedMs": 0.031,
+            "error": null
+          },
+          {
+            "ok": true,
+            "elapsedMs": 0.05,
+            "error": null
+          }
+        ],
+        "internet": [
+          {
+            "ok": true,
+            "elapsedMs": 2.514,
+            "error": null,
+            "response": null
+          },
+          {
+            "ok": true,
+            "elapsedMs": 0.032,
+            "error": null,
+            "response": null
+          }
+        ],
+        "dns": [
+          {
+            "ok": true,
+            "elapsedMs": 1.33,
+            "error": null,
+            "response": {
+              "transactionIdMatched": true,
+              "rcode": 0,
+              "answers": 1,
+              "bytes": 47
+            }
+          },
+          {
+            "ok": true,
+            "elapsedMs": 0.105,
+            "error": null,
+            "response": {
+              "transactionIdMatched": true,
+              "rcode": 0,
+              "answers": 1,
+              "bytes": 47
+            }
+          }
+        ],
+        "service": [
+          {
+            "ok": true,
+            "elapsedMs": 12.246,
+            "error": null,
+            "response": {
+              "httpStatus": 200,
+              "bytes": 61
+            }
+          },
+          {
+            "ok": true,
+            "elapsedMs": 0.428,
+            "error": null,
+            "response": {
+              "httpStatus": 200,
+              "bytes": 61
+            }
+          }
+        ]
+      },
+      "icmp": {
+        "stdout": "PING 192.0.2.1 (192.0.2.1) 56(84) bytes of data.\n64 bytes from 192.0.2.1: icmp_seq=1 ttl=64 time=0.031 ms\n64 bytes from 192.0.2.1: icmp_seq=2 ttl=64 time=0.050 ms\n\n--- 192.0.2.1 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 55ms\nrtt min/avg/max/mdev = 0.031/0.040/0.050/0.009 ms\n",
+        "stderr": "",
+        "exitCode": 0
+      },
+      "completedAt": "2026-10-20T05:24:58.072Z",
+      "durationMs": 72.672,
+      "serverReadback": {
+        "dnsReceived": 6,
+        "dnsReplied": 6,
+        "dnsDeliberatelyDropped": 0,
+        "tcpAccepted": 6,
+        "httpAccepted": 6,
+        "at": "2026-10-20T05:24:58.072Z"
+      },
+      "phase": "recovery"
+    },
+    {
+      "sample": {
+        "at": "2026-10-20T05:24:58.190Z",
+        "status": "ok",
+        "layers": {
+          "gateway": {
+            "p50Ms": 0.041,
+            "p95Ms": 0.052,
+            "attempts": 2,
+            "failed": 0,
+            "failurePct": 0.0,
+            "status": "ok",
+            "flags": [],
+            "complete": true,
+            "observedSeries": 1,
+            "expectedSeries": 1
+          },
+          "internet": {
+            "p50Ms": 1.351,
+            "p95Ms": 2.67,
+            "attempts": 2,
+            "failed": 0,
+            "failurePct": 0.0,
+            "status": "ok",
+            "flags": [],
+            "complete": true,
+            "observedSeries": 1,
+            "expectedSeries": 1
+          },
+          "dns": {
+            "p50Ms": 0.688,
+            "p95Ms": 1.192,
+            "attempts": 2,
+            "failed": 0,
+            "failurePct": 0.0,
+            "status": "ok",
+            "flags": [],
+            "complete": true,
+            "observedSeries": 1,
+            "expectedSeries": 1
+          },
+          "service": {
+            "p50Ms": 6.349,
+            "p95Ms": 12.384,
+            "attempts": 2,
+            "failed": 0,
+            "failurePct": 0.0,
+            "status": "ok",
+            "flags": [],
+            "complete": true,
+            "observedSeries": 1,
+            "expectedSeries": 1
+          }
+        }
+      },
+      "attempts": {
+        "gateway": [
+          {
+            "ok": true,
+            "elapsedMs": 0.03,
+            "error": null
+          },
+          {
+            "ok": true,
+            "elapsedMs": 0.052,
+            "error": null
+          }
+        ],
+        "internet": [
+          {
+            "ok": true,
+            "elapsedMs": 2.67,
+            "error": null,
+            "response": null
+          },
+          {
+            "ok": true,
+            "elapsedMs": 0.033,
+            "error": null,
+            "response": null
+          }
+        ],
+        "dns": [
+          {
+            "ok": true,
+            "elapsedMs": 1.192,
+            "error": null,
+            "response": {
+              "transactionIdMatched": true,
+              "rcode": 0,
+              "answers": 1,
+              "bytes": 47
+            }
+          },
+          {
+            "ok": true,
+            "elapsedMs": 0.184,
+            "error": null,
+            "response": {
+              "transactionIdMatched": true,
+              "rcode": 0,
+              "answers": 1,
+              "bytes": 47
+            }
+          }
+        ],
+        "service": [
+          {
+            "ok": true,
+            "elapsedMs": 12.384,
+            "error": null,
+            "response": {
+              "httpStatus": 200,
+              "bytes": 61
+            }
+          },
+          {
+            "ok": true,
+            "elapsedMs": 0.314,
+            "error": null,
+            "response": {
+              "httpStatus": 200,
+              "bytes": 61
+            }
+          }
+        ]
+      },
+      "icmp": {
+        "stdout": "PING 192.0.2.1 (192.0.2.1) 56(84) bytes of data.\n64 bytes from 192.0.2.1: icmp_seq=1 ttl=64 time=0.030 ms\n64 bytes from 192.0.2.1: icmp_seq=2 ttl=64 time=0.052 ms\n\n--- 192.0.2.1 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 55ms\nrtt min/avg/max/mdev = 0.030/0.041/0.052/0.011 ms\n",
+        "stderr": "",
+        "exitCode": 0
+      },
+      "completedAt": "2026-10-20T05:24:58.264Z",
+      "durationMs": 73.719,
+      "serverReadback": {
+        "dnsReceived": 8,
+        "dnsReplied": 8,
+        "dnsDeliberatelyDropped": 0,
+        "tcpAccepted": 8,
+        "httpAccepted": 8,
+        "at": "2026-10-20T05:24:58.264Z"
+      },
+      "phase": "recovery"
+    }
+  ],
+  "limits": [
+    "Synthetic isolated IPv4 lab; no real ISP, home router, Wi-Fi or public service was tested.",
+    "Configured injection is ground truth only inside this lab; measured flags do not establish real-world root cause.",
+    "External and service labels are synthetic TCP/HTTP endpoints, not Internet or meeting-media quality.",
+    "100% loss is a deterministic total-loss case; partial loss and jitter are not covered."
+  ],
+  "topology": {
+    "namespaces": {
+      "client": "rfdi-c7a7cb7ac504-c",
+      "router": "rfdi-c7a7cb7ac504-r",
+      "server": "rfdi-c7a7cb7ac504-s"
+    },
+    "ownershipMarker": "roomflow-incident-drill:c7a7cb7ac504",
+    "links": [
+      "client 192.0.2.2/30 <-> 192.0.2.1/30 router",
+      "router 198.51.100.1/30 <-> 198.51.100.2/30 server"
+    ],
+    "routes": {
+      "client": "[{\"dst\":\"default\",\"gateway\":\"192.0.2.1\",\"dev\":\"eth0\",\"flags\":[]},{\"dst\":\"192.0.2.0/30\",\"dev\":\"eth0\",\"protocol\":\"kernel\",\"scope\":\"link\",\"prefsrc\":\"192.0.2.2\",\"flags\":[]}]\n",
+      "router": "[{\"dst\":\"192.0.2.0/30\",\"dev\":\"lan\",\"protocol\":\"kernel\",\"scope\":\"link\",\"prefsrc\":\"192.0.2.1\",\"flags\":[]},{\"dst\":\"198.51.100.0/30\",\"dev\":\"wan\",\"protocol\":\"kernel\",\"scope\":\"link\",\"prefsrc\":\"198.51.100.1\",\"flags\":[]}]\n",
+      "server": "[{\"dst\":\"192.0.2.0/30\",\"gateway\":\"198.51.100.1\",\"dev\":\"eth0\",\"flags\":[]},{\"dst\":\"198.51.100.0/30\",\"dev\":\"eth0\",\"protocol\":\"kernel\",\"scope\":\"link\",\"prefsrc\":\"198.51.100.2\",\"flags\":[]}]\n"
+    },
+    "routerForwarding": "1",
+    "probes": {
+      "gateway": "ICMP 192.0.2.1",
+      "internet": "TCP 198.51.100.2:18080",
+      "dns": "UDP 198.51.100.2:15353 drill.invalid A",
+      "service": "HTTP 198.51.100.2:18081"
+    }
+  },
+  "injection": {
+    "at": "2026-10-20T05:24:34.741Z",
+    "scenario": "loss",
+    "configured": "router/wan egress netem loss 100%",
+    "qdiscReadback": "qdisc netem 8006: root refcnt 17 limit 1000 loss 100%\n Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n",
+    "dnsResponderMode": "normal"
+  },
+  "restoration": {
+    "at": "2026-10-20T05:24:57.890Z",
+    "qdiscReadback": "qdisc noqueue 0: root refcnt 2 \n",
+    "deleteExitCode": 0,
+    "dnsResponderMode": "normal"
+  },
+  "serverFinal": {
+    "dnsReceived": 8,
+    "dnsReplied": 8,
+    "dnsDeliberatelyDropped": 0,
+    "tcpAccepted": 8,
+    "httpAccepted": 8,
+    "at": "2026-10-20T05:24:58.264Z"
+  },
+  "cleanup": {
+    "verifiedAt": "2026-10-20T05:24:58.281Z",
+    "namespacesAbsent": true,
+    "remainingOwnedNames": [],
+    "errors": []
+  },
+  "completedAt": "2026-10-20T05:24:58.281Z",
+  "validation": {
+    "passed": true,
+    "sampleCount": 7,
+    "baselineSamples": 2,
+    "faultSamples": 3,
+    "recoverySamples": 2,
+    "measurementAssertions": "gateway healthy, expected protocol fault observed, complete recovery, namespaces removed",
+    "incidentAssertions": "three abnormal checks open once; two healthy checks resolve once; start, duration and affected layers verified"
+  }
+}

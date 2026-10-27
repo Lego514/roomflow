@@ -42,10 +42,10 @@ class TraceParsing(unittest.TestCase):
                          [Hop(1, "192.168.1.1"), Hop(2, "100.64.0.1"), Hop(3, None), Hop(4, "1.1.1.1")])
 
     def test_segments(self):
-        self.assertEqual(path.segment(Hop(1, "10.0.0.1")), "home router")
-        self.assertEqual(path.segment(Hop(2, "203.0.113.9")), "ISP access line")
-        self.assertEqual(path.segment(Hop(2, "100.64.0.1")), "ISP (carrier NAT)")
-        self.assertEqual(path.segment(Hop(5, "198.51.100.7")), "ISP / internet")
+        self.assertEqual(path.segment(Hop(1, "10.0.0.1")), "first private hop")
+        self.assertEqual(path.segment(Hop(2, "203.0.113.9")), "early upstream hop")
+        self.assertEqual(path.segment(Hop(2, "100.64.0.1")), "shared-address hop")
+        self.assertEqual(path.segment(Hop(5, "198.51.100.7")), "upstream hop")
         self.assertEqual(path.segment(Hop(3, None)), "unknown")
 
 
@@ -58,30 +58,30 @@ class PathAnalysis(unittest.TestCase):
         self.assertEqual(v.biggest_step.hop.index, 2)
         self.assertAlmostEqual(v.biggest_step.added_ms, 14)
         self.assertIsNone(v.loss_at)
-        self.assertIn("hop 2 (ISP access line): +14 ms", v.text)
+        self.assertIn("hop 2 (early upstream hop): +14 ms", v.text)
 
     def test_a_slow_middle_hop_is_not_blamed(self):
         # Hop 3 answers its own pings slowly, but the destination is fast: deprioritized ICMP.
         v = path.analyze(HOPS, {1: s(2), 2: s(16), 3: s(80), 5: s(18)})
         hop3 = v.rows[2]
         self.assertEqual(hop3.effective_ms, 18)
-        self.assertIn("slow only here", hop3.note)
+        self.assertIn("higher ICMP RTT only here", hop3.note)
         self.assertEqual(v.biggest_step.hop.index, 2)
 
     def test_loss_only_at_a_middle_hop_is_rate_limiting(self):
         v = path.analyze(HOPS, {1: s(2), 2: s(16), 3: s(17, loss=40), 5: s(18)})
         self.assertIsNone(v.loss_at)
-        self.assertIn("rate-limited", v.rows[2].note)
+        self.assertIn("rate limiting is one possible reason", v.rows[2].note)
 
     def test_loss_that_carries_through_is_reported(self):
         v = path.analyze(HOPS, {1: s(2), 2: s(16, loss=20), 3: s(17, loss=25), 5: s(18, loss=20)})
         self.assertEqual(v.loss_at.hop.index, 2)
-        self.assertIn("Loss starts at hop 2", v.text)
+        self.assertIn("Probe failures above 5% persist across replying hops from hop 2", v.text)
 
     def test_silent_hop_is_explained(self):
         v = path.analyze(HOPS, {1: s(2), 2: s(16), 3: s(17), 5: s(18)})
-        self.assertIn("silent", v.rows[3].note)
-        self.assertIn("traffic still passes", v.rows[3].note)
+        self.assertIn("no traceroute reply", v.rows[3].note)
+        self.assertIn("forwarding behavior is unknown", v.rows[3].note)
         v2 = path.analyze([Hop(1, "10.0.0.1"), Hop(2, "96.1.1.1")], {1: s(2)})  # hop 2 traced, never pinged back
         self.assertEqual(v2.rows[1].note, "answers traceroute but not pings")
 
@@ -145,21 +145,21 @@ class DnsServers(unittest.TestCase):
 
 class Ipv6Verdicts(unittest.TestCase):
     def test_pair_verdicts(self):
-        self.assertEqual(ipv6.Pair("x", s(20), None).verdict, "no IPv6 address")
+        self.assertEqual(ipv6.Pair("x", s(20), None).verdict, "no IPv6 probe address")
         self.assertEqual(ipv6.Pair("x", s(20), s(21)).verdict, "about the same")
         self.assertEqual(ipv6.Pair("x", s(20), s(35)).verdict, "IPv6 15 ms slower")
         self.assertEqual(ipv6.Pair("x", s(25), s(20)).verdict, "IPv6 5 ms faster")
         dead = Series("x")
         dead.sent = 10
-        self.assertEqual(ipv6.Pair("x", s(20), dead).verdict, "IPv6 fails")
+        self.assertEqual(ipv6.Pair("x", s(20), dead).verdict, "IPv6 TCP probes had no successful connections")
 
     def test_summary(self):
-        self.assertIn("slower for zoom.us", ipv6.summary([ipv6.Pair("zoom.us", s(21), s(36)),
+        self.assertIn("higher for zoom.us", ipv6.summary([ipv6.Pair("zoom.us", s(21), s(36)),
                                                            ipv6.Pair("google", s(20), s(20))]))
         dead = Series("x")
         dead.sent = 10
-        self.assertIn("doesn't work", ipv6.summary([ipv6.Pair("a", s(20), dead)]))
-        self.assertIn("None of the targets", ipv6.summary([ipv6.Pair("a", s(20), None)]))
+        self.assertIn("succeeded for 0/1 tested targets", ipv6.summary([ipv6.Pair("a", s(20), dead)]))
+        self.assertIn("No IPv6 TCP probe results", ipv6.summary([ipv6.Pair("a", s(20), None)]))
 
 
 if __name__ == "__main__":

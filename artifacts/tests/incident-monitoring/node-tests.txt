@@ -1,0 +1,42 @@
+✔ API validation and nested failures translate while preserving exact OS diagnostics (7.5898ms)
+✔ kernel findings preserve measurements, missing-data markers, and unresolved caveats (4.4977ms)
+✔ blocked storage keeps a Chinese default while language changes and events still work (17.9961ms)
+✔ stored language, selector changes, and restart persistence remain consistent (23.5805ms)
+✔ actual static page keys resolve and switching preserves form and export identifiers (15.372ms)
+✔ a point incomplete-check marker cuts both adjacent incident shading intervals (27.8905ms)
+✔ collection gaps stay unshaded and line segments break without explicit gap metadata (3.4449ms)
+✔ observation API keeps history separate, detects local staleness at request time, and never substitutes demo for local (290.2669ms)
+✔ observation API rejects impossible metrics and malformed incidents (58.833ms)
+✔ portable demonstration has self-contained assets, valid saved sources, and reproducible provenance (49.3661ms)
+✔ HTTP experiment, export, expiry, and restart recovery work end to end (411.4633ms)
+✔ bounded experiment inputs reject invalid and expensive requests (0.801ms)
+✔ missing or corrupted saved results become failed jobs instead of false completion (74.1723ms)
+✔ worker termination handles metadata write failure without an uncaught callback (38.9335ms)
+✔ aggregation preserves missing RTT and missing policies instead of zero success (0.3843ms)
+✔ saved kernel evidence handles pending, exact JSON and CSV exports, malformed files, and recovery (179.3531ms)
+✔ lease expiry restores normal mode and survives reconstruction (8.2535ms)
+✔ early stop restores state, is idempotent, and a second start conflicts (7.1645ms)
+✔ apply failure returns error, rolls back, and does not persist false success (2.6157ms)
+✔ invalid device and duration are rejected without mutation (1.5904ms)
+✔ readback mismatch cannot be reported as successful start (2.3921ms)
+✔ expiry persistence failure rolls back, reports failure, and retries safely (8.2737ms)
+✔ an unloaded link delivers fixed-rate media without fictitious congestion (29.4282ms)
+✔ congestion creates actual FIFO queue delay; fair scheduling protects sparse traffic (76.3808ms)
+✔ priority remains bounded and every bulk flow progresses under media overload (19.7569ms)
+✔ all modes conserve bytes and packets after draining even when UDP overloads (231.6813ms)
+✔ identical seeds reproduce complete event traces; startup phase varies with seed (21.7305ms)
+✔ directional bottlenecks are shared by media and bulk, with no cross-direction bulk (15.2702ms)
+✔ reported media rate and loss are derived from raw packet records after warmup (15.7415ms)
+✔ serialized packets cannot arrive faster than each bottleneck capacity (16.1314ms)
+✔ larger propagation delay is included in observed RTT (3.3986ms)
+✔ sample bins hold measured byte counts rather than invented chart values (1.3647ms)
+✔ input validation rejects unsafe sizes, NaN, numeric strings, and invalid modes (0.5225ms)
+✔ absence of completed samples is represented honestly with null (2.6438ms)
+ℹ tests 34
+ℹ suites 0
+ℹ pass 34
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 848.6647

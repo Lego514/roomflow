@@ -1,0 +1,54 @@
+name: Incident faults and recovery
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "homenet/**"
+      - "lab/incident_drill.py"
+      - "lab/test_incident_drill.py"
+      - ".github/workflows/incident-drills.yml"
+  pull_request:
+    paths:
+      - "homenet/**"
+      - "lab/incident_drill.py"
+      - "lab/test_incident_drill.py"
+      - ".github/workflows/incident-drills.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  isolated-packets:
+    name: Real delay, loss, DNS timeout and incident recovery
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Portable evidence interpretation tests
+        run: python3 -m unittest discover -s lab -p test_incident_drill.py -v
+      - name: Install namespace and ICMP tools
+        run: |
+          sudo apt-get update -q
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -q iproute2 iputils-ping procps
+          sudo modprobe sch_netem || true
+      - name: Inject real isolated faults, measure packets, verify transitions and cleanup
+        run: sudo python3 lab/incident_drill.py --scenario all --output results/incident-drills
+      - name: Check no drill namespace remains
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import subprocess
+          names = subprocess.check_output(["ip", "netns", "list"], text=True)
+          remaining = [line for line in names.splitlines() if line.startswith("rfdi-")]
+          assert not remaining, f"Inspect leftover incident drill namespaces: {remaining}"
+          PY
+      - name: Upload measured evidence, including failed runs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: incident-drills-real-packets
+          path: results/incident-drills/
+          if-no-files-found: warn
+          retention-days: 14
