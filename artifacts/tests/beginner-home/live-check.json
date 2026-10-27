@@ -1,0 +1,52 @@
+{
+  "job": {
+    "id": "ce689cee-fa73-440c-a673-d0eb94693af3",
+    "status": "complete",
+    "startedAt": "2026-10-27T04:51:47.629Z",
+    "completedAt": "2026-10-27T04:51:49.681Z",
+    "errorCode": null,
+    "result": {
+      "scope": "server-host",
+      "observedAt": "2026-10-27T00:51:48.532-04:00",
+      "overall": "ok",
+      "layers": [
+        {
+          "id": "gateway",
+          "status": "ok",
+          "p95Ms": 28,
+          "attempts": 3,
+          "failed": 0
+        },
+        {
+          "id": "internet",
+          "status": "ok",
+          "p95Ms": 30.492000048980117,
+          "attempts": 6,
+          "failed": 0
+        },
+        {
+          "id": "dns",
+          "status": "ok",
+          "p95Ms": 34.040700003970414,
+          "attempts": 6,
+          "failed": 0
+        },
+        {
+          "id": "service",
+          "status": "ok",
+          "p95Ms": 24.447100004181266,
+          "attempts": 6,
+          "failed": 0
+        }
+      ],
+      "wifi": {
+        "available": true,
+        "status": "ok",
+        "signalPct": 87
+      },
+      "historySaved": true,
+      "p95Basis": "maximum-target-p95",
+      "probeCount": 3
+    }
+  }
+}

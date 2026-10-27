@@ -1,0 +1,10 @@
+{
+  "jobStatus": "complete",
+  "observedAt": "2026-10-27T10:35:23.402-04:00",
+  "scope": "server-host",
+  "historySaved": true,
+  "routerConnected": false,
+  "deviceBound": false,
+  "controlAvailable": false,
+  "multiUserAvailable": false
+}
