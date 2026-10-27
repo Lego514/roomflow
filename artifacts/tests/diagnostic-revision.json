@@ -1,0 +1,21 @@
+{
+  "unit_tests": {
+    "node": 29,
+    "lab": 19,
+    "homenet": 78,
+    "total": 126,
+    "passed": true
+  },
+  "fixed_cutoff_utc": "2026-10-12T06:05:02Z",
+  "checks": 1238,
+  "episode_rule_comparison": "passed against homenet.episodes",
+  "snapshot_generator_hash_matches": true,
+  "ipv6_run_level_counts_match": true,
+  "ipv4_and_mac_pattern_scan": "passed",
+  "snapshot_sha256": "368c4e98695a3d600ce4363c337d34363d04af05f9c2a7e173f096a98fbcbd2a",
+  "fixed_export_byte_reproducible": true,
+  "svg_xml_and_text_bounds": "passed for light and dark",
+  "git_diff_check": "passed",
+  "snapshot_generator_sha256": "b6f81a3d58da0b4e2621a457a79331cab1d430703ea6dc62c48236c9c1c7ec61",
+  "maintained_document_local_links": 111
+}

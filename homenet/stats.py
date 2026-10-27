@@ -1,4 +1,4 @@
-"""Summaries and verdicts. Pure functions, so every threshold is tested."""
+"""Probe summaries and observation flags; thresholds do not establish root causes."""
 
 from __future__ import annotations
 
@@ -48,11 +48,11 @@ class Series:
 
 LAYERS = ("wifi", "gateway", "internet", "dns", "service")
 FIXES = {
-    "wifi": "Weak Wi-Fi: move closer to the router, or switch to 5 GHz / a cable.",
-    "gateway": "The local network is slow or dropping packets: Wi-Fi interference or the router.",
-    "internet": "The router is fine but public IPs are slow or unreachable: likely the ISP.",
-    "dns": "IPs work but names resolve slowly or not at all: try another DNS server.",
-    "service": "The network is fine; that service itself is slow or down.",
+    "wifi": "The Wi-Fi link is disconnected or has a low reported signal; compare with a cable or a closer position.",
+    "gateway": "Gateway echo probes are slow or unsuccessful; investigate the local link and gateway response behavior.",
+    "internet": "Selected public-IP TCP probes are slow or unsuccessful; compare targets and wired/Wi-Fi paths before assigning a cause.",
+    "dns": "Selected name lookups are slow or unsuccessful; compare resolver results and distinguish DNS from connectivity failures.",
+    "service": "TCP connection probes to selected service addresses are slow or unsuccessful; this does not establish a service outage or call quality.",
 }
 MAX_LOSS_PCT = 5.0
 MAX_P95_MS = {"gateway": 30.0, "internet": 120.0, "dns": 200.0, "service": 250.0}
@@ -77,7 +77,7 @@ def wifi_status(signal_pct: int | None, connected: bool) -> str:
 
 
 def diagnose(statuses: dict[str, str]) -> tuple[str, str | None]:
-    """(overall, layer at fault): the lowest layer that isn't ok."""
+    """(status, first flagged observation layer), not a root-cause diagnosis."""
     for layer in LAYERS:
         st = statuses.get(layer)
         if st and st != "ok":
@@ -88,12 +88,11 @@ def diagnose(statuses: dict[str, str]) -> tuple[str, str | None]:
 # --- Bufferbloat ----------------------------------------------------------------
 
 # How much a link's latency grows under load, in ms of p95 over the idle p50.
-# These bands are this project's own, tied to calls: tens of ms go unnoticed,
-# around 100 ms of extra delay is where conversation starts to feel laggy.
-BLOAT_BANDS = [(30, "A", "no noticeable bufferbloat"),
-               (100, "B", "mild: calls may feel slightly delayed"),
-               (300, "C", "significant: calls will stutter under load"),
-               (float("inf"), "D", "severe: the queue dominates latency under load")]
+# Project-specific latency bands, not standardized grades or call-quality scores.
+BLOAT_BANDS = [(30, "A", "small added probe latency under load (<30 ms)"),
+               (100, "B", "moderate added probe latency under load (30-100 ms)"),
+               (300, "C", "high added probe latency under load (100-300 ms)"),
+               (float("inf"), "D", "very high added probe latency under load (>=300 ms)")]
 
 
 def bloat_grade(idle_p50: float | None, loaded_p95: float | None) -> tuple[str, float | None, str]:

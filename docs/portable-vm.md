@@ -1,6 +1,8 @@
 # 這台 Windows 上的隔離 Linux 測試環境
 
-本次驗證使用專案內的可攜 QEMU 與 Alpine live ISO。沒有安裝 WSL、Docker、系統級 QEMU 或變更家用網路設定。虛擬機以軟體 TCG 執行，所有測試角色與流量位於同一個 Linux guest 的獨立 namespaces。
+這是**歷史 QEMU 階段的重現指南**。目前的受控比較另在 [GitHub Actions](../.github/workflows/kernel-lab.yml) 跑兩個原生 Linux kernel profile，資料見 [reference CI](../results/native-ci/) 與 [固定 home-inspired CI](../results/native-ci-home/summary.md)。歷史 QEMU 矩陣與補測的延遲／丟包波動完整保留；切換環境後結果較穩定，但原波動的唯一原因未被隔離確認。
+
+歷史驗證使用專案內的可攜 QEMU 與 Alpine live ISO。沒有安裝 WSL、Docker、系統級 QEMU 或變更家用網路設定。虛擬機以軟體 TCG 執行，所有測試角色與流量位於同一個 Linux guest 的獨立 namespaces。
 
 ## 已保存的執行檔
 

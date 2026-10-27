@@ -1,0 +1,39 @@
+{
+  "originalRawTablesRetained": {
+    "checks": {
+      "beforeRows": 3439,
+      "afterRows": 3439,
+      "allPriorRowsRetained": true
+    },
+    "latency": {
+      "beforeRows": 24073,
+      "afterRows": 24073,
+      "allPriorRowsRetained": true
+    },
+    "trace": {
+      "beforeRows": 1490,
+      "afterRows": 1490,
+      "allPriorRowsRetained": true
+    },
+    "ipv6": {
+      "beforeRows": 755,
+      "afterRows": 755,
+      "allPriorRowsRetained": true
+    },
+    "capacity": {
+      "beforeRows": 271,
+      "afterRows": 271,
+      "allPriorRowsRetained": true
+    },
+    "bloat": {
+      "beforeRows": 117,
+      "afterRows": 117,
+      "allPriorRowsRetained": true
+    }
+  },
+  "existingNormalizedSamplesUnchanged": true,
+  "existingTransitionIdsRetained": true,
+  "priorTransitions": 122,
+  "currentTransitions": 122,
+  "enrichedIncidents": 61
+}

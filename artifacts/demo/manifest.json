@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "artifact": "RoomFlow.html",
+  "sourceKinds": [
+    "demo",
+    "drill-delay",
+    "drill-loss",
+    "drill-dns"
+  ],
+  "inputSHA256": {
+    "docs/evidence/observations-demo.json": "1403df02afb7d0813eadabef5db44ebc72028ff687e688f60192122ba276a5c6",
+    "results/incident-drills/delay.json": "c7bf20121c6334974d04e8fa8ad2cc83dae8f9280902b2e0c51e3e4a0248eae5",
+    "results/incident-drills/loss.json": "1e78957d3a8aa1cba5bdcd59179a639fe4d95072ee91352a454f872969f0d9d2",
+    "results/incident-drills/dns.json": "7d9f7263b09d81b69aa44c9736879c8618c48c3461bcadbc9f50b4ed0e6d730e",
+    "public/monitor.css": "751f2fe6124006ad8902845e54b48ccc02eed3915fa77199fd0620920a2eebf3",
+    "public/monitor.js": "debfcd5e58e6daf39a6fc49e94961b64cad634880a92b7fd17418a59251d287e",
+    "public/monitor.html": "865e1143df368818a5c54d8dcb4de2fa7efca8c91293e377a384e40e5b2a3aae"
+  },
+  "outputSHA256": "85d6154a6b0a31c6a1b690dd119fa32e12d977ffba38d386a26e5d30e93c8195",
+  "includesLocalPrivateHistory": false,
+  "requiresNetwork": false,
+  "notes": [
+    "Historical aggregates and isolated drill results remain separately labelled. Rebuild after updating monitor assets or evidence."
+  ]
+}

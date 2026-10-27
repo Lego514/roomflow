@@ -1,0 +1,1118 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "kind": "lab-drill",
+    "label": "Isolated Linux delay and recovery",
+    "windowStart": "2026-10-20T05:24:24.321000Z",
+    "windowEnd": "2026-10-20T05:24:34.009000Z",
+    "generatedAt": "2026-10-20T14:25:24.570100Z",
+    "notes": [
+      "Synthetic isolated IPv4 lab; no real ISP, home router, Wi-Fi or public service was tested.",
+      "Configured injection is ground truth only inside this lab; measured flags do not establish real-world root cause.",
+      "External and service labels are synthetic TCP/HTTP endpoints, not Internet or meeting-media quality.",
+      "100% loss is a deterministic total-loss case; partial loss and jitter are not covered.",
+      "Presentation and replay were rebuilt from saved packet observations; no new packets were measured.",
+      "Original packet run ended at 2026-10-20T05:24:34.087Z."
+    ]
+  },
+  "policy": {
+    "openAfter": 3,
+    "recoverAfter": 2,
+    "maxGapSeconds": 900,
+    "staleAfterSeconds": 900,
+    "requiredLayers": [
+      "gateway",
+      "internet",
+      "dns",
+      "service"
+    ],
+    "failureThresholdPct": 5.0,
+    "p95ThresholdMs": {
+      "gateway": 30.0,
+      "internet": 120.0,
+      "dns": 200.0,
+      "service": 250.0
+    },
+    "expectedSeries": {
+      "gateway": 1,
+      "internet": 1,
+      "dns": 1,
+      "service": 1
+    },
+    "durationSemantics": "Span from first abnormal check through last observed check or confirmed recovery; excludes collection gaps and unknown intervals. This is observed monitoring span, not proven continuous outage time.",
+    "latencyAggregation": "p50Ms is the mean of available per-target p50 values; p95Ms is the maximum per-target p95, not a pooled percentile.",
+    "notificationSemantics": "Durable local transition records only; no external messages are sent."
+  },
+  "latest": {
+    "at": "2026-10-20T05:24:34.009000Z",
+    "status": "ok",
+    "layers": {
+      "gateway": {
+        "p50Ms": 0.038,
+        "p95Ms": 0.051,
+        "attempts": 2,
+        "failed": 0,
+        "failurePct": 0.0,
+        "flags": [],
+        "status": "ok",
+        "complete": true,
+        "observedSeries": 1,
+        "expectedSeries": 1
+      },
+      "internet": {
+        "p50Ms": 1.183,
+        "p95Ms": 2.327,
+        "attempts": 2,
+        "failed": 0,
+        "failurePct": 0.0,
+        "flags": [],
+        "status": "ok",
+        "complete": true,
+        "observedSeries": 1,
+        "expectedSeries": 1
+      },
+      "dns": {
+        "p50Ms": 0.492,
+        "p95Ms": 0.802,
+        "attempts": 2,
+        "failed": 0,
+        "failurePct": 0.0,
+        "flags": [],
+        "status": "ok",
+        "complete": true,
+        "observedSeries": 1,
+        "expectedSeries": 1
+      },
+      "service": {
+        "p50Ms": 0.343,
+        "p95Ms": 0.445,
+        "attempts": 2,
+        "failed": 0,
+        "failurePct": 0.0,
+        "flags": [],
+        "status": "ok",
+        "complete": true,
+        "observedSeries": 1,
+        "expectedSeries": 1
+      }
+    }
+  },
+  "timeline": [
+    {
+      "at": "2026-10-20T05:24:24.321000Z",
+      "status": "ok",
+      "layers": {
+        "gateway": {
+          "p50Ms": 0.089,
+          "p95Ms": 0.095,
+          "attempts": 2,
+          "failed": 0,
+          "failurePct": 0.0,
+          "flags": [],
+          "status": "ok",
+          "complete": true,
+          "observedSeries": 1,
+          "expectedSeries": 1
+        },
+        "internet": {
+          "p50Ms": 1.106,
+          "p95Ms": 2.152,
+          "attempts": 2,
+          "failed": 0,
+          "failurePct": 0.0,
+          "flags": [],
+          "status": "ok",
+          "complete": true,
+          "observedSeries": 1,
+          "expectedSeries": 1
+        },
+        "dns": {
+          "p50Ms": 0.68,
+          "p95Ms": 1.159,
+          "attempts": 2,
+          "failed": 0,
+          "failurePct": 0.0,
+          "flags": [],
+          "status": "ok",
+          "complete": true,
+          "observedSeries": 1,
+          "expectedSeries": 1
+        },
+        "service": {
+          "p50Ms": 0.338,
+          "p95Ms": 0.397,
+          "attempts": 2,
+          "failed": 0,
+          "failurePct": 0.0,
+          "flags": [],
+          "status": "ok",
+          "complete": true,
+          "observedSeries": 1,
+          "expectedSeries": 1
+        }
+      }
+    },
+    {
+      "at": "2026-10-20T05:24:24.540000Z",
+      "status": "ok",
+      "layers": {
+        "gateway": {
+          "p50Ms": 0.036,
+          "p95Ms": 0.036,
+          "attempts": 2,
+          "failed": 0,
+          "failurePct": 0.0,
+          "flags": [],
+          "status": "ok",
+          "complete": true,
+          "observedSeries": 1,
+          "expectedSeries": 1
+        },
+        "internet": {
+          "p50Ms": 1.331,
+          "p95Ms": 2.607,
+          "attempts": 2,
+          "failed": 0,
+          "failurePct": 0.0,
+          "flags": [],
+          "status": "ok",
+          "complete": true,
+          "observedSeries": 1,
+          "expectedSeries": 1
+        },
+        "dns": {
+          "p50Ms": 0.575,
+          "p95Ms": 0.914,
+          "attempts": 2,
+          "failed": 0,
+          "failurePct": 0.0,
+          "flags": [],
+          "status": "ok",
+          "complete": true,
+          "observedSeries": 1,
+          "expectedSeries": 1
+        },
+        "service": {
+          "p50Ms": 0.299,
+          "p95Ms": 0.307,
+          "attempts": 2,
+          "failed": 0,
+          "failurePct": 0.0,
+          "flags": [],
+          "status": "ok",
+          "complete": true,
+          "observedSeries": 1,
+          "expectedSeries": 1
+        }
+      }
+    },
+    {
+      "at": "2026-10-20T05:24:24.785000Z",
+      "status": "degraded",
+      "layers": {
+        "gateway": {
+          "p50Ms": 0.054,
+          "p95Ms": 0.058,
+          "attempts": 2,
+          "failed": 0,
+          "failurePct": 0.0,
+          "flags": [],
+          "status": "ok",
+          "complete": true,
+          "observedSeries": 1,
+          "expectedSeries": 1
+        },
+        "internet": {
+          "p50Ms": 356.515,
+          "p95Ms": 358.281,
+          "attempts": 2,
+          "failed": 0,
+          "failurePct": 0.0,
+          "flags": [
+            "high-p95"
+          ],
+          "status": "degraded",
+          "complete": true,
+          "observedSeries": 1,
+          "expectedSeries": 1
+        },
+        "dns": {
+          "p50Ms": 353.726,
+          "p95Ms": 356.706,
+          "attempts": 2,
+          "failed": 0,
+          "failurePct": 0.0,
+          "flags": [
+            "high-p95"
+          ],
+          "status": "degraded",
+          "complete": true,
+          "observedSeries": 1,
+          "expectedSeries": 1
+        },
+        "service": {
+          "p50Ms": 707.101,
+          "p95Ms": 709.659,
+          "attempts": 2,
+          "failed": 0,
+          "failurePct": 0.0,
+          "flags": [
+            "high-p95"
+          ],
+          "status": "degraded",
+          "complete": true,
+          "observedSeries": 1,
+          "expectedSeries": 1
+        }
+      }
+    },
+    {
+      "at": "2026-10-20T05:24:27.801000Z",
+      "status": "degraded",
+      "layers": {
+        "gateway": {
+          "p50Ms": 0.042,
+          "p95Ms": 0.053,
+          "attempts": 2,
+          "failed": 0,
+          "failurePct": 0.0,
+          "flags": [],
+          "status": "ok",
+          "complete": true,
+          "observedSeries": 1,
+          "expectedSeries": 1
+        },
+        "internet": {
+          "p50Ms": 352.824,
+          "p95Ms": 352.982,
+          "attempts": 2,
+          "failed": 0,
+          "failurePct": 0.0,
+          "flags": [
+            "high-p95"
+          ],
+          "status": "degraded",
+          "complete": true,
+          "observedSeries": 1,
+          "expectedSeries": 1
+        },
+        "dns": {
+          "p50Ms": 352.471,
+          "p95Ms": 352.785,
+          "attempts": 2,
+          "failed": 0,
+          "failurePct": 0.0,
+          "flags": [
+            "high-p95"
+          ],
+          "status": "degraded",
+          "complete": true,
+          "observedSeries": 1,
+          "expectedSeries": 1
+        },
+        "service": {
+          "p50Ms": 707.313,
+          "p95Ms": 713.231,
+          "attempts": 2,
+          "failed": 0,
+          "failurePct": 0.0,
+          "flags": [
+            "high-p95"
+          ],
+          "status": "degraded",
+          "complete": true,
+          "observedSeries": 1,
+          "expectedSeries": 1
+        }
+      }
+    },
+    {
+      "at": "2026-10-20T05:24:30.814000Z",
+      "status": "degraded",
+      "layers": {
+        "gateway": {
+          "p50Ms": 0.052,
+          "p95Ms": 0.071,
+          "attempts": 2,
+          "failed": 0,
+          "failurePct": 0.0,
+          "flags": [],
+          "status": "ok",
+          "complete": true,
+          "observedSeries": 1,
+          "expectedSeries": 1
+        },
+        "internet": {
+          "p50Ms": 351.679,
+          "p95Ms": 353.001,
+          "attempts": 2,
+          "failed": 0,
+          "failurePct": 0.0,
+          "flags": [
+            "high-p95"
+          ],
+          "status": "degraded",
+          "complete": true,
+          "observedSeries": 1,
+          "expectedSeries": 1
+        },
+        "dns": {
+          "p50Ms": 351.325,
+          "p95Ms": 352.129,
+          "attempts": 2,
+          "failed": 0,
+          "failurePct": 0.0,
+          "flags": [
+            "high-p95"
+          ],
+          "status": "degraded",
+          "complete": true,
+          "observedSeries": 1,
+          "expectedSeries": 1
+        },
+        "service": {
+          "p50Ms": 706.688,
+          "p95Ms": 710.011,
+          "attempts": 2,
+          "failed": 0,
+          "failurePct": 0.0,
+          "flags": [
+            "high-p95"
+          ],
+          "status": "degraded",
+          "complete": true,
+          "observedSeries": 1,
+          "expectedSeries": 1
+        }
+      }
+    },
+    {
+      "at": "2026-10-20T05:24:33.830000Z",
+      "status": "ok",
+      "layers": {
+        "gateway": {
+          "p50Ms": 0.041,
+          "p95Ms": 0.052,
+          "attempts": 2,
+          "failed": 0,
+          "failurePct": 0.0,
+          "flags": [],
+          "status": "ok",
+          "complete": true,
+          "observedSeries": 1,
+          "expectedSeries": 1
+        },
+        "internet": {
+          "p50Ms": 1.145,
+          "p95Ms": 2.256,
+          "attempts": 2,
+          "failed": 0,
+          "failurePct": 0.0,
+          "flags": [],
+          "status": "ok",
+          "complete": true,
+          "observedSeries": 1,
+          "expectedSeries": 1
+        },
+        "dns": {
+          "p50Ms": 0.533,
+          "p95Ms": 0.953,
+          "attempts": 2,
+          "failed": 0,
+          "failurePct": 0.0,
+          "flags": [],
+          "status": "ok",
+          "complete": true,
+          "observedSeries": 1,
+          "expectedSeries": 1
+        },
+        "service": {
+          "p50Ms": 0.309,
+          "p95Ms": 0.422,
+          "attempts": 2,
+          "failed": 0,
+          "failurePct": 0.0,
+          "flags": [],
+          "status": "ok",
+          "complete": true,
+          "observedSeries": 1,
+          "expectedSeries": 1
+        }
+      }
+    },
+    {
+      "at": "2026-10-20T05:24:34.009000Z",
+      "status": "ok",
+      "layers": {
+        "gateway": {
+          "p50Ms": 0.038,
+          "p95Ms": 0.051,
+          "attempts": 2,
+          "failed": 0,
+          "failurePct": 0.0,
+          "flags": [],
+          "status": "ok",
+          "complete": true,
+          "observedSeries": 1,
+          "expectedSeries": 1
+        },
+        "internet": {
+          "p50Ms": 1.183,
+          "p95Ms": 2.327,
+          "attempts": 2,
+          "failed": 0,
+          "failurePct": 0.0,
+          "flags": [],
+          "status": "ok",
+          "complete": true,
+          "observedSeries": 1,
+          "expectedSeries": 1
+        },
+        "dns": {
+          "p50Ms": 0.492,
+          "p95Ms": 0.802,
+          "attempts": 2,
+          "failed": 0,
+          "failurePct": 0.0,
+          "flags": [],
+          "status": "ok",
+          "complete": true,
+          "observedSeries": 1,
+          "expectedSeries": 1
+        },
+        "service": {
+          "p50Ms": 0.343,
+          "p95Ms": 0.445,
+          "attempts": 2,
+          "failed": 0,
+          "failurePct": 0.0,
+          "flags": [],
+          "status": "ok",
+          "complete": true,
+          "observedSeries": 1,
+          "expectedSeries": 1
+        }
+      }
+    }
+  ],
+  "timelineTotal": 7,
+  "timelineTruncated": false,
+  "incidents": [
+    {
+      "id": "incident-6feb8e4b47e802a5",
+      "status": "resolved",
+      "startedAt": "2026-10-20T05:24:24.785000Z",
+      "openedAt": "2026-10-20T05:24:30.814000Z",
+      "lastObservedAt": "2026-10-20T05:24:34.009000Z",
+      "lastAbnormalAt": "2026-10-20T05:24:30.814000Z",
+      "resolvedAt": "2026-10-20T05:24:34.009000Z",
+      "durationSeconds": 9.224,
+      "affectedLayers": [
+        "dns",
+        "internet",
+        "service"
+      ],
+      "abnormalChecks": 3,
+      "evidenceGaps": [],
+      "transitions": [
+        {
+          "id": "incident-6feb8e4b47e802a5:opened",
+          "type": "opened",
+          "at": "2026-10-20T05:24:30.814000Z"
+        },
+        {
+          "id": "incident-6feb8e4b47e802a5:resolved",
+          "type": "resolved",
+          "at": "2026-10-20T05:24:34.009000Z"
+        }
+      ],
+      "spanSeconds": 9.224,
+      "evidence": {
+        "startAt": "2026-10-20T05:24:24.785000Z",
+        "endAt": "2026-10-20T05:24:30.814000Z",
+        "checkCount": 3,
+        "layers": {
+          "gateway": {
+            "peakP95Ms": 0.071,
+            "peakP95At": "2026-10-20T05:24:30.814000Z",
+            "latencyThresholdMs": 30.0,
+            "failureThresholdPct": 5.0,
+            "attempts": 6,
+            "failed": 0,
+            "failurePct": 0.0,
+            "countsComplete": true,
+            "countedChecks": 3,
+            "missingCountChecks": 0,
+            "abnormalChecks": 0,
+            "healthyChecks": 3,
+            "unknownChecks": 0,
+            "latencyBreaches": 0,
+            "failureBreaches": 0
+          },
+          "internet": {
+            "peakP95Ms": 358.281,
+            "peakP95At": "2026-10-20T05:24:24.785000Z",
+            "latencyThresholdMs": 120.0,
+            "failureThresholdPct": 5.0,
+            "attempts": 6,
+            "failed": 0,
+            "failurePct": 0.0,
+            "countsComplete": true,
+            "countedChecks": 3,
+            "missingCountChecks": 0,
+            "abnormalChecks": 3,
+            "healthyChecks": 0,
+            "unknownChecks": 0,
+            "latencyBreaches": 3,
+            "failureBreaches": 0
+          },
+          "dns": {
+            "peakP95Ms": 356.706,
+            "peakP95At": "2026-10-20T05:24:24.785000Z",
+            "latencyThresholdMs": 200.0,
+            "failureThresholdPct": 5.0,
+            "attempts": 6,
+            "failed": 0,
+            "failurePct": 0.0,
+            "countsComplete": true,
+            "countedChecks": 3,
+            "missingCountChecks": 0,
+            "abnormalChecks": 3,
+            "healthyChecks": 0,
+            "unknownChecks": 0,
+            "latencyBreaches": 3,
+            "failureBreaches": 0
+          },
+          "service": {
+            "peakP95Ms": 713.231,
+            "peakP95At": "2026-10-20T05:24:27.801000Z",
+            "latencyThresholdMs": 250.0,
+            "failureThresholdPct": 5.0,
+            "attempts": 6,
+            "failed": 0,
+            "failurePct": 0.0,
+            "countsComplete": true,
+            "countedChecks": 3,
+            "missingCountChecks": 0,
+            "abnormalChecks": 3,
+            "healthyChecks": 0,
+            "unknownChecks": 0,
+            "latencyBreaches": 3,
+            "failureBreaches": 0
+          }
+        }
+      },
+      "observations": [
+        "dns: selected probes exceeded the configured latency or unsuccessful-probe threshold.",
+        "internet: selected probes exceeded the configured latency or unsuccessful-probe threshold.",
+        "service: selected probes exceeded the configured latency or unsuccessful-probe threshold."
+      ],
+      "unknowns": [
+        "Selected probes do not establish a root cause, an ISP fault, a service-wide outage, or real call quality.",
+        "Checks are sequential samples; conditions between checks were not continuously observed."
+      ],
+      "nextChecks": [
+        "Compare resolver responses and distinguish name lookup failure from IP connectivity.",
+        "Compare multiple public TCP targets and a wired path before assigning an upstream cause.",
+        "Compare service TCP connection results with DNS and public-IP probes; verify the application separately."
+      ]
+    }
+  ],
+  "notifications": [
+    {
+      "id": "incident-6feb8e4b47e802a5:opened",
+      "type": "opened",
+      "at": "2026-10-20T05:24:30.814000Z",
+      "incidentId": "incident-6feb8e4b47e802a5"
+    },
+    {
+      "id": "incident-6feb8e4b47e802a5:resolved",
+      "type": "resolved",
+      "at": "2026-10-20T05:24:34.009000Z",
+      "incidentId": "incident-6feb8e4b47e802a5"
+    }
+  ],
+  "monitor": {
+    "status": "historical",
+    "evaluatedAt": "2026-10-20T05:24:34.009000Z",
+    "lastObservedAt": "2026-10-20T05:24:34.009000Z",
+    "ageSeconds": 0,
+    "clockSkew": false,
+    "pendingAbnormalChecks": 0,
+    "pendingRecoveryChecks": 0
+  },
+  "replay": {
+    "frames": [
+      {
+        "sampleCount": 1,
+        "at": "2026-10-20T05:24:24.321000Z",
+        "stage": "normal",
+        "incidents": [],
+        "notifications": [],
+        "pendingAbnormalChecks": 0,
+        "pendingRecoveryChecks": 0
+      },
+      {
+        "sampleCount": 2,
+        "at": "2026-10-20T05:24:24.540000Z",
+        "stage": "normal",
+        "incidents": [],
+        "notifications": [],
+        "pendingAbnormalChecks": 0,
+        "pendingRecoveryChecks": 0
+      },
+      {
+        "sampleCount": 3,
+        "at": "2026-10-20T05:24:24.785000Z",
+        "stage": "pending",
+        "incidents": [],
+        "notifications": [],
+        "pendingAbnormalChecks": 1,
+        "pendingRecoveryChecks": 0
+      },
+      {
+        "sampleCount": 4,
+        "at": "2026-10-20T05:24:27.801000Z",
+        "stage": "pending",
+        "incidents": [],
+        "notifications": [],
+        "pendingAbnormalChecks": 2,
+        "pendingRecoveryChecks": 0
+      },
+      {
+        "sampleCount": 5,
+        "at": "2026-10-20T05:24:30.814000Z",
+        "stage": "open",
+        "incidents": [
+          {
+            "id": "incident-6feb8e4b47e802a5",
+            "status": "open",
+            "startedAt": "2026-10-20T05:24:24.785000Z",
+            "openedAt": "2026-10-20T05:24:30.814000Z",
+            "lastObservedAt": "2026-10-20T05:24:30.814000Z",
+            "lastAbnormalAt": "2026-10-20T05:24:30.814000Z",
+            "resolvedAt": null,
+            "durationSeconds": 6.029,
+            "affectedLayers": [
+              "dns",
+              "internet",
+              "service"
+            ],
+            "abnormalChecks": 3,
+            "evidenceGaps": [],
+            "transitions": [
+              {
+                "id": "incident-6feb8e4b47e802a5:opened",
+                "type": "opened",
+                "at": "2026-10-20T05:24:30.814000Z"
+              }
+            ],
+            "spanSeconds": 6.029,
+            "evidence": {
+              "startAt": "2026-10-20T05:24:24.785000Z",
+              "endAt": "2026-10-20T05:24:30.814000Z",
+              "checkCount": 3,
+              "layers": {
+                "gateway": {
+                  "peakP95Ms": 0.071,
+                  "peakP95At": "2026-10-20T05:24:30.814000Z",
+                  "latencyThresholdMs": 30.0,
+                  "failureThresholdPct": 5.0,
+                  "attempts": 6,
+                  "failed": 0,
+                  "failurePct": 0.0,
+                  "countsComplete": true,
+                  "countedChecks": 3,
+                  "missingCountChecks": 0,
+                  "abnormalChecks": 0,
+                  "healthyChecks": 3,
+                  "unknownChecks": 0,
+                  "latencyBreaches": 0,
+                  "failureBreaches": 0
+                },
+                "internet": {
+                  "peakP95Ms": 358.281,
+                  "peakP95At": "2026-10-20T05:24:24.785000Z",
+                  "latencyThresholdMs": 120.0,
+                  "failureThresholdPct": 5.0,
+                  "attempts": 6,
+                  "failed": 0,
+                  "failurePct": 0.0,
+                  "countsComplete": true,
+                  "countedChecks": 3,
+                  "missingCountChecks": 0,
+                  "abnormalChecks": 3,
+                  "healthyChecks": 0,
+                  "unknownChecks": 0,
+                  "latencyBreaches": 3,
+                  "failureBreaches": 0
+                },
+                "dns": {
+                  "peakP95Ms": 356.706,
+                  "peakP95At": "2026-10-20T05:24:24.785000Z",
+                  "latencyThresholdMs": 200.0,
+                  "failureThresholdPct": 5.0,
+                  "attempts": 6,
+                  "failed": 0,
+                  "failurePct": 0.0,
+                  "countsComplete": true,
+                  "countedChecks": 3,
+                  "missingCountChecks": 0,
+                  "abnormalChecks": 3,
+                  "healthyChecks": 0,
+                  "unknownChecks": 0,
+                  "latencyBreaches": 3,
+                  "failureBreaches": 0
+                },
+                "service": {
+                  "peakP95Ms": 713.231,
+                  "peakP95At": "2026-10-20T05:24:27.801000Z",
+                  "latencyThresholdMs": 250.0,
+                  "failureThresholdPct": 5.0,
+                  "attempts": 6,
+                  "failed": 0,
+                  "failurePct": 0.0,
+                  "countsComplete": true,
+                  "countedChecks": 3,
+                  "missingCountChecks": 0,
+                  "abnormalChecks": 3,
+                  "healthyChecks": 0,
+                  "unknownChecks": 0,
+                  "latencyBreaches": 3,
+                  "failureBreaches": 0
+                }
+              }
+            },
+            "observations": [
+              "dns: selected probes exceeded the configured latency or unsuccessful-probe threshold.",
+              "internet: selected probes exceeded the configured latency or unsuccessful-probe threshold.",
+              "service: selected probes exceeded the configured latency or unsuccessful-probe threshold."
+            ],
+            "unknowns": [
+              "Selected probes do not establish a root cause, an ISP fault, a service-wide outage, or real call quality.",
+              "Checks are sequential samples; conditions between checks were not continuously observed."
+            ],
+            "nextChecks": [
+              "Compare resolver responses and distinguish name lookup failure from IP connectivity.",
+              "Compare multiple public TCP targets and a wired path before assigning an upstream cause.",
+              "Compare service TCP connection results with DNS and public-IP probes; verify the application separately."
+            ]
+          }
+        ],
+        "notifications": [
+          {
+            "id": "incident-6feb8e4b47e802a5:opened",
+            "type": "opened",
+            "at": "2026-10-20T05:24:30.814000Z",
+            "incidentId": "incident-6feb8e4b47e802a5"
+          }
+        ],
+        "pendingAbnormalChecks": 0,
+        "pendingRecoveryChecks": 0
+      },
+      {
+        "sampleCount": 6,
+        "at": "2026-10-20T05:24:33.830000Z",
+        "stage": "recovering",
+        "incidents": [
+          {
+            "id": "incident-6feb8e4b47e802a5",
+            "status": "open",
+            "startedAt": "2026-10-20T05:24:24.785000Z",
+            "openedAt": "2026-10-20T05:24:30.814000Z",
+            "lastObservedAt": "2026-10-20T05:24:33.830000Z",
+            "lastAbnormalAt": "2026-10-20T05:24:30.814000Z",
+            "resolvedAt": null,
+            "durationSeconds": 9.045,
+            "affectedLayers": [
+              "dns",
+              "internet",
+              "service"
+            ],
+            "abnormalChecks": 3,
+            "evidenceGaps": [],
+            "transitions": [
+              {
+                "id": "incident-6feb8e4b47e802a5:opened",
+                "type": "opened",
+                "at": "2026-10-20T05:24:30.814000Z"
+              }
+            ],
+            "spanSeconds": 9.045,
+            "evidence": {
+              "startAt": "2026-10-20T05:24:24.785000Z",
+              "endAt": "2026-10-20T05:24:30.814000Z",
+              "checkCount": 3,
+              "layers": {
+                "gateway": {
+                  "peakP95Ms": 0.071,
+                  "peakP95At": "2026-10-20T05:24:30.814000Z",
+                  "latencyThresholdMs": 30.0,
+                  "failureThresholdPct": 5.0,
+                  "attempts": 6,
+                  "failed": 0,
+                  "failurePct": 0.0,
+                  "countsComplete": true,
+                  "countedChecks": 3,
+                  "missingCountChecks": 0,
+                  "abnormalChecks": 0,
+                  "healthyChecks": 3,
+                  "unknownChecks": 0,
+                  "latencyBreaches": 0,
+                  "failureBreaches": 0
+                },
+                "internet": {
+                  "peakP95Ms": 358.281,
+                  "peakP95At": "2026-10-20T05:24:24.785000Z",
+                  "latencyThresholdMs": 120.0,
+                  "failureThresholdPct": 5.0,
+                  "attempts": 6,
+                  "failed": 0,
+                  "failurePct": 0.0,
+                  "countsComplete": true,
+                  "countedChecks": 3,
+                  "missingCountChecks": 0,
+                  "abnormalChecks": 3,
+                  "healthyChecks": 0,
+                  "unknownChecks": 0,
+                  "latencyBreaches": 3,
+                  "failureBreaches": 0
+                },
+                "dns": {
+                  "peakP95Ms": 356.706,
+                  "peakP95At": "2026-10-20T05:24:24.785000Z",
+                  "latencyThresholdMs": 200.0,
+                  "failureThresholdPct": 5.0,
+                  "attempts": 6,
+                  "failed": 0,
+                  "failurePct": 0.0,
+                  "countsComplete": true,
+                  "countedChecks": 3,
+                  "missingCountChecks": 0,
+                  "abnormalChecks": 3,
+                  "healthyChecks": 0,
+                  "unknownChecks": 0,
+                  "latencyBreaches": 3,
+                  "failureBreaches": 0
+                },
+                "service": {
+                  "peakP95Ms": 713.231,
+                  "peakP95At": "2026-10-20T05:24:27.801000Z",
+                  "latencyThresholdMs": 250.0,
+                  "failureThresholdPct": 5.0,
+                  "attempts": 6,
+                  "failed": 0,
+                  "failurePct": 0.0,
+                  "countsComplete": true,
+                  "countedChecks": 3,
+                  "missingCountChecks": 0,
+                  "abnormalChecks": 3,
+                  "healthyChecks": 0,
+                  "unknownChecks": 0,
+                  "latencyBreaches": 3,
+                  "failureBreaches": 0
+                }
+              }
+            },
+            "observations": [
+              "dns: selected probes exceeded the configured latency or unsuccessful-probe threshold.",
+              "internet: selected probes exceeded the configured latency or unsuccessful-probe threshold.",
+              "service: selected probes exceeded the configured latency or unsuccessful-probe threshold."
+            ],
+            "unknowns": [
+              "Selected probes do not establish a root cause, an ISP fault, a service-wide outage, or real call quality.",
+              "Checks are sequential samples; conditions between checks were not continuously observed."
+            ],
+            "nextChecks": [
+              "Compare resolver responses and distinguish name lookup failure from IP connectivity.",
+              "Compare multiple public TCP targets and a wired path before assigning an upstream cause.",
+              "Compare service TCP connection results with DNS and public-IP probes; verify the application separately."
+            ]
+          }
+        ],
+        "notifications": [
+          {
+            "id": "incident-6feb8e4b47e802a5:opened",
+            "type": "opened",
+            "at": "2026-10-20T05:24:30.814000Z",
+            "incidentId": "incident-6feb8e4b47e802a5"
+          }
+        ],
+        "pendingAbnormalChecks": 0,
+        "pendingRecoveryChecks": 1
+      },
+      {
+        "sampleCount": 7,
+        "at": "2026-10-20T05:24:34.009000Z",
+        "stage": "resolved",
+        "incidents": [
+          {
+            "id": "incident-6feb8e4b47e802a5",
+            "status": "resolved",
+            "startedAt": "2026-10-20T05:24:24.785000Z",
+            "openedAt": "2026-10-20T05:24:30.814000Z",
+            "lastObservedAt": "2026-10-20T05:24:34.009000Z",
+            "lastAbnormalAt": "2026-10-20T05:24:30.814000Z",
+            "resolvedAt": "2026-10-20T05:24:34.009000Z",
+            "durationSeconds": 9.224,
+            "affectedLayers": [
+              "dns",
+              "internet",
+              "service"
+            ],
+            "abnormalChecks": 3,
+            "evidenceGaps": [],
+            "transitions": [
+              {
+                "id": "incident-6feb8e4b47e802a5:opened",
+                "type": "opened",
+                "at": "2026-10-20T05:24:30.814000Z"
+              },
+              {
+                "id": "incident-6feb8e4b47e802a5:resolved",
+                "type": "resolved",
+                "at": "2026-10-20T05:24:34.009000Z"
+              }
+            ],
+            "spanSeconds": 9.224,
+            "evidence": {
+              "startAt": "2026-10-20T05:24:24.785000Z",
+              "endAt": "2026-10-20T05:24:30.814000Z",
+              "checkCount": 3,
+              "layers": {
+                "gateway": {
+                  "peakP95Ms": 0.071,
+                  "peakP95At": "2026-10-20T05:24:30.814000Z",
+                  "latencyThresholdMs": 30.0,
+                  "failureThresholdPct": 5.0,
+                  "attempts": 6,
+                  "failed": 0,
+                  "failurePct": 0.0,
+                  "countsComplete": true,
+                  "countedChecks": 3,
+                  "missingCountChecks": 0,
+                  "abnormalChecks": 0,
+                  "healthyChecks": 3,
+                  "unknownChecks": 0,
+                  "latencyBreaches": 0,
+                  "failureBreaches": 0
+                },
+                "internet": {
+                  "peakP95Ms": 358.281,
+                  "peakP95At": "2026-10-20T05:24:24.785000Z",
+                  "latencyThresholdMs": 120.0,
+                  "failureThresholdPct": 5.0,
+                  "attempts": 6,
+                  "failed": 0,
+                  "failurePct": 0.0,
+                  "countsComplete": true,
+                  "countedChecks": 3,
+                  "missingCountChecks": 0,
+                  "abnormalChecks": 3,
+                  "healthyChecks": 0,
+                  "unknownChecks": 0,
+                  "latencyBreaches": 3,
+                  "failureBreaches": 0
+                },
+                "dns": {
+                  "peakP95Ms": 356.706,
+                  "peakP95At": "2026-10-20T05:24:24.785000Z",
+                  "latencyThresholdMs": 200.0,
+                  "failureThresholdPct": 5.0,
+                  "attempts": 6,
+                  "failed": 0,
+                  "failurePct": 0.0,
+                  "countsComplete": true,
+                  "countedChecks": 3,
+                  "missingCountChecks": 0,
+                  "abnormalChecks": 3,
+                  "healthyChecks": 0,
+                  "unknownChecks": 0,
+                  "latencyBreaches": 3,
+                  "failureBreaches": 0
+                },
+                "service": {
+                  "peakP95Ms": 713.231,
+                  "peakP95At": "2026-10-20T05:24:27.801000Z",
+                  "latencyThresholdMs": 250.0,
+                  "failureThresholdPct": 5.0,
+                  "attempts": 6,
+                  "failed": 0,
+                  "failurePct": 0.0,
+                  "countsComplete": true,
+                  "countedChecks": 3,
+                  "missingCountChecks": 0,
+                  "abnormalChecks": 3,
+                  "healthyChecks": 0,
+                  "unknownChecks": 0,
+                  "latencyBreaches": 3,
+                  "failureBreaches": 0
+                }
+              }
+            },
+            "observations": [
+              "dns: selected probes exceeded the configured latency or unsuccessful-probe threshold.",
+              "internet: selected probes exceeded the configured latency or unsuccessful-probe threshold.",
+              "service: selected probes exceeded the configured latency or unsuccessful-probe threshold."
+            ],
+            "unknowns": [
+              "Selected probes do not establish a root cause, an ISP fault, a service-wide outage, or real call quality.",
+              "Checks are sequential samples; conditions between checks were not continuously observed."
+            ],
+            "nextChecks": [
+              "Compare resolver responses and distinguish name lookup failure from IP connectivity.",
+              "Compare multiple public TCP targets and a wired path before assigning an upstream cause.",
+              "Compare service TCP connection results with DNS and public-IP probes; verify the application separately."
+            ]
+          }
+        ],
+        "notifications": [
+          {
+            "id": "incident-6feb8e4b47e802a5:opened",
+            "type": "opened",
+            "at": "2026-10-20T05:24:30.814000Z",
+            "incidentId": "incident-6feb8e4b47e802a5"
+          },
+          {
+            "id": "incident-6feb8e4b47e802a5:resolved",
+            "type": "resolved",
+            "at": "2026-10-20T05:24:34.009000Z",
+            "incidentId": "incident-6feb8e4b47e802a5"
+          }
+        ],
+        "pendingAbnormalChecks": 0,
+        "pendingRecoveryChecks": 0
+      }
+    ],
+    "totalSamples": 7,
+    "available": true
+  },
+  "drill": {
+    "scenario": "delay",
+    "injectedTruth": {
+      "at": "2026-10-20T05:24:24.612Z",
+      "scenario": "delay",
+      "configured": "router/wan egress netem delay 350ms",
+      "qdiscReadback": "qdisc netem 8004: root refcnt 17 limit 1000 delay 350ms\n Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n",
+      "dnsResponderMode": "normal"
+    },
+    "rawEvidenceFile": "delay-evidence.json",
+    "rawEvidenceSHA256": "51efee27b1d52c07b941888e73464315b4c4eacfbe02cf4dcb91677a9ca826e6",
+    "packetRunCompletedAt": "2026-10-20T05:24:34.087Z",
+    "validation": {
+      "passed": true,
+      "sampleCount": 7,
+      "baselineSamples": 2,
+      "faultSamples": 3,
+      "recoverySamples": 2,
+      "measurementAssertions": "gateway healthy, expected protocol fault observed, complete recovery, namespaces removed",
+      "incidentAssertions": "three abnormal checks open once; two healthy checks resolve once; start, duration and affected layers verified"
+    },
+    "cleanup": {
+      "verifiedAt": "2026-10-20T05:24:34.087Z",
+      "namespacesAbsent": true,
+      "remainingOwnedNames": [],
+      "errors": []
+    }
+  }
+}

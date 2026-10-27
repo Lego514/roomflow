@@ -1,6 +1,10 @@
 # 真實 Linux 網路實驗
 
-這個 lab 用 Linux 核心的 network namespaces、veth、`tc` 與 `iperf3` 執行封包實驗。它與瀏覽器的數值模擬分開：只有執行 lab 後產生的 JSON/CSV 才是核心網路量測。所有流量留在虛擬機內，沒有更動家裡的路由器。
+這個 lab 用 Linux 核心的 network namespaces、veth、`tc` 與 `iperf3` 執行封包實驗。它與瀏覽器的數值模擬分開：只有執行 lab 後產生的 JSON/CSV 才是核心網路量測。所有實驗流量留在隔離 Linux 拓樸內，沒有更動家裡的路由器。
+
+目前 [GitHub Actions workflow](../.github/workflows/kernel-lab.yml) 先執行 Node、lab、homenet 回歸測試，再測 reference（5/20 Mbps、40 ms、300 ms FIFO）與固定 home-inspired（35/250 Mbps、25 ms、180 ms FIFO）兩個 profile。已保存的 [reference CI 資料](../results/native-ci/) 與 [home CI 摘要](../results/native-ci-home/summary.md) 各有四情境 × 三策略 × 五次，共 60 次；它們是原生核心受控量測，home profile 不代表實體家用路由器前後測。
+
+[results/linux/](../results/linux/REPORT.md) 與 [初版驗證](../TEST_REPORT.md) 是歷史 QEMU TCG 階段，包含未被解釋的波動與補測；原始資料仍保留。居家觀察另見 [incident case](home-incident.zh-TW.md)，不能用 lab 校準值確診居家原因。
 
 ## 環境與安裝
 

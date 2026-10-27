@@ -1,0 +1,76 @@
+{
+  "verifiedAtUTC": "2026-10-20T14:29:13.221849+00:00",
+  "tests": {
+    "node": 41,
+    "homenet": 113,
+    "lab": 28,
+    "total": 182,
+    "passed": true,
+    "skipped": 0
+  },
+  "savedPacketReplay": {
+    "delay": {
+      "frames": 7,
+      "stages": [
+        "normal",
+        "normal",
+        "pending",
+        "pending",
+        "open",
+        "recovering",
+        "resolved"
+      ],
+      "originalPacketEvidenceHashMatches": true
+    },
+    "loss": {
+      "frames": 7,
+      "stages": [
+        "normal",
+        "normal",
+        "pending",
+        "pending",
+        "open",
+        "recovering",
+        "resolved"
+      ],
+      "originalPacketEvidenceHashMatches": true
+    },
+    "dns": {
+      "frames": 7,
+      "stages": [
+        "normal",
+        "normal",
+        "pending",
+        "pending",
+        "open",
+        "recovering",
+        "resolved"
+      ],
+      "originalPacketEvidenceHashMatches": true
+    }
+  },
+  "newPacketOrHouseholdProbesRun": false,
+  "browser": {
+    "step4NoIncident": true,
+    "step5Open": true,
+    "step6StillOpen": true,
+    "step7Resolved": true,
+    "previousNextRestartPause": true,
+    "scenarioChangeStopsPlayback": true,
+    "languageSwitchPreservesStep": true,
+    "eventFocusAndFullHistoryReset": true,
+    "standaloneViewportWidth": 1265,
+    "standalonePageWidth": 1265,
+    "newPanelFits502px": true,
+    "directOfflineFileVisualCheck": false
+  },
+  "preservation": {
+    "sourceFilesChecked": 82,
+    "unexpectedSourceChanges": 0,
+    "existingRawAndNormalizedSamplesRetained": true,
+    "existingTransitionIdsRetained": true
+  },
+  "artifact": "artifacts/demo/RoomFlow.html",
+  "committedOrPushed": false,
+  "remoteCIRun": false
+}

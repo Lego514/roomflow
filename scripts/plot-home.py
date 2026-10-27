@@ -1,21 +1,25 @@
 #!/usr/bin/env python3
 """Draw home latency over time, router vs internet, as light and dark SVGs.
 
-Input: the local history from homenet (data/home.sqlite). For every scheduled
+Input: a frozen incident JSON snapshot, or read-only local history from homenet.
+For every scheduled
 check it takes the router's median ping and the internet's median (mean of the
 1.1.1.1 and 8.8.8.8 medians) and plots both along real time. A timeline rather
 than an average by hour of day, because the slow periods start and stop at
 different hours on different days; averaging by hour would blur that on/off
-shape, which is the clue to the cause. Two lines show where the delay lives:
-if the router line stays flat while the internet line rises, the queue is
-outside the home. Gaps longer than 15 minutes (the laptop asleep) break the lines.
+shape. The two series use different protocols and sequential measurements;
+they show observations rather than locating a queue or ruling out Wi-Fi.
+Gaps longer than 15 minutes break the lines; their cause is not inferred.
 Shaded bands are the slow periods homenet's report detects (homenet/episodes.py).
 
+    python scripts/plot-home.py docs/evidence/home-incident.json docs/
     python scripts/plot-home.py data/home.sqlite docs/
 """
 from __future__ import annotations
 
 import sys
+import json
+import sqlite3
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -77,17 +81,20 @@ def svg(theme: dict, rows, checks: int, slow: list) -> str:
     t0, t1 = rows[0][0], rows[-1][0]
     top = 300.0  # clip the rare spike so the plateaus stay readable
     span = f"{t0:%b %d %H:%M} to {t1:%b %d %H:%M}"
+    offset = t0.strftime("%z")
+    zone = f"UTC{offset[:3]}:{offset[3:]}" if offset else "host local time"
     out = [
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" '
         f'font-family=\'{FONT}\' role="img" aria-labelledby="t d">',
         '<title id="t">Home latency over time: router vs internet</title>',
-        f'<desc id="d">Latency every 5 minutes from {span}. The router stays near a few milliseconds '
-        'throughout; latency to the internet alternates between about 25 ms and multi-hour plateaus near 200 ms.</desc>',
+        f'<desc id="d">Recorded checks from {span}, {zone}. Gateway ICMP and external TCP handshake '
+        'medians are different probes. Shaded bands mark sustained external latency increases; '
+        'these observations do not confirm the cause or rule out Wi-Fi.</desc>',
         f'<rect width="{W}" height="{H}" rx="8" fill="{theme["surface"]}"/>',
         f'<text x="{LEFT}" y="30" font-size="16" font-weight="600" fill="{theme["ink"]}">'
-        "Inside the home it's fast; the delay is on the line outside</text>",
+        "Home latency observations; the cause remains unconfirmed</text>",
         f'<text x="{LEFT}" y="52" font-size="12.5" fill="{theme["ink2"]}">'
-        f"Median latency every 5 minutes · {checks} checks, {span} · capped at {top:.0f} ms</text>",
+        f"{checks} checks · {span} {zone} · medians capped at {top:.0f} ms</text>",
     ]
     for e in slow:  # behind the grid and the lines
         x0, x1 = xt(e.start, t0, t1), xt(e.end, t0, t1)
@@ -100,20 +107,28 @@ def svg(theme: dict, rows, checks: int, slow: list) -> str:
         out.append(f'<text x="{LEFT - 8}" y="{yy + 4:.1f}" font-size="11.5" text-anchor="end" fill="{theme["muted"]}" '
                    f'font-variant-numeric="tabular-nums">{ms}</text>')
     out.append(f'<text x="{LEFT - 8}" y="{TOP - 12}" font-size="11.5" text-anchor="end" fill="{theme["muted"]}">ms</text>')
-    # Ticks every 6 hours on the clock.
+    # Keep labels readable as the observation window grows.
+    hours = (t1 - t0).total_seconds() / 3600
+    tick_hours = next((step for step in (6, 12, 24, 48, 96, 168) if hours / step <= 7), 336)
     tick = t0.replace(minute=0, second=0, microsecond=0)
-    while tick.hour % 6:
-        tick += timedelta(hours=1)
+    if tick_hours < 24:
+        while tick.hour % tick_hours:
+            tick += timedelta(hours=1)
+    else:
+        tick = tick.replace(hour=0)
+    while tick < t0:
+        tick += timedelta(hours=tick_hours)
     while tick <= t1:
         if tick >= t0:
-            label = f"{tick:%a} {tick.hour % 12 or 12}{'am' if tick.hour < 12 else 'pm'}"
+            label = (f"{tick:%a %d}" if tick_hours >= 24 else
+                     f"{tick:%a} {tick.hour % 12 or 12}{'am' if tick.hour < 12 else 'pm'}")
             out.append(f'<text x="{xt(tick, t0, t1):.1f}" y="{H - BOTTOM + 18}" font-size="11.5" text-anchor="middle" '
                        f'fill="{theme["muted"]}">{label}</text>')
-        tick += timedelta(hours=6)
+        tick += timedelta(hours=tick_hours)
     out += draw(segments(rows, 2, t0, t1, top), theme["series"][0])
     out += draw(segments(rows, 1, t0, t1, top), theme["series"][1])
     lx = W - RIGHT + 14
-    for name, ly, i in (("To the internet", y(200, top) + 4, 0), ("To the home router", y(0, top) - 4, 1)):
+    for name, ly, i in (("External TCP", y(200, top) + 4, 0), ("Gateway ping", y(0, top) - 4, 1)):
         out.append(f'<line x1="{lx}" x2="{lx + 14}" y1="{ly - 4:.1f}" y2="{ly - 4:.1f}" stroke="{theme["series"][i]}" '
                    'stroke-width="3" stroke-linecap="round"/>')
         out.append(f'<text x="{lx + 20}" y="{ly:.1f}" font-size="12.5" fill="{theme["ink"]}">{name}</text>')
@@ -122,15 +137,24 @@ def svg(theme: dict, rows, checks: int, slow: list) -> str:
         out.append(f'<rect x="{lx}" y="{ly - 10:.1f}" width="14" height="12" fill="{theme["band"]}" '
                    f'stroke="{theme["axis"]}" stroke-width="0.5"/>')
         out.append(f'<text x="{lx + 20}" y="{ly:.1f}" font-size="12.5" fill="{theme["ink"]}">Slow period</text>')
+    out.append(f'<text x="{LEFT}" y="{H - 8}" font-size="10.5" fill="{theme["ink2"]}">'
+               'ICMP/TCP probes differ; shading marks observations, not a confirmed cause.</text>')
     out.append("</svg>")
     return "\n".join(out) + "\n"
 
 
+def load_rows(source: Path):
+    if source.suffix.lower() == ".json":
+        snapshot = json.loads(source.read_text(encoding="utf-8"))
+        return [(datetime.fromisoformat(row["at_local"]), row["gateway_p50_ms"], row["internet_p50_ms"])
+                for row in snapshot["timeline"]]
+    with sqlite3.connect(source.resolve().as_uri() + "?mode=ro", uri=True) as db:
+        return store.check_timeline(db)
+
+
 def main() -> int:
-    db_path, out_dir = Path(sys.argv[1]), Path(sys.argv[2])
-    db = store.connect(db_path)
-    rows = store.check_timeline(db)
-    db.close()
+    source, out_dir = Path(sys.argv[1]), Path(sys.argv[2])
+    rows = load_rows(source)
     checks = len(rows)
     slow = episodes.find(rows)
     if len(rows) < 2:

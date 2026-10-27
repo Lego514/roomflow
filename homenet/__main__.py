@@ -2,14 +2,16 @@
 
     python -m homenet check            Wi-Fi + latency layer by layer, with a verdict
     python -m homenet wifi             how crowded your Wi-Fi channel is, and a quieter one
-    python -m homenet trace            hop by hop: where latency is added, whether loss carries through
+    python -m homenet trace            compare hop-by-hop ICMP observations and their limits
     python -m homenet dns              your resolvers vs 1.1.1.1 / 8.8.8.8 / 9.9.9.9, cached and uncached
     python -m homenet ipv6             the same services over IPv4 and IPv6
     python -m homenet path             trace, then ipv6 (what the schedule runs every 2 hours)
-    python -m homenet bloat            bufferbloat test (uses data: ~10 s each way at full speed)
-    python -m homenet capacity         available download/upload right now (~5 s each way at full speed)
+    python -m homenet bloat            load-related latency test (uses data: ~10 s transfers each way)
+    python -m homenet capacity         available download/upload right now (~5 s transfers each way)
     python -m homenet watch --every 300   run `check` every 5 minutes
     python -m homenet report           what the scheduled runs found: slow periods, by hour, bufferbloat, path, IPv6
+    python -m homenet incidents        sustained probe incidents and confirmed recovery
+    python -m homenet dashboard        export the privacy-filtered local observation snapshot
 
 Scheduled runs (scripts/schedule-homenet.ps1) add --log data/homenet.log, which
 appends output and errors to that file instead of a console.
@@ -18,6 +20,7 @@ appends output and errors to that file instead of a console.
 from __future__ import annotations
 
 import argparse
+from contextlib import closing
 import sys
 import time
 from datetime import datetime, timedelta, timezone
@@ -44,21 +47,24 @@ def print_check(r) -> None:
     if w:
         print(f"wifi      {w.state}, {w.band}, channel {w.channel}, {w.radio}, signal {w.signal_pct}% "
               f"({w.rssi_dbm} dBm), link {fmt(w.rx_mbps, 0)}/{fmt(w.tx_mbps, 0)} Mbps  [{r.statuses.get('wifi')}]")
-    print(f"{'layer':<9} {'target':<22} {'loss%':>6} {'p50':>7} {'p95':>7} {'jitter':>7}  status")
+    print(f"{'layer':<9} {'target':<22} {'fail%':>6} {'p50':>7} {'p95':>7} {'jitter':>7}  flag")
     for layer, series in r.layers.items():
         for s in series:
             target = "(router)" if layer == "gateway" else s.target
             print(f"{layer:<9} {target:<22} {s.loss_pct:>6.1f} {fmt(s.p50):>7} {fmt(s.p95):>7} {fmt(s.jitter):>7}  "
                   f"{r.statuses[layer]}")
     status, layer = r.verdict
-    print("\nverdict: all layers ok" if status == "ok" else f"\nverdict: {layer} {status}. {FIXES[layer]}")
+    print("\nobservations: selected probes were within this project's thresholds" if status == "ok"
+          else f"\nfirst flagged observation: {layer} {status}. {FIXES[layer]}")
+    print("Probe flags guide investigation; they do not establish a root cause or real call quality.")
+    print("'fail%' counts unsuccessful probes, not measured video packet loss; 'down' can also mean no probe data.")
 
 
-BLOAT_LOCK = DB.parent / ".bloat-running"  # held by bloat and capacity, which both saturate the link
+BLOAT_LOCK = DB.parent / ".bloat-running"  # held by bloat and capacity, which both generate load
 
 
 def bloat_running() -> bool:
-    """A load test saturates the link; a check during it would record the load, not the network."""
+    """A load test may affect probes; scheduled checks skip this induced traffic."""
     try:
         return time.time() - BLOAT_LOCK.stat().st_mtime < 180
     except OSError:
@@ -71,9 +77,61 @@ def cmd_check(args) -> int:
         return 0
     r = run_check(args.count)
     print_check(r)
-    with store.connect(DB) as db:
+    with closing(store.connect(DB)) as db, db:
         store.save_check(db, now(), r)
+        export_observations(db)
     return 0 if r.verdict[0] == "ok" else 1
+
+
+def export_observations(db, output: Path | None = None):
+    from . import dashboard
+
+    # Re-read after save_check's commit, with a writer lock through publication.
+    # An overlapping scheduled writer cannot replace a newer export with an
+    # older pre-commit snapshot.
+    db.execute("begin immediate")
+    try:
+        snapshot = dashboard.from_connection(db)
+        dashboard.atomic_export(snapshot, output or DB.parent / "observations.json")
+        db.commit()
+    except Exception:
+        db.rollback()
+        raise
+    return snapshot
+
+
+def cmd_dashboard(args) -> int:
+    from . import dashboard
+
+    with closing(store.connect(DB)) as db:
+        db.execute("begin immediate")
+        try:
+            dashboard.from_connection(db, persist=True)
+            db.commit()
+        except Exception:
+            db.rollback()
+            raise
+        snapshot = export_observations(db, args.output)
+    print(f"exported {snapshot['timelineTotal']} saved checks, {len(snapshot['incidents'])} incidents; "
+          f"monitor {snapshot['monitor']['status']} -> {args.output}")
+    return 0
+
+
+def cmd_incidents(args) -> int:
+    from . import dashboard
+
+    with closing(store.connect(DB)) as db:
+        db.execute("begin")
+        snapshot = dashboard.from_connection(db)
+    print(f"monitor: {snapshot['monitor']['status']}; last observation: {snapshot['monitor']['lastObservedAt'] or '-'}")
+    for incident in snapshot["incidents"]:
+        print(f"{incident['id']}  {incident['status']}  start {incident['startedAt']}  "
+              f"recovery {incident['resolvedAt'] or 'unconfirmed'}  "
+              f"observed span {incident['durationSeconds']:.0f}s  layers {', '.join(incident['affectedLayers'])}")
+    if not snapshot["incidents"]:
+        print("no sustained incidents recorded")
+    print("Gaps do not confirm recovery. Observed span is not proven continuous downtime; transitions are local records.")
+    return 0
 
 
 def cmd_wifi(args) -> int:
@@ -112,18 +170,18 @@ def cmd_trace(args) -> int:
         print("traceroute returned nothing")
         return 1
     print(f"pinging {sum(1 for h in hops if h.ip)} hops {args.count} times each, in parallel...")
-    verdict = path.analyze(hops, path.probe_hops(hops, args.count))
-    print(f"\n{'hop':>3}  {'segment':<18} {'address':<16} {'loss%':>6} {'p50':>6} {'carries':>8} {'added':>6}  note")
+    verdict = path.analyze(hops, path.probe_hops(hops, args.count), target=args.target)
+    print(f"\n{'hop':>3}  {'position hint':<20} {'address':<16} {'fail%':>6} {'p50':>6} {'suffix':>8} {'step':>6}  note")
     for r in verdict.rows:
         s = r.series
         addr = r.hop.ip or "*"
         loss = fmt(s.loss_pct) if s else "-"
         p50 = fmt(s.p50) if s else "-"
         added = "" if r.added_ms is None else f"+{r.added_ms:.0f}"
-        print(f"{r.hop.index:>3}  {r.segment:<18} {addr:<16} {loss:>6} {p50:>6} {fmt(r.effective_ms):>8} {added:>6}  {r.note}")
+        print(f"{r.hop.index:>3}  {r.segment:<20} {addr:<16} {loss:>6} {p50:>6} {fmt(r.effective_ms):>8} {added:>6}  {r.note}")
     print(f"\n{verdict.text}")
-    print("'carries' is the latency that really passes through each hop (lowest of it and every later hop).")
-    with store.connect(DB) as db:
+    print("'suffix' is the minimum median ICMP RTT of this and later replying hops; 'step' compares adjacent observations.")
+    with closing(store.connect(DB)) as db, db:
         store.save_trace(db, now(), args.target, verdict)
     return 0
 
@@ -148,7 +206,7 @@ def cmd_dns(args) -> int:
               "at this sample size that's a tie, so switching wouldn't change much.")
     else:
         print(f"\nfastest for everyday lookups: {best.label}, by more than {dns.TIE_MS:.0f} ms.")
-    print("'uncached' forces a full lookup through the DNS tree: the worst case for a name you haven't visited.")
+    print("'uncached' uses random names to reduce exact-name cache reuse; it does not prove a full recursive lookup.")
     return 0
 
 
@@ -162,7 +220,7 @@ def cmd_ipv6(args) -> int:
         v6 = fmt(p.v6.p50) if p.v6 else "-"
         print(f"{p.label:<20} {v4:>9} {v6:>9}  {p.verdict}")
     print(f"\n{ipv6.summary(pairs)}")
-    with store.connect(DB) as db:
+    with closing(store.connect(DB)) as db, db:
         store.save_ipv6(db, now(), pairs)
     return 0
 
@@ -189,7 +247,7 @@ def cmd_capacity(args) -> int:
 
     print(f"available now: download {show(r.download)}, upload {show(r.upload)}")
     print(f"latency while loaded (p50): download {fmt(r.download.internet.p50)} ms, upload {fmt(r.upload.internet.p50)} ms")
-    with store.connect(DB) as db:
+    with closing(store.connect(DB)) as db, db:
         store.save_capacity(db, now(), r)
     return 1 if r.download.failure or r.upload.failure else 0
 
@@ -213,7 +271,7 @@ def cmd_bloat(args) -> int:
         mbps = "" if phase is r.idle else fmt(phase.mbps)
         print(f"{phase.name:<9} {mbps:>7} {fmt(phase.internet.p50):>13} {fmt(phase.internet.p95):>13} "
               f"{fmt(phase.gateway.p95):>11}  {grade}")
-    with store.connect(DB) as db:
+    with closing(store.connect(DB)) as db, db:
         store.save_bloat(db, now(), r)
     return 0
 
@@ -222,8 +280,9 @@ def cmd_watch(args) -> int:
     while True:
         try:
             r = run_check(args.count)
-            with store.connect(DB) as db:
+            with closing(store.connect(DB)) as db, db:
                 store.save_check(db, now(), r)
+                export_observations(db)
             status, layer = r.verdict
             print(f"[{datetime.now():%H:%M}] {status}{'' if layer is None else ' at ' + layer}", flush=True)
         except Exception as e:  # keep watching through a transient failure
@@ -263,12 +322,14 @@ def print_slow_periods(timeline, cap_runs, v6_runs) -> None:
             print(f"{label:<22} {len(rows):>4} {fmt(down):>10} {fmt(up):>8}")
     if v6_runs:
         inside, outside = split(v6_runs)
-        print(f"\nIPv6 failed in {sum(r[1] for r in inside)} of {len(inside)} runs during slow periods, "
+        print(f"\nAt least one target lacked a successful IPv6 lookup/connection observation while IPv4 worked in "
+              f"{sum(r[1] for r in inside)} of {len(inside)} runs during slow periods, "
               f"{sum(r[1] for r in outside)} of {len(outside)} the rest of the time.")
+        print("This is a run-level association; legacy outcomes may be ambiguous and application fallback was not measured.")
 
 
 def cmd_report(args) -> int:
-    with store.connect(DB) as db:
+    with closing(store.connect(DB)) as db, db:
         timeline = store.check_timeline(db)
         hours = store.hourly(db)
         cap = store.capacity_by_hour(db)
@@ -285,7 +346,7 @@ def cmd_report(args) -> int:
         print_slow_periods(timeline, cap_runs, v6_runs)
     if hours:
         print("\nLatency to the internet by hour of day (from scheduled checks)")
-        print(f"{'hour':>4} {'checks':>6} {'avg p95':>8} {'worst p95':>10} {'loss%':>6}")
+        print(f"{'hour':>4} {'checks':>6} {'avg p95':>8} {'worst p95':>10} {'fail%':>6}")
         for hour, checks, p95, worst, loss in hours:
             print(f"{hour:>4} {checks:>6} {fmt(p95):>8} {fmt(worst):>10} {fmt(loss, 2):>6}")
     if cap:
@@ -294,24 +355,25 @@ def cmd_report(args) -> int:
         for hour, runs, down, up, failed in cap:
             print(f"{hour:>4} {runs:>4} {fmt(down):>10} {fmt(up):>8} {failed or '':>6}")
     if blo:
-        print("\nBufferbloat runs")
+        print("\nLoad-test observations (project-specific added-latency grades, not call-quality scores)")
         print(f"{'when':<20} {'down Mbps':>9} {'grade':>5} {'added':>7}   {'up Mbps':>7} {'grade':>5} {'added':>7}")
         for when, dm, dg, da, um, ug, ua in blo:
             print(f"{when:<20} {fmt(dm):>9} {dg or '?':>5} {fmt(da, 0):>7}   {fmt(um):>7} {ug or '?':>5} {fmt(ua, 0):>7}")
     if tr:
         runs, total, seg, times, added = tr
-        print(f"\nPath ({runs} traces): median {fmt(total)} ms end to end; the most latency is added at the "
-              f"{seg} in {times} of {runs} runs (median +{fmt(added, 0)} ms).")
+        print(f"\nPath ({runs} traces): median last-reply ICMP RTT {fmt(total)} ms; the largest observed comparison step "
+              f"is at {seg} in {times} of {runs} runs (median +{fmt(added, 0)} ms).")
+        print("History does not establish destination confirmation, an exact physical link, ownership, or forwarding loss.")
     if v6:
         print("\nIPv4 vs IPv6 (latency compared only on runs where both answered)")
-        print(f"{'target':<20} {'runs':>4} {'both ok':>7} {'IPv4 p50':>9} {'IPv6 p50':>9} {'v6 slower':>9} {'v6 failed':>9}")
+        print(f"{'target':<20} {'runs':>4} {'both ok':>7} {'IPv4 p50':>9} {'IPv6 p50':>9} {'v6 slower':>9} {'missing':>7} {'lookup':>7} {'TCP':>5} {'unknown':>8}")
         for s in v6:
             print(f"{s.target:<20} {s.runs:>4} {s.paired:>7} {fmt(s.v4_p50):>9} {fmt(s.v6_p50):>9} "
-                  f"{s.v6_slower:>9} {s.v6_failed:>9}")
+                  f"{s.v6_slower:>9} {s.v6_failed:>7} {s.v6_lookup_unavailable:>7} {s.v6_tcp_failed:>5} {s.v6_unclassified:>8}")
         failing = [s for s in v6 if s.v6_failed]
         if failing:
-            print("'v6 failed' counts runs where IPv4 answered and IPv6 didn't; check whether they line up "
-                  "with the slow hours above.")
+            print("'missing' counts target observations with IPv4 success but no IPv6 success; lookup/TCP stages are "
+                  "separated where recorded, and ambiguous legacy outcomes stay unknown. It does not measure application fallback.")
     return 0
 
 
@@ -349,6 +411,10 @@ def main(argv: list[str] | None = None) -> int:
     w.add_argument("--count", type=int, default=5)
     w.set_defaults(fn=cmd_watch)
     sub.add_parser("report").set_defaults(fn=cmd_report)
+    sub.add_parser("incidents").set_defaults(fn=cmd_incidents)
+    ds = sub.add_parser("dashboard")
+    ds.add_argument("--output", type=Path, default=DB.parent / "observations.json")
+    ds.set_defaults(fn=cmd_dashboard)
     args = parser.parse_args(argv)
     if args.log is None:
         return args.fn(args)

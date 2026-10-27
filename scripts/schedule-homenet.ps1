@@ -3,7 +3,7 @@
     Run RoomFlow's home measurements on a schedule (Windows Task Scheduler).
 
 .DESCRIPTION
-    Registers three tasks for the current user, in the \RoomFlow\ task folder.
+    Registers four tasks for the current user, in the \RoomFlow\ task folder.
     They run only while you are logged on, with no console window, and append
     their output to data\homenet.log. Results go to data\home.sqlite; see them
     with `python -m homenet report`.

@@ -7,12 +7,22 @@ import { Worker } from 'node:worker_threads';
 import { SessionController, atomicJson } from './session.mjs';
 import { validateExperiment, resultCsv } from './experiment.mjs';
 import { simulate } from './simulator.mjs';
+import { loadObservations } from './observations.mjs';
+import { QuickCheckController } from './quick-check.mjs';
+import { HomeSetupStore } from './home-setup.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.svg': 'image/svg+xml' };
 
-export function createApp({ dataDir = path.join(ROOT, 'data'), evidenceDir = path.join(ROOT, 'results', 'linux'), now = Date.now } = {}) {
+export function createApp({ dataDir = path.join(ROOT, 'data'), evidenceDir = path.join(ROOT, 'results', 'linux'),
+  observationsDemoFile = path.join(ROOT, 'docs', 'evidence', 'observations-demo.json'),
+  drillDir = path.join(ROOT, 'results', 'incident-drills'), now = Date.now,
+  quickCheckController = null, quickCheckOptions = {} } = {}) {
   fs.mkdirSync(path.join(dataDir, 'experiments'), { recursive: true });
+  const homeSetup = new HomeSetupStore({dataDir,now});
+  const quickChecks = quickCheckController ?? new QuickCheckController({
+    dataDir, rootDir: ROOT, now, pythonCommand: process.env.ROOMFLOW_PYTHON || 'python', ...quickCheckOptions,
+  });
   let appliedMode = 'normal';
   let preview = null;
   const session = new SessionController({ file: path.join(dataDir, 'session.json'), now,
@@ -77,9 +87,35 @@ export function createApp({ dataDir = path.join(ROOT, 'data'), evidenceDir = pat
         return json(res, 403, { error: 'Cross-origin writes are not allowed.' });
       }
       const url = new URL(req.url, `http://${host}`);
+      if (req.method === 'GET' && url.pathname === '/api/home-setup') return json(res, 200, homeSetup.read());
+      if (req.method === 'POST' && url.pathname === '/api/home-setup') return json(res, 200, homeSetup.save(await body(req)));
+      if (req.method === 'GET' && url.pathname === '/api/quick-check') {
+        return json(res, 200, { job: quickChecks.get() });
+      }
+      const checkMatch = /^\/api\/quick-check\/([a-f0-9-]+)$/.exec(url.pathname);
+      if (req.method === 'GET' && checkMatch) {
+        const job = quickChecks.get(checkMatch[1]);
+        return job ? json(res, 200, { job }) : json(res, 404, { error: 'Check not found.' });
+      }
+      if (req.method === 'POST' && url.pathname === '/api/quick-check') {
+        const command = await body(req);
+        if (!command || typeof command !== 'object' || Array.isArray(command) || Object.keys(command).length) {
+          return json(res, 400, { error: 'Use an empty object to run the fixed lightweight check.' });
+        }
+        try { return json(res, 202, { job: quickChecks.start() }); }
+        catch (error) {
+          if (error.status === 409) return json(res, 409, { error: 'A check is already running.', job: error.job ?? quickChecks.get() });
+          throw error;
+        }
+      }
+      if (req.method === 'GET' && url.pathname === '/api/observations') {
+        return json(res, 200, loadObservations({ source: url.searchParams.get('source') ?? 'demo',
+          scenario: url.searchParams.get('scenario') ?? 'delay', dataDir,
+          demoFile: observationsDemoFile, drillDir, now: now() }));
+      }
       if (req.method === 'GET' && url.pathname === '/api/status') {
         return json(res, 200, { session: session.status(), policies: ['fifo', 'fair', 'priority'],
-          capability: { engine: 'model', kernelAvailable: false, sessionScope: 'model-only', effectivePolicy: appliedMode === 'meeting' ? 'priority' : 'fair' }, preview, expiryError });
+          capability: { engine: 'model', kernelAvailable: false, routerConnected: false, quickCheckScope: 'server-host', sessionScope: 'model-only', effectivePolicy: appliedMode === 'meeting' ? 'priority' : 'fair' }, preview, expiryError });
       }
       if (req.method === 'GET' && url.pathname === '/api/kernel-evidence') {
         const file = path.join(evidenceDir, 'summary.json');
@@ -172,6 +208,7 @@ export function createApp({ dataDir = path.join(ROOT, 'data'), evidenceDir = pat
     closing = true;
     clearInterval(timer);
     const closed = server.listening ? new Promise(resolve => server.close(resolve)) : Promise.resolve();
+    await quickChecks.dispose();
     await Promise.all([...workers].map(worker => worker.terminate()));
     await closed;
   };
@@ -182,6 +219,6 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
   const port = Number(process.env.ROOMFLOW_PORT ?? 3210);
   if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('Invalid ROOMFLOW_PORT.');
   const app = createApp();
-  app.server.listen(port, '127.0.0.1', () => console.log(`RoomFlow: http://127.0.0.1:${port} (model dashboard)`));
+  app.server.listen(port, '127.0.0.1', () => console.log(`RoomFlow: http://127.0.0.1:${port} (home and connection check)`));
   for (const signal of ['SIGINT', 'SIGTERM']) process.on(signal, async () => { await app.dispose(); process.exit(0); });
 }

@@ -1,0 +1,36 @@
+{
+  "checks": {
+    "beforeRows": 3332,
+    "afterRows": 3333,
+    "originalRowsRetained": true
+  },
+  "latency": {
+    "beforeRows": 23324,
+    "afterRows": 23331,
+    "originalRowsRetained": true
+  },
+  "trace": {
+    "beforeRows": 1440,
+    "afterRows": 1440,
+    "originalRowsRetained": true
+  },
+  "ipv6": {
+    "beforeRows": 730,
+    "afterRows": 730,
+    "originalRowsRetained": true
+  },
+  "capacity": {
+    "beforeRows": 262,
+    "afterRows": 262,
+    "originalRowsRetained": true
+  },
+  "bloat": {
+    "beforeRows": 114,
+    "afterRows": 114,
+    "originalRowsRetained": true
+  },
+  "monitorTransitions": {
+    "records": 122,
+    "distinctIds": 122
+  }
+}

@@ -1,0 +1,31 @@
+name: Portable tests
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Node HTTP, models, monitoring and guided homepage
+        run: node --test tests/*.test.mjs
+      - name: Python observations, incident lifecycle and storage
+        run: python -B -m unittest discover -s homenet/tests -t .
+      - name: Privacy-filtered quick-check bridge
+        run: python -B -m unittest homenet.test_quick_check
+      - name: Portable lab and saved-drill interpretation
+        run: python -B -m unittest discover -s lab -p 'test_*.py'

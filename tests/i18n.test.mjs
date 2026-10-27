@@ -7,7 +7,7 @@ import { normalizeConfig } from '../src/simulator.mjs';
 
 const dynamicSource = fs.readFileSync(new URL('../public/dynamic-i18n.js', import.meta.url), 'utf8');
 const staticSource = fs.readFileSync(new URL('../public/i18n.js', import.meta.url), 'utf8');
-const pageSource = fs.readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
+const pageSource = fs.readFileSync(new URL('../public/lab.html', import.meta.url), 'utf8');
 
 // Only the DOM surface consumed by the static translator is modeled here.
 // Browser tests own rendering; this fixture uses the actual page's text,

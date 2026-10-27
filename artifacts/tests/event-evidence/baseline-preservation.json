@@ -1,0 +1,22 @@
+{
+  "existingSourceFilesChecked": 82,
+  "changedFiles": [
+    "homenet/dashboard.py",
+    "homenet/incidents.py",
+    "homenet/tests/test_dashboard.py",
+    "homenet/tests/test_incidents.py",
+    "public/monitor.css",
+    "public/monitor.js",
+    "src/observations.mjs",
+    "scripts/build-observation-demo.mjs",
+    "docs/incident-drills.md",
+    "docs/incident-monitoring.md",
+    "docs/observations-schema.md",
+    "docs/README.zh-TW.md",
+    "docs/evidence/observations-demo.json",
+    "tests/monitor.test.mjs",
+    "tests/observations.test.mjs",
+    "tests/offline-demo.test.mjs"
+  ],
+  "unexpectedSourceChanges": []
+}
