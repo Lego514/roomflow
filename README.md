@@ -6,6 +6,48 @@ RoomFlow investigates it with real packets: a Linux lab that shares one bottlene
 
 [中文說明](docs/README.zh-TW.md)
 
+## Try RoomFlow in a few minutes
+
+The browser interface helps you check the connection, compare observations after a change, and inspect incidents through recovery. **The three usage modes currently save preferences only; they do not control your home router.**
+
+<details>
+  <summary><strong>See the app: homepage, usage modes, and a completed connection check</strong></summary>
+  <p><img src="artifacts/tests/four-improvements/overview.jpg" alt="RoomFlow homepage showing three usage preferences, a router-not-connected status, connection-check results, and actions to recheck after a change." width="480"></p>
+  <p>Saved screenshot from October 27, 2026. Its measurements describe that check, not your current connection. English and Traditional Chinese are available in the app.</p>
+</details>
+
+### Install and open
+
+You need **Node.js 22+** to run the website and **Python 3** for real connection checks. The app uses built-in modules; no `npm install` or `pip install` is required.
+
+```sh
+git clone https://github.com/Lego514/roomflow.git
+cd roomflow
+npm start
+```
+
+Open the address printed in the terminal (default: <http://127.0.0.1:3210>). Keep the terminal running; press Ctrl+C to stop. If Python is not found, see the [Python executable setting](docs/beginner-home.md).
+
+The server is local-only. Open it on the computer running RoomFlow; sharing its localhost URL or scanning a Wi-Fi QR code does not let a roommate join or enable priority control. There is no router pairing or verified Google/Nest Wifi integration yet.
+
+### Your first check
+
+1. **Name this computer, optionally.** Open “First-time setup / admin help.” Router details can be added later; a name is not a verified device binding. Do not enter a router password.
+2. **Click “Start check.”** It runs lightweight gateway, internet, DNS, and service probes on this computer, without bulk downloads or uploads. Opening the page does not automatically start a check.
+3. **Read the observation and next step.** Expand details for measurements. Incomplete data stay unknown; a successful check does not guarantee a smooth game or call.
+4. **Make one change, then compare.** For example, pause downloads yourself, then choose “Downloads paused — compare.” You can also remeasure with the same setup. RoomFlow records your stated condition; it does not perform or verify that change. Copy the summary if you want to share it.
+5. **Open “Connection history & incidents.”** Review saved local checks, or select the labelled historical demonstration / fault drills. Select an incident for what was observed, what remains uncertain, and what to check next. A fresh installation may not have any local incidents yet.
+
+| Page | What to use it for |
+|---|---|
+| `/` | Usage preferences, setup preparation, a real connection check, and before/after comparisons |
+| `/monitor.html?source=local` | Saved local measurements, incident timelines, and recovery records |
+| `/lab.html` | Queueing-model comparisons and saved Linux packet evidence; independent of home-router control |
+
+“Gaming / a call,” “Everyday use,” and “I can make room” are a **preview of the intended roommate controls**. Timers return the browser preference to normal; the actual network is unchanged. See the [full homepage guide](docs/beginner-home.md) for storage, timing, and measurement limits.
+
+**View evidence without installing:** download the [self-contained offline demonstration](artifacts/demo/RoomFlow.html) and open the downloaded HTML file in a browser. It contains saved incident observations and fault-drill playback; it cannot run a new check or change a router. GitHub's file preview does not run the app.
+
 ## Evidence to inspect
 
 - **Controlled reference lab:** [raw packet results](results/native-ci/), [measurements CSV](results/native-ci/batch/measurements.csv), [separate raw-data audit](results/native-ci/batch-audit.json), and [CI workflow](.github/workflows/kernel-lab.yml).
