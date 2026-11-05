@@ -1,16 +1,21 @@
 # RoomFlow
 
-**Can my video call stay usable while my roommate uploads and downloads large files on the same connection?**
+**Troubleshoot slow internet on a shared home network.**
 
-RoomFlow investigates it with real packets: a Linux lab that shares one bottleneck between a "meeting" device and a "roommate" device, then compares three queueing policies under the same bandwidth. A separate `homenet` tool records observations on a real home connection. Neither packet metrics nor service TCP probes establish actual video-call quality.
+Run a quick connection check, see when problems started and recovered, and explore how fair queueing affects latency when a roommate is uploading or downloading.
 
-[中文說明](docs/README.zh-TW.md)
+## English interface
+
+| Check your connection | Review incidents and recovery |
+| :--- | :--- |
+| [<img src="artifacts/screenshots/readme-connection-check.jpg" width="410" alt="RoomFlow homepage with the English Start check button">](artifacts/screenshots/readme-connection-check.jpg) | [<img src="artifacts/screenshots/readme-incident-history.jpg" width="410" alt="English incident log with a recovered event selected and its start and recovery times">](artifacts/screenshots/readme-incident-history.jpg) |
+| Run a light check from your computer. Pause a download or switch to Ethernet, then compare the results. | Open an incident to see when it started, which probes were affected, and when recovery was confirmed. Shown with saved demo data. |
+
+[Run locally](#try-roomflow-in-a-few-minutes) · [Download the offline demo](artifacts/demo/RoomFlow.html) · [中文說明](docs/README.zh-TW.md)
 
 ## Try RoomFlow in a few minutes
 
-The browser interface helps you check the connection, compare observations after a change, and inspect incidents through recovery. **The three usage modes currently save preferences only; they do not control your home router.**
-
-[View the English screenshot](#english-interface)
+**Current scope:** connection checks run locally, and the three usage modes are browser preferences. Router control is still a preview.
 
 ### Install and open
 
@@ -43,12 +48,6 @@ The server is local-only. Open it on the computer running RoomFlow; sharing its 
 “Gaming / a call,” “Everyday use,” and “I can make room” are a **preview of the intended roommate controls**. Timers return the browser preference to normal; the actual network is unchanged. See the [full homepage guide](docs/beginner-home.md) for storage, timing, and measurement limits.
 
 **View evidence without installing:** download the [self-contained offline demonstration](artifacts/demo/RoomFlow.html) and open the downloaded HTML file in a browser. It contains saved incident observations and fault-drill playback; it cannot run a new check or change a router. GitHub's file preview does not run the app.
-
-### English interface
-
-<img src="artifacts/tests/four-improvements/overview.jpg" alt="RoomFlow in English, showing the three usage modes, a completed connection check, and options to recheck after a change." width="420">
-
-*Homepage and connection check captured on October 27, 2026.*
 
 ## Evidence to inspect
 
