@@ -8,8 +8,8 @@ Run a quick connection check, see when problems started and recovered, and explo
 
 | Check your connection | Review incidents and recovery |
 | :--- | :--- |
-| [<img src="artifacts/screenshots/readme-connection-check.jpg" width="410" alt="RoomFlow homepage with the English Start check button">](artifacts/screenshots/readme-connection-check.jpg) | [<img src="artifacts/screenshots/readme-incident-history.jpg" width="410" alt="English incident log with a recovered event selected and its start and recovery times">](artifacts/screenshots/readme-incident-history.jpg) |
-| Run a light check from your computer. Pause a download or switch to Ethernet, then compare the results. | Open an incident to see when it started, which probes were affected, and when recovery was confirmed. Shown with saved demo data. |
+| [<img src="artifacts/screenshots/readme-connection-check.jpg" width="375" alt="RoomFlow homepage with the English Start check button">](artifacts/screenshots/readme-connection-check.jpg) | [<img src="artifacts/screenshots/readme-incident-history.jpg" width="375" alt="English incident log with a recovered event selected and its start and recovery times">](artifacts/screenshots/readme-incident-history.jpg) |
+| Check the router, internet, and DNS. Recheck after a change to compare results. | See which probes were affected, when the incident started, and when recovery was confirmed. Saved demo data. |
 
 [Run locally](#try-roomflow-in-a-few-minutes) · [Download the offline demo](artifacts/demo/RoomFlow.html) · [中文說明](docs/README.zh-TW.md)
 
