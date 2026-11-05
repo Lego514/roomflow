@@ -4,14 +4,21 @@
 
 Run a quick connection check, see when problems started and recovered, and explore how fair queueing affects latency when a roommate is uploading or downloading.
 
+[Run locally](#try-roomflow-in-a-few-minutes) · [Download the offline demo](artifacts/demo/RoomFlow.html) · [中文說明](docs/README.zh-TW.md)
+
 ## English interface
 
-| Check your connection | Review incidents and recovery |
-| :--- | :--- |
-| [<img src="artifacts/screenshots/readme-connection-check.jpg" width="375" alt="RoomFlow homepage with the English Start check button">](artifacts/screenshots/readme-connection-check.jpg) | [<img src="artifacts/screenshots/readme-incident-history.jpg" width="375" alt="English incident log with a recovered event selected and its start and recovery times">](artifacts/screenshots/readme-incident-history.jpg) |
-| Check the router, internet, and DNS. Recheck after a change to compare results. | See which probes were affected, when the incident started, and when recovery was confirmed. Saved demo data. |
+### Check your connection
 
-[Run locally](#try-roomflow-in-a-few-minutes) · [Download the offline demo](artifacts/demo/RoomFlow.html) · [中文說明](docs/README.zh-TW.md)
+![RoomFlow connection check with the English Start check button](artifacts/screenshots/readme-connection-check.jpg)
+
+> Check the router, internet, and DNS. Recheck after a change to compare results.
+
+### Review incidents and recovery
+
+![RoomFlow incident details with the affected probes, start time, and confirmed recovery time](artifacts/screenshots/readme-incident-history.jpg)
+
+> See which probes were affected, when the incident started, and when recovery was confirmed. Shown with saved demo data.
 
 ## Try RoomFlow in a few minutes
 
