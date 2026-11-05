@@ -10,11 +10,7 @@ RoomFlow investigates it with real packets: a Linux lab that shares one bottlene
 
 The browser interface helps you check the connection, compare observations after a change, and inspect incidents through recovery. **The three usage modes currently save preferences only; they do not control your home router.**
 
-<details>
-  <summary><strong>See the app: homepage, usage modes, and a completed connection check</strong></summary>
-  <p><img src="artifacts/tests/four-improvements/overview.jpg" alt="RoomFlow homepage showing three usage preferences, a router-not-connected status, connection-check results, and actions to recheck after a change." width="480"></p>
-  <p>Saved screenshot from October 27, 2026. Its measurements describe that check, not your current connection. English and Traditional Chinese are available in the app.</p>
-</details>
+[View the English screenshot](#english-interface)
 
 ### Install and open
 
@@ -47,6 +43,12 @@ The server is local-only. Open it on the computer running RoomFlow; sharing its 
 “Gaming / a call,” “Everyday use,” and “I can make room” are a **preview of the intended roommate controls**. Timers return the browser preference to normal; the actual network is unchanged. See the [full homepage guide](docs/beginner-home.md) for storage, timing, and measurement limits.
 
 **View evidence without installing:** download the [self-contained offline demonstration](artifacts/demo/RoomFlow.html) and open the downloaded HTML file in a browser. It contains saved incident observations and fault-drill playback; it cannot run a new check or change a router. GitHub's file preview does not run the app.
+
+### English interface
+
+<img src="artifacts/tests/four-improvements/overview.jpg" alt="RoomFlow in English, showing the three usage modes, a completed connection check, and options to recheck after a change." width="420">
+
+*Homepage and connection check captured on October 27, 2026.*
 
 ## Evidence to inspect
 
