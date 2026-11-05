@@ -10,13 +10,13 @@ Run a quick connection check, see when problems started and recovered, and explo
 
 ### Check your connection
 
-![RoomFlow connection check with the English Start check button](artifacts/screenshots/readme-connection-check.jpg)
+![RoomFlow connection check with the English Start check button](artifacts/screenshots/readme-connection-check-detail.jpg)
 
 > Check the router, internet, and DNS. Recheck after a change to compare results.
 
 ### Review incidents and recovery
 
-![RoomFlow incident details with the affected probes, start time, and confirmed recovery time](artifacts/screenshots/readme-incident-history.jpg)
+![RoomFlow incident details with the affected probes, start time, and confirmed recovery time](artifacts/screenshots/readme-incident-history-detail.jpg)
 
 > See which probes were affected, when the incident started, and when recovery was confirmed. Shown with saved demo data.
 
